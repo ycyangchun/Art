@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <com.funs.appreciate.art.view.widget.TabFocusRelative
+            android:id="@+id/focus_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:descendantFocusability="afterDescendants">
+
+        </com.funs.appreciate.art.view.widget.TabFocusRelative>
+    </HorizontalScrollView>
+
+    <com.funs.appreciate.art.view.widget.ScrollFrameLayout
+        android:orientation="horizontal"
+        android:id="@+id/main_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="200px">
+        <FrameLayout android:id="@+id/frameLayout1"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout2"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout3"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout4"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout5"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout6"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout7"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+        <FrameLayout android:id="@+id/frameLayout8"  android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
+
+    </com.funs.appreciate.art.view.widget.ScrollFrameLayout>
+
+</RelativeLayout>
