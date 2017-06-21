@@ -8,9 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
@@ -22,7 +21,6 @@ import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
-import com.funs.appreciate.art.utils.AnimFocusTabManager;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 
@@ -37,7 +35,7 @@ import javax.inject.Inject;
  * art main
  */
 
-public class MainActivity extends BaseActivity  implements MainContract.View , AnimFocusTabManager.TabSelect{
+public class MainActivity extends BaseActivity  implements MainContract.View ,TabFocusRelative.TabSelect{
 
     @Inject
     MainPresenter mainPresenter;
@@ -47,9 +45,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
     private int currentTabContainId  = -1 ;//当前选择tab ContainId
     private int lastTabContainId = -1;//上次选择tab ContainId
     private int tabIndex ; //默认 tab index
+    private String lastTab;//上次显示 tab
     List<String> listMainTab;// tab 数据
     private FragmentManager fm;//
     private FragmentTransaction ft;//
+    private BaseFragment currentFragment;// 当前 fragment
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,8 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
         MsgHelper.setMainHandler(handler);
 
         tabFocusRelative = (TabFocusRelative) findViewById(R.id.focus_linear);
+        tabIndex = 0;//默认 0
+        lastTab = "";
 
         DaggerMainComponent.builder()
              .netComponent(ArtApp.get(this).getNetComponent())
@@ -66,7 +68,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
         mainPresenter.loadLayout();
 
-        tabIndex = 0;//默认 0
+
     }
 
     // dispatchKeyEvent ↓↓↓↓↓↓↓
@@ -88,10 +90,13 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
                     if (focus != null ){
                         if(!tabFocusRelative.isChileView(focus)) {// 导航失去焦点
 //                            System.out.println("======= 焦点在item =======>");
+                            bubbleFocusEvent(tabFocusRelative,false);
                             if (keyCode == KeyEvent.KEYCODE_BACK ) {// item按 (返回键) 导航获取焦点
                                 lastFocusStatus();
                                 return true;
                             }
+                        } else {
+
                         }
                     }
 
@@ -110,6 +115,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
     // tab 最后焦点状态
     private void lastFocusStatus() {
+        bubbleFocusEvent(tabFocusRelative,true);
         tabFocusRelative.getLastFocusChangeView().requestFocus();
     }
 
@@ -147,15 +153,16 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
     // 切换界面
     private void switchPage(String tab) {
-        BaseFragment fragment;
-        fm = this.getSupportFragmentManager();
+        if(tab.equals(lastTab)) return;
+        lastTab = tab;
 
+        tabIndex = listMainTab.indexOf(tab);
+        System.out.println("=======tab======>"+tab+" tabIndex "+tabIndex +" lastTab "+lastTab);
+        fm = this.getSupportFragmentManager();
         // 隐藏上一个
         if(lastTabContainId != -1){
             FrameLayout lastFrame = (FrameLayout) findViewById(lastTabContainId);
-            bubbleFocusEvent(lastFrame,false);
             lastFrame.setVisibility(View.GONE);
-            lastFrame.clearFocus();
 
             ft = fm.beginTransaction();
             final BaseFragment lastFragment = (BaseFragment) fm.findFragmentByTag(lastTabContainId+"_fgm");
@@ -165,43 +172,40 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
         // 显示当前的
         currentTabContainId = getContainId(tab);
-        fragment = (BaseFragment) fm.findFragmentByTag(currentTabContainId+"_fgm");
-        if(fragment == null) {
+        currentFragment = (BaseFragment) fm.findFragmentByTag(currentTabContainId+"_fgm");
+        if(currentFragment == null) {
             switch (tab) {
                 case ArtConstants.recommends:
-                    fragment = new RecommendFragment();
+                    currentFragment = new RecommendFragment();
                     break;
                 case ArtConstants.oil:
-                    fragment = new OilFragment();
+                    currentFragment = new OilFragment();
                     break;
                 case ArtConstants.landscape:
-                    fragment = new RecommendFragment();
+                    currentFragment = new RecommendFragment();
                     break;
                 case ArtConstants.migratory:
-                    fragment = new OilFragment();
+                    currentFragment = new OilFragment();
                     break;
                 case ArtConstants.mall:
-                    fragment = new RecommendFragment();
+                    currentFragment = new RecommendFragment();
                     break;
             }
 
             // 第一次添加
             ft = fm.beginTransaction();
-            ft.add(currentTabContainId, fragment, currentTabContainId+"_fgm");
+            ft.add(currentTabContainId, currentFragment, currentTabContainId+"_fgm");
             ft.commit();
         } else {
             ft = fm.beginTransaction();
-            ft.show(fragment);
+            ft.show(currentFragment);
             ft.commit();
-            fragment.setScroller();
+            currentFragment.setScroller();
         }
         FrameLayout currentFrame = (FrameLayout) findViewById(currentTabContainId);
-
         currentFrame.setVisibility(View.VISIBLE);
-        currentFrame.requestFocus();
-        bubbleFocusEvent(currentFrame,true);
-//        fragment.setIndexFocus();
         lastTabContainId = currentTabContainId;
+
     }
 
     // replace
@@ -222,14 +226,14 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
     // FOCUS_BLOCK_DESCENDANTS  本身进行处理，不管是否处理成功，都不会分发给ChildView进行处理
     // FOCUS_BEFORE_DESCENDANTS 本身先对焦点进行处理，如果没有处理则分发给child View进行处理
     // FOCUS_AFTER_DESCENDANTS  先分发给Child View进行处理，如果所有的Child View都没有处理，则自己再处理
-    public void bubbleFocusEvent(FrameLayout v , boolean enable){
+    public void bubbleFocusEvent(ViewGroup v , boolean enable){
         if (enable){
             if (v != null)
-                v.setDescendantFocusability(FrameLayout.FOCUS_BEFORE_DESCENDANTS);
+                v.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         }
         else{
             if (v != null)
-                v.setDescendantFocusability(FrameLayout.FOCUS_BLOCK_DESCENDANTS);
+                v.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         }
     }
     @Override
@@ -237,20 +241,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
     }
     //////////// MainContract.View ↑↑↑↑↑↑
-
-    //////////// AnimFocusTabManager.TabSelect ↓↓↓↓↓↓↓
-    @Override
-    public void itemListener(boolean hasFocus ,RelativeLayout rl ,TextView tv) {
-//        System.out.println("== tab Listener ==> "+ hasFocus+"  " +tv.getId()+"  "+tv.getText());
-        tabFocusRelative.recordFocus(hasFocus ,rl ,tv);
-        if(hasFocus) {// 获取焦点时才切换
-            String title = tv.getText().toString();
-            switchPage(title);
-            tabIndex = listMainTab.indexOf(title);
-            tabFocusRelative.setLastFocusChangeIndex(tabIndex);
-        }
-
-    }
 
     public Handler handler = new Handler() {
         @Override
@@ -261,10 +251,14 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
                     lastFocusStatus();
                     break;
                 case ArtConstants.KEYLEFT:
-                    tabFocusRelative.switchPage(ArtConstants.KEYLEFT).requestFocus();
+                    int left = tabFocusRelative.switchPageNext(ArtConstants.KEYLEFT, tabIndex);
+                    switchPage(listMainTab.get(left));
+                    tabFocusRelative.setTextColorByPageChange(left);
                     break;
                 case ArtConstants.KEYRIGHT:
-                    tabFocusRelative.switchPage(ArtConstants.KEYRIGHT).requestFocus();
+                    int right = tabFocusRelative.switchPageNext(ArtConstants.KEYRIGHT,tabIndex);
+                    switchPage(listMainTab.get(right));
+                    tabFocusRelative.setTextColorByPageChange(right);
                     break;
                 case 3:
                     break;
@@ -272,4 +266,10 @@ public class MainActivity extends BaseActivity  implements MainContract.View , A
 
         }
     };
+    //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
+
+    @Override
+    public void tabChangeListener(String tab) {
+        switchPage(tab);
+    }
 }

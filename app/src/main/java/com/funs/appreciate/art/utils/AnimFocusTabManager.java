@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.funs.appreciate.art.presenter.MainContract;
+import com.funs.appreciate.art.view.widget.TabFocusRelative;
 
 import java.util.HashMap;
 
@@ -21,9 +22,13 @@ import java.util.HashMap;
  */
 public class AnimFocusTabManager extends  AnimFocusManager{
 
-	private TabSelect tabSelect;
+	TabFocusRelative focusRelative;
 	public AnimFocusTabManager(Context c) {
 		super(c);
+	}
+	public AnimFocusTabManager(Context c, TabFocusRelative tabFocusRelative) {
+		super(c);
+		this.focusRelative = tabFocusRelative;
 	}
 
 	public void onFocusChange(View v, boolean hasFocus) {
@@ -35,18 +40,9 @@ public class AnimFocusTabManager extends  AnimFocusManager{
 			int count = rl.getChildCount();
 			if (count > 0) {
 				TextView tv = (TextView) rl.getChildAt(0);
-				tabSelect.itemListener(hasFocus, rl ,tv);
+				focusRelative.recordFocus(hasFocus, rl ,tv);
 			}
 		}
 	}
-
-	public void setTabSelect(TabSelect tabSelect) {
-		this.tabSelect = tabSelect;
-	}
-
-	public interface TabSelect{
-		void itemListener(boolean hasFocus ,RelativeLayout rl , TextView tv);
-	}
-
 
 }

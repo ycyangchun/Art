@@ -31,8 +31,10 @@ public class TabFocusRelative extends FocusRelative {
 
     private List<PictureModel> lms;
     public List<RelativeLayout> childViews;
-    private int itemFocusIndex, lastFocusChangeIndex;// 获取焦点 item ;  最后焦点变化view的index
+    private int itemFocusIndex;// 获取焦点 item
     public RelativeLayout lastFocusChangeView , lastFocusTextChangeView; // 最后焦点变化view ; 最后text变化view( 按下键，焦点转移到fragment时)
+    private int colorDefault, colorSelect;
+    TabSelect tabSelect;
     public TabFocusRelative(Context context) {
         super(context);
     }
@@ -41,6 +43,8 @@ public class TabFocusRelative extends FocusRelative {
         super(context, attrs);
         margin = 10;
         childViews = new ArrayList<>();
+        colorDefault = Color.parseColor("#E6000000");
+        colorSelect = Color.parseColor("#01FFFF");
     }
 
     public TabFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -73,7 +77,7 @@ public class TabFocusRelative extends FocusRelative {
                 tv.setText(lm.getTypeRrc());
                 tv.setTextSize(marginW * 2.2f);
                 tv.setGravity(Gravity.CENTER);
-                tv.setTextColor(Color.parseColor("#E6000000"));
+                tv.setTextColor(colorDefault);
                 LayoutParams lpc = new LayoutParams(size.width,size.height);
 
                 RelativeLayout rl = lm.getFocusView();
@@ -107,29 +111,32 @@ public class TabFocusRelative extends FocusRelative {
     // 记录焦点变化
     public void recordFocus(boolean hasFocus ,RelativeLayout rl ,TextView tv){
         if(hasFocus) { // 字体颜色
-            tv.setTextColor(Color.parseColor("#01FFFF"));
+            tv.setTextColor(colorSelect);
 
             // 上次 最后text变化view，和再次获取焦点不是同一个 view
             if(lastFocusTextChangeView != null && rl != lastFocusTextChangeView){
                 int count = lastFocusTextChangeView.getChildCount();
                 if (count > 0) {
                     TextView tv2 = (TextView) lastFocusTextChangeView.getChildAt(0);
-                    tv2.setTextColor(Color.parseColor("#E6000000"));
+                    tv2.setTextColor(colorDefault);
                 }
             }
         } else {
-            tv.setTextColor(Color.parseColor("#E6000000"));
+            tv.setTextColor(colorDefault);
         }
         lastFocusChangeView = rl;
-
         //字体最后变化view
         String tag = (String) rl.getTag();
         if(tag != null && tag.equals("lastDown")){
             rl.setTag("");
             lastFocusTextChangeView = rl;
-            tv.setTextColor(Color.parseColor("#01FFFF"));
+            tv.setTextColor(colorSelect);
         }
 
+        // tab 切换
+       if(hasFocus && colorSelect == tv.getCurrentTextColor()){
+           tabSelect.tabChangeListener(tv.getText().toString());
+       }
     }
 
     // 焦点最后变化 view
@@ -138,19 +145,41 @@ public class TabFocusRelative extends FocusRelative {
     }
 
     // 左右翻页
-    public RelativeLayout switchPage(int switchType){
+    public int switchPageNext(int switchType , int index){
         int nextIndex = 0;
         switch(switchType){
             case ArtConstants.KEYLEFT:
-                nextIndex = lastFocusChangeIndex - 1 >= 0 ? lastFocusChangeIndex - 1 : 0;
-                System.out.println("========== tab 左翻页 ==>"+ nextIndex + "  lastFocusChangeIndex "+lastFocusChangeIndex);
+                nextIndex = index - 1 >= 0 ? index - 1 : 0;
+//                System.out.println("========== tab 左翻页 ==>"+ nextIndex + "  lastFocusChangeIndex "+index);
                 break;
             case ArtConstants.KEYRIGHT:
-                nextIndex = lastFocusChangeIndex +1  ==  childViews.size()?  lastFocusChangeIndex   : lastFocusChangeIndex +1;
-                System.out.println("========== tab 右翻页 ==>"+nextIndex+ "  lastFocusChangeIndex "+lastFocusChangeIndex);
+                nextIndex = index +1  ==  childViews.size()?  index   : index +1;
+//                System.out.println("========== tab 右翻页 ==>"+nextIndex+ "  lastFocusChangeIndex "+index);
                 break;
         }
-        return  childViews.get(nextIndex);
+        return  nextIndex;
+    }
+
+    //左右翻页设置text颜色
+    public  void setTextColorByPageChange(int index){
+        RelativeLayout rl = childViews.get(index);
+        if(rl != null){
+            int count = rl.getChildCount();
+            if (count > 0) {
+                TextView tv3 = (TextView) rl.getChildAt(0);
+                tv3.setTextColor(colorSelect);
+            }
+        }
+        // 上次 最后text变化view，和再次获取焦点不是同一个 view
+        if(lastFocusTextChangeView != null && rl != lastFocusTextChangeView){
+            int count = lastFocusTextChangeView.getChildCount();
+            if (count > 0) {
+                TextView tv2 = (TextView) lastFocusTextChangeView.getChildAt(0);
+                tv2.setTextColor(colorDefault);
+            }
+        }
+        lastFocusTextChangeView = rl;
+        lastFocusChangeView = rl;
     }
 
     // v 是否属于 childViews
@@ -165,10 +194,6 @@ public class TabFocusRelative extends FocusRelative {
         return is;
     }
 
-    // lastFocusChangeIndex
-    public void setLastFocusChangeIndex(int lastFocusChangeIndex) {
-        this.lastFocusChangeIndex = lastFocusChangeIndex;
-    }
 
     // itemFocus
     public void setIndexFocus(int index){
@@ -181,12 +206,9 @@ public class TabFocusRelative extends FocusRelative {
         },200);
     }
     public void setmAnimationFocusController() {
-        mAnimationFocusController = new AnimFocusTabManager(getContext());
+        mAnimationFocusController = new AnimFocusTabManager(getContext(), this);
     }
 
-    public void setTabSelect(AnimFocusTabManager.TabSelect tabSelect) {
-        ((AnimFocusTabManager)mAnimationFocusController).setTabSelect(tabSelect);
-    }
     /**
      *
      * @param lock  true  else  ,false DEF:false
@@ -204,5 +226,12 @@ public class TabFocusRelative extends FocusRelative {
         lm.getFocusView().setOnFocusChangeListener(mAnimationFocusController);
     }
 
+    // tab 切换
+    public interface TabSelect{
+        void tabChangeListener(String tab);
+    }
 
+    public void setTabSelect(TabSelect tabSelect) {
+        this.tabSelect = tabSelect;
+    }
 }
