@@ -12,9 +12,13 @@ public class PictureModel {
     private int id;
     private int width;
     private int height;
-    private int toBelowId = 0;
-    private int toRightId = 0;
     private String typeRrc;
+    private String leftdistance;
+    private int leftid ;
+    private String topdistance;
+    private Object colorid;
+    private String columnid;
+    private int topid ;
 
     public RelativeLayout getFocusView() {
         return mFocusView;
@@ -24,12 +28,31 @@ public class PictureModel {
         this.mFocusView = mFocusView;
     }
 
+    public PictureModel(LayoutModel.LayoutBean lb, Context mContext) {
+        this.id = Integer.parseInt(lb.getId()) * 1000 ;
+        this.width = Integer.parseInt(lb.getWidth());
+        this.height = Integer.parseInt(lb.getHeight());
+        Object ot = lb.getTopid();
+        Object ol = lb.getLeftid();
+        System.out.println("=======ot==ol================>"+ot+ "  "+ol);
+        int it  = 0, il = 0;
+        if(!ot.equals(null) && ot instanceof  String)  it = Integer.parseInt((String) ot);
+        if(!ol.equals(null) && ol instanceof  String)  il = Integer.parseInt((String)ol);
+        this.topid = it * 1000;
+        this.leftid = il * 1000;
+        // 添加root
+        RelativeLayout rl = new RelativeLayout(mContext);
+        rl.setId(this.id);
+        rl.setFocusable(true);
+        setFocusView(rl);
+    }
+
     public PictureModel(int id, int width, int height, int toBelowId, int toRightId , Context mContext) {
         this.id = id * 1000 ;
         this.width = width;
         this.height = height;
-        this.toBelowId = toBelowId * 1000;
-        this.toRightId = toRightId * 1000;
+        this.topid = toBelowId * 1000;
+        this.leftid = toRightId * 1000;
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(id);
@@ -41,7 +64,7 @@ public class PictureModel {
         this.id = id * 100;
         this.width = width;
         this.height = height;
-        this.toRightId = toRightId * 100;
+        this.leftid = toRightId * 100;
         this.typeRrc = typeRrc;
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
@@ -74,20 +97,20 @@ public class PictureModel {
         this.height = height;
     }
 
-    public int getToBelowId() {
-        return toBelowId;
+    public int getTopid() {
+        return topid;
     }
 
-    public void setToBelowId(int toBelowId) {
-        this.toBelowId = toBelowId;
+    public void setTopid(int topid) {
+        this.topid = topid;
     }
 
-    public int getToRightId() {
-        return toRightId;
+    public int getLeftid() {
+        return leftid;
     }
 
-    public void setToRightId(int toRightId) {
-        this.toRightId = toRightId;
+    public void setLeftid(int leftid) {
+        this.leftid = leftid;
     }
 
     public String getTypeRrc() {

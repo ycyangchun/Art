@@ -12,17 +12,20 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.funs.appreciate.art.ArtApp;
+import com.funs.appreciate.art.ArtConfig;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
 import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.base.BaseFragment;
 import com.funs.appreciate.art.di.components.DaggerMainComponent;
 import com.funs.appreciate.art.di.modules.MainModule;
+import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,12 +53,14 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     private FragmentManager fm;//
     private FragmentTransaction ft;//
     private BaseFragment currentFragment;// 当前 fragment
+    private String layoutString;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         MsgHelper.setMainHandler(handler);
+        ArtConfig.setMainActivity(this);
 
         tabFocusRelative = (TabFocusRelative) findViewById(R.id.focus_linear);
         tabIndex = 0;//默认 0
@@ -133,7 +138,13 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     @Override
     public void loadLayoutSuccess(String lay) {
-        String mainTab[] = new  String[]{ "今日推荐" , "油画" ,"山水画" ,"候鸟摄影" ,"精品商城"};
+        //////////////////////////////////
+        if(lay != null) {
+            layoutString = lay;
+            LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
+        }
+        //////////////////////////////////
+        String mainTab[] = new  String[]{ "精品推荐" , "油画" };//,"山水画" ,"候鸟摄影" ,"精品商城"};
         listMainTab = Arrays.asList(mainTab);
         int section = 80;
         for(int i = 0; i<  listMainTab.size() ;i++){
@@ -177,18 +188,18 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             switch (tab) {
                 case ArtConstants.recommends:
                     currentFragment = new RecommendFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("layout",layoutString);
+                    currentFragment.setArguments(bundle);
                     break;
                 case ArtConstants.oil:
                     currentFragment = new OilFragment();
                     break;
                 case ArtConstants.landscape:
-                    currentFragment = new RecommendFragment();
                     break;
                 case ArtConstants.migratory:
-                    currentFragment = new OilFragment();
                     break;
                 case ArtConstants.mall:
-                    currentFragment = new RecommendFragment();
                     break;
             }
 

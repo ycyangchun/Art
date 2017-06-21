@@ -26,19 +26,6 @@ public class SplashPresenter implements  SplashContract.Presenter{
 
     @Override
     public void loadSplash() {
-         apiService.getColumnList("getColumnList")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        view.loadSplashSuccess(s);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        view.loadSplashFailed(throwable);
-                    }
-                });
+        view.loadSplashSuccess("");
     }
 }

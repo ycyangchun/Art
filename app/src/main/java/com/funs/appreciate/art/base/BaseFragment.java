@@ -18,6 +18,8 @@ import android.widget.Scroller;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 
+import java.util.List;
+
 /**
  * Created by yc on 2017/6/14.
  * Base Fragment

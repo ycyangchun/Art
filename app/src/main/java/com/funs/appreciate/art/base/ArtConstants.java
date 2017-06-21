@@ -10,7 +10,7 @@ public interface ArtConstants {
     int KEYLEFT = 1;//左方向键
     int KEYRIGHT = 2;//右方向键
 
-    String recommends = "今日推荐";
+    String recommends = "精品推荐";
     String oil = "油画";
     String landscape = "山水画";
     String migratory  = "候鸟摄影";

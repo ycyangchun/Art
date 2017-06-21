@@ -62,10 +62,10 @@ public class TabFocusRelative extends FocusRelative {
                 UIHelper.Size size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth(), UIHelper.ZoomMode.KeepHV), UIHelper.zoomH(lm.getHeight(), UIHelper.ZoomMode.KeepHV));
                 LayoutParams lp = new LayoutParams(size.width, size.height);
 
-                if (lm.getToBelowId() != 0)
-                    lp.addRule(RelativeLayout.BELOW, lm.getToBelowId());
-                if (lm.getToRightId() != 0)
-                    lp.addRule(RelativeLayout.RIGHT_OF, lm.getToRightId());
+                if (lm.getTopid() != 0)
+                    lp.addRule(RelativeLayout.BELOW, lm.getTopid());
+                if (lm.getLeftid() != 0)
+                    lp.addRule(RelativeLayout.RIGHT_OF, lm.getLeftid());
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
                 lp.setMargins(marginW, marginH, marginW, marginH);

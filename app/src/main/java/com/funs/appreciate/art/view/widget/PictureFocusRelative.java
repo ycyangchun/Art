@@ -54,13 +54,15 @@ public class PictureFocusRelative extends FocusRelative {
 //                System.out.println("====== width ======== height  ==========>"+size.width+ " "+size.height);
                 LayoutParams lp = new LayoutParams(size.width, size.height);
 
-                if (lm.getToBelowId() != 0)
-                    lp.addRule(RelativeLayout.BELOW, lm.getToBelowId());
-                if (lm.getToRightId() != 0)
-                    lp.addRule(RelativeLayout.RIGHT_OF, lm.getToRightId());
+                if (lm.getTopid() != 0)
+                    lp.addRule(RelativeLayout.BELOW, lm.getTopid());
+                if (lm.getLeftid() != 0)
+                    lp.addRule(RelativeLayout.RIGHT_OF, lm.getLeftid());
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
 //                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
+                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
+
                 lp.setMargins(marginW, marginH, marginW, marginH);
 
                 ///////////////
@@ -91,8 +93,8 @@ public class PictureFocusRelative extends FocusRelative {
                 addFocusItem(lm);
 
                 //////
-                rl.setTag(R.id.tag_to_below,lm.getToBelowId());
-                rl.setTag(R.id.tag_to_right,lm.getToRightId());
+                rl.setTag(R.id.tag_to_below,lm.getTopid());
+                rl.setTag(R.id.tag_to_right,lm.getLeftid());
                 rl.setTag(R.id.tag_index,i);
                 rl.setOnKeyListener(new OnKeyListener() {
                     @Override
@@ -154,7 +156,7 @@ public class PictureFocusRelative extends FocusRelative {
             PictureModel lm1 = lms.get(size -1);
             PictureModel lm2 = lms.get(size -2);
             //(在同一元素的右边)
-            if(lm2.getToRightId() == lm1.getToRightId()){
+            if(lm2.getLeftid() == lm1.getLeftid()){
                 penultimate = true;
             }
 

@@ -1,5 +1,6 @@
 package com.funs.appreciate.art;
 
+import android.app.Activity;
 import android.util.Log;
 
 /**
@@ -15,6 +16,8 @@ public class ArtConfig {
         if(IS_DEBUG)
             Log.d(tag , msg);
     }
+
+    private static Activity mainActivity;
 
     /**
      * 测试环境
@@ -49,4 +52,11 @@ public class ArtConfig {
 
     }
 
+    public static Activity getMainActivity() {
+        return mainActivity;
+    }
+
+    public static void setMainActivity(Activity mainActivity) {
+        ArtConfig.mainActivity = mainActivity;
+    }
 }
