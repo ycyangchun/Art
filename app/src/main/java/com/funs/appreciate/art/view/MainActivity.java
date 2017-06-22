@@ -169,11 +169,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     // 切换界面fragment
     private void switchPage(String tab , int type) {
+        tabIndex = listMainTab.indexOf(tab);
+        System.out.println("======= tab ======> "+tab+"  =  "+ tabIndex +" = "+lastTab);
         if(tab.equals(lastTab)) return;
         lastTab = tab;
 
-        tabIndex = listMainTab.indexOf(tab);
-        System.out.println("=======tab======>"+tab+" tabIndex "+tabIndex +" lastTab "+lastTab);
         fm = this.getSupportFragmentManager();
         // 隐藏上一个
         if(lastTabContainId != -1){
