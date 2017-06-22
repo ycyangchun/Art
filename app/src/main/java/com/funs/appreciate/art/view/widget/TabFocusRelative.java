@@ -161,7 +161,7 @@ public class TabFocusRelative extends FocusRelative {
     }
 
     //左右翻页设置text颜色
-    public  void setTextColorByPageChange(int index){
+    public void setTextColorByPageChange(int index){
         RelativeLayout rl = childViews.get(index);
         if(rl != null){
             int count = rl.getChildCount();
@@ -182,6 +182,17 @@ public class TabFocusRelative extends FocusRelative {
         lastFocusChangeView = rl;
     }
 
+    // 设置text颜色
+    public void setLastFocus(){
+        if(lastFocusChangeView != null){
+            int count = lastFocusChangeView.getChildCount();
+            if (count > 0) {
+                TextView tv3 = (TextView) lastFocusChangeView.getChildAt(0);
+                tv3.setTextColor(Color.parseColor("#01FFFF"));
+            }
+        }
+        lastFocusTextChangeView = lastFocusChangeView;
+    }
     // v 是否属于 childViews
     public boolean isChileView(View v){
         boolean is = false;
@@ -234,4 +245,6 @@ public class TabFocusRelative extends FocusRelative {
     public void setTabSelect(TabSelect tabSelect) {
         this.tabSelect = tabSelect;
     }
+
+
 }

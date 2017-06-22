@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 import com.funs.appreciate.art.R;
@@ -28,7 +29,7 @@ import java.util.List;
 public class BaseFragment extends Fragment {
 
     AnimationEndListeners animationEndListeners;
-    public  PictureFocusRelative fr;
+    public  PictureFocusRelative fr;// content view
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -49,9 +50,16 @@ public class BaseFragment extends Fragment {
     }
 
     // 设置默认 0 ，获取焦点
-    public void setIndexFocus(){
+    public void setIndexFocus(int index){
         if(fr != null ){
-            fr.setIndexFocus(0);
+            fr.setIndexFocus(index);
+        }
+    }
+
+    // 最后获取焦点view
+    public void setLastFocus(){
+        if(fr != null ){
+            fr.setLastFocus();
         }
     }
 

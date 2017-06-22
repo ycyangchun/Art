@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.model.entitys.PictureModel;
+import com.funs.appreciate.art.utils.AnimFocusContentManager;
+import com.funs.appreciate.art.utils.AnimFocusTabManager;
 import com.funs.appreciate.art.utils.ImageHelper;
 import com.funs.appreciate.art.utils.UIHelper;
 
@@ -29,6 +31,7 @@ public class PictureFocusRelative extends FocusRelative {
     private List<PictureModel> lms;
     private boolean penultimate = false; // 布局倒数第二个是否靠边
     private PictureFocusKeyEvent mPictureFocusKeyEvent;
+    public RelativeLayout lastFocusChangeView; // 最后焦点变化view ;
     public PictureFocusRelative(Context context) {
         super(context);
     }
@@ -107,14 +110,14 @@ public class PictureFocusRelative extends FocusRelative {
                                     // 布局位于 top 边界
                                     if (keyCode == KeyEvent.KEYCODE_DPAD_UP && (int) rl.getTag(R.id.tag_to_below) == 0) {
 //                                        System.out.println("== top === >" + rl.getId());
-                                        mPictureFocusKeyEvent.pictureListener("top",lm);
+                                        mPictureFocusKeyEvent.pictureListener("top",lm , rl);
                                         return true;
                                     }
 
                                     // 布局位于 left边界
                                     if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && (int) rl.getTag(R.id.tag_to_right) == 0) {
 //                                        System.out.println("== left === >" + rl.getId());
-                                        mPictureFocusKeyEvent.pictureListener("left",lm);
+                                        mPictureFocusKeyEvent.pictureListener("left",lm , rl);
                                         return true;
                                     }
                                     // 布局位于 right 边界  ：数据倒数第一个 （或  倒数第二个）
@@ -123,13 +126,13 @@ public class PictureFocusRelative extends FocusRelative {
                                         int size = lms.size();
                                         if (size >= 1 && tag_index == size - 1) {//数据倒数第一个
 //                                            System.out.println("== right === >" + rl.getId());
-                                            mPictureFocusKeyEvent.pictureListener("right",lm);
+                                            mPictureFocusKeyEvent.pictureListener("right",lm , rl);
                                             return true;
                                         }
 
                                         if(penultimate(rl)){//倒数第二个是靠边的
 //                                            System.out.println("== right === >" + rl.getId());
-                                            mPictureFocusKeyEvent.pictureListener("right",lm);
+                                            mPictureFocusKeyEvent.pictureListener("right",lm , rl);
                                             return true;
                                         }
                                     }
@@ -137,9 +140,10 @@ public class PictureFocusRelative extends FocusRelative {
 
                                 case KeyEvent.KEYCODE_DPAD_CENTER:
                                 case KeyEvent.KEYCODE_ENTER:
-                                    mPictureFocusKeyEvent.pictureListener("center",lm);
+                                    mPictureFocusKeyEvent.pictureListener("center",lm , rl);
                                     return true;
                             }
+
                         }
                         return false;
                     }
@@ -171,14 +175,59 @@ public class PictureFocusRelative extends FocusRelative {
             public void run() {
                 lms.get(index).getFocusView().requestFocus();
             }
+        },300);
+    }
+
+
+    public void setLastFocus(){
+        if(lastFocusChangeView == null){
+            lastFocusChangeView = lms.get(0).getFocusView();
+        }
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                lastFocusChangeView.requestFocus();
+            }
         },200);
     }
 
+    // 按键监听
     public interface PictureFocusKeyEvent{
-        void pictureListener(String keyType, PictureModel lm);
+        void pictureListener(String keyType, PictureModel lm , RelativeLayout rl);
     }
 
     public void setmPictureFocusKeyEvent(PictureFocusKeyEvent mPictureFocusKeyEvent) {
         this.mPictureFocusKeyEvent = mPictureFocusKeyEvent;
+    }
+
+    // 记录焦点变化
+    public void recordFocus(boolean hasFocus ,RelativeLayout rl){
+        lastFocusChangeView = rl;
+    }
+
+    public RelativeLayout getLastFocusChangeView() {
+        return lastFocusChangeView;
+    }
+
+    // 焦点动画
+    public void addFocusItem(PictureModel lm) {
+
+        OnFocusChangeListener l = lm.getFocusView().getOnFocusChangeListener();
+        if(l != null) {
+            mAnimationFocusController.add(lm.getFocusView(), l);
+        }
+        lm.getFocusView().setOnFocusChangeListener(mAnimationFocusController);
+    }
+
+    public void setmAnimationFocusController() {
+        mAnimationFocusController = new AnimFocusContentManager(getContext(), this);
+    }
+
+    /**
+     *
+     * @param lock  true  else  ,false DEF:false
+     */
+    public void setAnimationFocusLock(boolean lock) {
+        mAnimationFocusController.setAnimationFocusLock(lock);
     }
 }

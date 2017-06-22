@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.funs.appreciate.art.ArtConfig;
 import com.funs.appreciate.art.R;
@@ -88,24 +89,24 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
         lms.add(lm10);
         lms.add(lm11);
         lms.add(lm12);
-//        lms.add(lm13);
-//        lms.add(lm14);
+        lms.add(lm13);
+        lms.add(lm14);
 
     }
 
     /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
-    public void pictureListener(String keyType, PictureModel lm) {
+    public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
 
         if("top".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYTOP);
         } else if("left".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYLEFT);
          } else if("right".equals(keyType)) {
-            MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT);
+            MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT  , rl);
          } else if("center".equals(keyType)) {
-            System.out.println("======================  pictureListener ==>"+keyType);
+            System.out.println("======================  center ==>"+keyType);
         }
     }
 

@@ -174,7 +174,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         if(lastTabContainId != -1){
             FrameLayout lastFrame = (FrameLayout) findViewById(lastTabContainId);
             lastFrame.setVisibility(View.GONE);
-
             ft = fm.beginTransaction();
             final BaseFragment lastFragment = (BaseFragment) fm.findFragmentByTag(lastTabContainId+"_fgm");
             ft.hide(lastFragment);
@@ -207,11 +206,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             ft = fm.beginTransaction();
             ft.add(currentTabContainId, currentFragment, currentTabContainId+"_fgm");
             ft.commit();
+            currentFragment.setIndexFocus(0);
         } else {
             ft = fm.beginTransaction();
             ft.show(currentFragment);
             ft.commit();
-            currentFragment.setScroller();
         }
         FrameLayout currentFrame = (FrameLayout) findViewById(currentTabContainId);
         currentFrame.setVisibility(View.VISIBLE);
@@ -262,19 +261,22 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                     lastFocusStatus();
                     break;
                 case ArtConstants.KEYLEFT:
-                    int left = tabFocusRelative.switchPageNext(ArtConstants.KEYLEFT, tabIndex);
-                    switchPage(listMainTab.get(left));
-                    tabFocusRelative.setTextColorByPageChange(left);
+                    leftOrRight(ArtConstants.KEYLEFT);
                     break;
                 case ArtConstants.KEYRIGHT:
-                    int right = tabFocusRelative.switchPageNext(ArtConstants.KEYRIGHT,tabIndex);
-                    switchPage(listMainTab.get(right));
-                    tabFocusRelative.setTextColorByPageChange(right);
+                    leftOrRight(ArtConstants.KEYRIGHT);
                     break;
                 case 3:
                     break;
             }
 
+        }
+        // 左右切换
+        private void leftOrRight(int keyCode) {
+            int key = tabFocusRelative.switchPageNext(keyCode, tabIndex);
+            switchPage(listMainTab.get(key));
+            tabFocusRelative.setTextColorByPageChange(key);
+            currentFragment.setLastFocus();
         }
     };
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓

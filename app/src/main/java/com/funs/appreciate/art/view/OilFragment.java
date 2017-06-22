@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
@@ -83,7 +84,7 @@ public class OilFragment extends BaseFragment implements  PictureFocusRelative.P
     /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
-    public void pictureListener(String keyType, PictureModel lm) {
+    public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
 
         if("top".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYTOP);
