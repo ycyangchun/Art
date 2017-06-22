@@ -2,4 +2,15 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.Leanback"></style>
+
+    <!--toolbar替代actionbar后必须设置主题为NoActionBar-->
+    <style name="AppTheme.NoActionBar">
+        <!--Activity切换时，可能出现的白色闪屏解决方案-->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
 </resources>
