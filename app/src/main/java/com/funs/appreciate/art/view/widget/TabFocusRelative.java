@@ -59,7 +59,7 @@ public class TabFocusRelative extends FocusRelative {
         if(lms != null && lms.size() != 0) {
             for (int i = 0; i < lms.size(); i++) {
                 PictureModel lm = lms.get(i);
-                UIHelper.Size size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth(), UIHelper.ZoomMode.KeepHV), UIHelper.zoomH(lm.getHeight(), UIHelper.ZoomMode.KeepHV));
+                final UIHelper.Size size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth(), UIHelper.ZoomMode.KeepHV), UIHelper.zoomH(lm.getHeight(), UIHelper.ZoomMode.KeepHV));
                 LayoutParams lp = new LayoutParams(size.width, size.height);
 
                 if (lm.getTopid() != 0)
@@ -93,12 +93,17 @@ public class TabFocusRelative extends FocusRelative {
                 childViews.add(rl);
                 addFocusItem(lm);
 
+                final int finalI = i;
                 rl.setOnKeyListener(new OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if(event.getAction() == KeyEvent.ACTION_DOWN) {
                             if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {//导航失去焦点
                                 v.setTag("lastDown");
+                            }
+                            // 焦点右移最后一项
+                            if( (finalI == lms.size()-1) && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+                                return true;
                             }
                         }
                         return false;
@@ -182,17 +187,6 @@ public class TabFocusRelative extends FocusRelative {
         lastFocusChangeView = rl;
     }
 
-    // 设置text颜色
-    public void setLastFocus(){
-        if(lastFocusChangeView != null){
-            int count = lastFocusChangeView.getChildCount();
-            if (count > 0) {
-                TextView tv3 = (TextView) lastFocusChangeView.getChildAt(0);
-                tv3.setTextColor(Color.parseColor("#01FFFF"));
-            }
-        }
-        lastFocusTextChangeView = lastFocusChangeView;
-    }
     // v 是否属于 childViews
     public boolean isChileView(View v){
         boolean is = false;
