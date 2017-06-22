@@ -61,7 +61,7 @@ public class PictureFocusRelative extends FocusRelative {
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
 //                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
-                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
+//                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
 
                 lp.setMargins(marginW, marginH, marginW, marginH);
 
