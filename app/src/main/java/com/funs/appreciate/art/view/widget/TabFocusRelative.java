@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
 import com.funs.appreciate.art.model.entitys.PictureModel;
-import com.funs.appreciate.art.utils.AnimFocusManager;
 import com.funs.appreciate.art.utils.AnimFocusTabManager;
 import com.funs.appreciate.art.utils.ImageHelper;
 import com.funs.appreciate.art.utils.UIHelper;
@@ -32,7 +31,7 @@ public class TabFocusRelative extends FocusRelative {
     private List<PictureModel> lms;
     public List<RelativeLayout> childViews;
     private int itemFocusIndex;// 获取焦点 item
-    public RelativeLayout lastFocusChangeView , lastFocusTextChangeView; // 最后焦点变化view ; 最后text变化view( 按下键，焦点转移到fragment时)
+    public RelativeLayout focusView , lastFocusTextChangeView; // 记录焦点view ; 最后text变化view( 按下键，焦点转移到fragment时)
     private int colorDefault, colorSelect;
     TabSelect tabSelect;
     public TabFocusRelative(Context context) {
@@ -80,7 +79,7 @@ public class TabFocusRelative extends FocusRelative {
                 tv.setTextColor(colorDefault);
                 LayoutParams lpc = new LayoutParams(size.width,size.height);
 
-                RelativeLayout rl = lm.getFocusView();
+                RelativeLayout rl = lm.getRootView();
                 rl.setId(lm.getId());
                 rl.addView(tv,lpc);
                 ///////////////
@@ -126,11 +125,14 @@ public class TabFocusRelative extends FocusRelative {
                     tv2.setTextColor(colorDefault);
                 }
             }
-        } else {
+        } else {// 默认颜色
             tv.setTextColor(colorDefault);
         }
-        lastFocusChangeView = rl;
-        //字体最后变化view
+
+        focusView = rl;
+
+
+        //字体最后变化view，焦点离开，颜色保持
         String tag = (String) rl.getTag();
         if(tag != null && tag.equals("lastDown")){
             rl.setTag("");
@@ -146,7 +148,7 @@ public class TabFocusRelative extends FocusRelative {
 
     // 焦点最后变化 view
     public RelativeLayout getLastFocusChangeView() {
-        return lastFocusChangeView;
+        return focusView;
     }
 
     // 左右翻页
@@ -184,7 +186,7 @@ public class TabFocusRelative extends FocusRelative {
             }
         }
         lastFocusTextChangeView = rl;
-        lastFocusChangeView = rl;
+        focusView = rl;
     }
 
     // v 是否属于 childViews
@@ -206,7 +208,7 @@ public class TabFocusRelative extends FocusRelative {
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                lms.get(itemFocusIndex).getFocusView().requestFocus();
+                lms.get(itemFocusIndex).getRootView().requestFocus();
             }
         },100);
     }
@@ -224,11 +226,11 @@ public class TabFocusRelative extends FocusRelative {
 
     public void addFocusItem(PictureModel lm) {
 
-        OnFocusChangeListener l = lm.getFocusView().getOnFocusChangeListener();
+        OnFocusChangeListener l = lm.getRootView().getOnFocusChangeListener();
         if(l != null) {
-            mAnimationFocusController.add(lm.getFocusView(), l);
+            mAnimationFocusController.add(lm.getRootView(), l);
         }
-        lm.getFocusView().setOnFocusChangeListener(mAnimationFocusController);
+        lm.getRootView().setOnFocusChangeListener(mAnimationFocusController);
     }
 
     // tab 切换

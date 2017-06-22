@@ -50,10 +50,10 @@ public class BaseFragment extends Fragment {
     }
 
 
-    // 最后获取焦点view
-    public void setLastFocus(){
+    // 获取焦点view
+    public void setFocus(){
         if(fr != null ){
-            fr.setLastFocus();
+            fr.setFocusView();
         }
     }
 

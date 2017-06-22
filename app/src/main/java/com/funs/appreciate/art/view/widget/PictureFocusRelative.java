@@ -31,7 +31,7 @@ public class PictureFocusRelative extends FocusRelative {
     private List<PictureModel> lms;
     private boolean penultimate = false; // 布局倒数第二个是否靠边
     private PictureFocusKeyEvent mPictureFocusKeyEvent;
-    public RelativeLayout lastFocusChangeView; // 最后焦点变化view ;
+    public RelativeLayout focusChangeView; // 记录焦点view ;
     public PictureFocusRelative(Context context) {
         super(context);
     }
@@ -83,7 +83,7 @@ public class PictureFocusRelative extends FocusRelative {
                 }
                 LayoutParams lpc = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
 //                lpc.setMargins(6, 6, 6, 6);
-                final RelativeLayout rl = lm.getFocusView();
+                final RelativeLayout rl = lm.getRootView();
                 rl.setId(lm.getId());
                 rl.addView(tv,lpc);
                 ///////////////
@@ -153,13 +153,14 @@ public class PictureFocusRelative extends FocusRelative {
 
     }
 
+    //倒数第二个是靠边的
     public boolean penultimate(RelativeLayout rl){
         int size = lms.size();
         int tag_index = (int) rl.getTag(R.id.tag_index);
         if(size >= 2 && tag_index == size -2){
             PictureModel lm1 = lms.get(size -1);
             PictureModel lm2 = lms.get(size -2);
-            //(在同一元素的右边)
+            //在同一元素的右边
             if(lm2.getLeftid() == lm1.getLeftid()){
                 penultimate = true;
             }
@@ -170,14 +171,15 @@ public class PictureFocusRelative extends FocusRelative {
         return penultimate;
     }
 
-    public void setLastFocus(){
-        if(lastFocusChangeView == null){
-            lastFocusChangeView = lms.get(0).getFocusView();
+    //设置焦点
+    public void setFocusView(){
+        if(focusChangeView == null){
+            focusChangeView = lms.get(0).getRootView();
         }
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                lastFocusChangeView.requestFocus();
+                focusChangeView.requestFocus();
             }
         },100);
     }
@@ -193,21 +195,21 @@ public class PictureFocusRelative extends FocusRelative {
 
     // 记录焦点变化
     public void recordFocus(boolean hasFocus ,RelativeLayout rl){
-        lastFocusChangeView = rl;
+        focusChangeView = rl;
     }
 
     public RelativeLayout getLastFocusChangeView() {
-        return lastFocusChangeView;
+        return focusChangeView;
     }
 
     // 焦点动画
     public void addFocusItem(PictureModel lm) {
 
-        OnFocusChangeListener l = lm.getFocusView().getOnFocusChangeListener();
+        OnFocusChangeListener l = lm.getRootView().getOnFocusChangeListener();
         if(l != null) {
-            mAnimationFocusController.add(lm.getFocusView(), l);
+            mAnimationFocusController.add(lm.getRootView(), l);
         }
-        lm.getFocusView().setOnFocusChangeListener(mAnimationFocusController);
+        lm.getRootView().setOnFocusChangeListener(mAnimationFocusController);
     }
 
     public void setmAnimationFocusController() {

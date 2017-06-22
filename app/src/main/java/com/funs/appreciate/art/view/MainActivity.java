@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     private FragmentManager fm;//
     private FragmentTransaction ft;//
     private BaseFragment currentFragment;// 当前 fragment
-    private String layoutString;
+    private String layoutString;// 布局数据
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,11 +158,16 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         tabFocusRelative.setTabSelect(this);
         tabFocusRelative.setIndexFocus(tabIndex);
 
-        // 切换界面
-        switchPage(listMainTab.get(tabIndex) , -1);
     }
 
-    // 切换界面
+    //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
+    //tab 切换
+    @Override
+    public void tabChangeListener(String tab) {
+        switchPage(tab , -1);
+    }
+
+    // 切换界面fragment
     private void switchPage(String tab , int type) {
         if(tab.equals(lastTab)) return;
         lastTab = tab;
@@ -213,6 +218,9 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             ft = fm.beginTransaction();
             ft.show(currentFragment);
             ft.commit();
+            if(type != -1) { // 左右切换 ，回复上次焦点
+                MsgHelper.sendMessage(handler, ArtConstants.RIGHTSCROLLCREATE);
+            }
         }
         FrameLayout currentFrame = (FrameLayout) findViewById(currentTabContainId);
         currentFrame.setVisibility(View.VISIBLE);
@@ -269,7 +277,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                     leftOrRight(ArtConstants.KEYRIGHT);
                     break;
                 case ArtConstants.RIGHTSCROLLCREATE: //
-                    currentFragment.setLastFocus();
+                    currentFragment.setFocus();
                     break;
             }
 
@@ -282,13 +290,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             int key = tabFocusRelative.switchPageNext(keyCode, tabIndex);
             switchPage(listMainTab.get(key) ,keyCode);
             tabFocusRelative.setTextColorByPageChange(key);
-            currentFragment.setLastFocus();
         }
     };
-    //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
 
-    @Override
-    public void tabChangeListener(String tab) {
-        switchPage(tab , -1);
-    }
 }

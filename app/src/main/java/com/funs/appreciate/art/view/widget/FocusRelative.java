@@ -136,11 +136,11 @@ public class FocusRelative  extends RelativeLayout{
 
     public void addFocusItem(PictureModel lm) {
 
-        OnFocusChangeListener l = lm.getFocusView().getOnFocusChangeListener();
+        OnFocusChangeListener l = lm.getRootView().getOnFocusChangeListener();
         if(l != null) {
-            mAnimationFocusController.add(lm.getFocusView(), l);
+            mAnimationFocusController.add(lm.getRootView(), l);
         }
-        lm.getFocusView().setOnFocusChangeListener(mAnimationFocusController);
+        lm.getRootView().setOnFocusChangeListener(mAnimationFocusController);
     }
 
 }

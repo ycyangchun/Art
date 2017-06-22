@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
  */
 
 public class PictureModel {
-    private RelativeLayout mFocusView = null;
+    private RelativeLayout mRootView = null;
     private int id;
     private int width;
     private int height;
@@ -20,12 +20,12 @@ public class PictureModel {
     private String columnid;
     private int topid ;
 
-    public RelativeLayout getFocusView() {
-        return mFocusView;
+    public RelativeLayout getRootView() {
+        return mRootView;
     }
 
-    public void setFocusView(RelativeLayout mFocusView) {
-        this.mFocusView = mFocusView;
+    public void setRootView(RelativeLayout mRootView) {
+        this.mRootView = mRootView;
     }
 
     public PictureModel(LayoutModel.LayoutBean lb, Context mContext) {
@@ -43,7 +43,7 @@ public class PictureModel {
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(this.id);
         rl.setFocusable(true);
-        setFocusView(rl);
+        setRootView(rl);
     }
 
     public PictureModel(int id, int width, int height, int toBelowId, int toRightId , Context mContext) {
@@ -56,7 +56,7 @@ public class PictureModel {
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(id);
         rl.setFocusable(true);
-        setFocusView(rl);
+        setRootView(rl);
     }
 
     public PictureModel(int id, int width, int height, String typeRrc,int toRightId,  Context mContext) {
@@ -69,7 +69,7 @@ public class PictureModel {
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(id);
         rl.setFocusable(true);
-        setFocusView(rl);
+        setRootView(rl);
     }
 
     public int getId() {
