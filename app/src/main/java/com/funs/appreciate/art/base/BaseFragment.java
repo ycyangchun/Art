@@ -3,6 +3,7 @@ package com.funs.appreciate.art.base;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,11 +42,11 @@ public class BaseFragment extends Fragment {
 
     }
 
-    // 再次显示时，位置不在0,0
+    // 再次显示时位置不在 0,0
     public void setScroller(){
         if( getView() != null) {
             HorizontalScrollView horizontalScrollView = (HorizontalScrollView) getView().findViewById(R.id.scroll_view);
-            horizontalScrollView.scrollTo(0, 0);
+            horizontalScrollView.smoothScrollTo(0, 0);
         }
     }
 

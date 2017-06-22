@@ -249,11 +249,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     public void bubbleFocusEvent(ViewGroup v , boolean enable){
         if (enable){
             if (v != null)
-                v.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+                v.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);//本身先对焦点进行处理
         }
         else{
             if (v != null)
-                v.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+                v.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);//本身进行处理
         }
     }
     @Override
