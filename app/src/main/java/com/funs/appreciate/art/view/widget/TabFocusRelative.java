@@ -31,7 +31,7 @@ public class TabFocusRelative extends FocusRelative {
     private List<PictureModel> lms;
     public List<RelativeLayout> childViews;
     private int itemFocusIndex;// 获取焦点 item
-    public RelativeLayout focusView , lastFocusTextChangeView; // 记录焦点view ; 最后text变化view( 按下键，焦点转移到fragment时)
+    public RelativeLayout focusView , selectView; // 记录焦点view ; 记录tab 选中view( 按下方向键焦点转移到fragment时  ；fragment 左右切换时 )
     private int colorDefault, colorSelect;
     TabSelect tabSelect;
     public TabFocusRelative(Context context) {
@@ -98,7 +98,7 @@ public class TabFocusRelative extends FocusRelative {
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if(event.getAction() == KeyEvent.ACTION_DOWN) {
                             if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {//导航失去焦点
-                                v.setTag("lastDown");
+                                v.setTag("downFragment");
                             }
                             // 焦点右移最后一项
                             if( (finalI == lms.size()-1) && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
@@ -114,30 +114,23 @@ public class TabFocusRelative extends FocusRelative {
 
     // 记录焦点变化
     public void recordFocus(boolean hasFocus ,RelativeLayout rl ,TextView tv){
-        if(hasFocus) { // 字体颜色
-            tv.setTextColor(colorSelect);
-
-            // 上次 最后text变化view，和再次获取焦点不是同一个 view
-            if(lastFocusTextChangeView != null && rl != lastFocusTextChangeView){
-                int count = lastFocusTextChangeView.getChildCount();
-                if (count > 0) {
-                    TextView tv2 = (TextView) lastFocusTextChangeView.getChildAt(0);
-                    tv2.setTextColor(colorDefault);
-                }
-            }
-        } else {// 默认颜色
-            tv.setTextColor(colorDefault);
-        }
-
         focusView = rl;
 
-
-        //字体最后变化view，焦点离开，颜色保持
-        String tag = (String) rl.getTag();
-        if(tag != null && tag.equals("lastDown")){
-            rl.setTag("");
-            lastFocusTextChangeView = rl;
+        if(hasFocus) { // 字体颜色
             tv.setTextColor(colorSelect);
+            // 上次选择的view
+            if(selectView != null && rl != selectView){
+                setChildTextColor(selectView , colorDefault);
+            }
+        } else {// 默认颜色
+            //记录tab 选中view( 按下方向键焦点转移到fragment时)
+            String tag = (String) rl.getTag();
+            if(tag != null && tag.equals("downFragment")){
+                rl.setTag("");
+                selectView = rl;
+            } else {
+                tv.setTextColor(colorDefault);
+            }
         }
 
         // tab 切换
@@ -171,22 +164,23 @@ public class TabFocusRelative extends FocusRelative {
     public void setTextColorByPageChange(int index){
         RelativeLayout rl = childViews.get(index);
         if(rl != null){
-            int count = rl.getChildCount();
-            if (count > 0) {
-                TextView tv3 = (TextView) rl.getChildAt(0);
-                tv3.setTextColor(colorSelect);
-            }
+            setChildTextColor(rl , colorSelect);
         }
-        // 上次 最后text变化view，和再次获取焦点不是同一个 view
-        if(lastFocusTextChangeView != null && rl != lastFocusTextChangeView){
-            int count = lastFocusTextChangeView.getChildCount();
-            if (count > 0) {
-                TextView tv2 = (TextView) lastFocusTextChangeView.getChildAt(0);
-                tv2.setTextColor(colorDefault);
-            }
+        // 上次选择的view
+        if(selectView != null && rl != selectView){
+            setChildTextColor(selectView , colorDefault);
         }
-        lastFocusTextChangeView = rl;
+        selectView = rl;
         focusView = rl;
+    }
+
+    // 设置 relative child的文本颜色
+    private void setChildTextColor(RelativeLayout rl , int textColor) {
+        int count = rl.getChildCount();
+        if (count > 0) {
+            TextView tv = (TextView) rl.getChildAt(0);
+            tv.setTextColor(textColor);
+        }
     }
 
     // v 是否属于 childViews
