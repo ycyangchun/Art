@@ -1,26 +1,15 @@
 package com.funs.appreciate.art.base;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.RelativeLayout;
-import android.widget.Scroller;
 
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
-
-import java.util.List;
 
 /**
  * Created by yc on 2017/6/14.
@@ -29,7 +18,6 @@ import java.util.List;
 
 public class BaseFragment extends Fragment {
 
-    AnimationEndListeners animationEndListeners;
     public  PictureFocusRelative fr;// content view
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,37 +46,4 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        Animation anim = null;
-        if(nextAnim != 0) {
-            anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    System.out.println("======= onAnimationStart ========>");
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    System.out.println("======= onAnimationEnd ========>");
-                    animationEndListeners.onAnimationEnd(animation);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-        }
-        return anim;
-    }
-
-    public interface AnimationEndListeners{
-        void onAnimationEnd(Animation animation);
-    }
-
-    public void setAnimationEndListeners(AnimationEndListeners animationEndListeners) {
-        this.animationEndListeners = animationEndListeners;
-    }
 }

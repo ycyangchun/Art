@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import com.funs.appreciate.art.ArtApp;
@@ -54,6 +56,8 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     private FragmentTransaction ft;//
     private BaseFragment currentFragment;// 当前 fragment
     private String layoutString;// 布局数据
+    private Animation leftIn, leftOut,rightIn, rightOut;// 动画
+    private FrameLayout currentFL , lastFL;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +67,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         ArtConfig.setMainActivity(this);
 
         tabFocusRelative = (TabFocusRelative) findViewById(R.id.focus_linear);
-        tabIndex = 0;//默认 0
-        lastTab = "";
+        initData();
 
         DaggerMainComponent.builder()
              .netComponent(ArtApp.get(this).getNetComponent())
@@ -72,8 +75,15 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
              .build().inject(this);
 
         mainPresenter.loadLayout();
+    }
 
-
+    private void initData() {
+        tabIndex = 0;//默认 0
+        lastTab = "";
+        leftIn = AnimationUtils.loadAnimation(this, R.anim.translate_left_in);
+        leftOut = AnimationUtils.loadAnimation(this, R.anim.translate_left_out);
+        rightIn = AnimationUtils.loadAnimation(this, R.anim.translate_right_in);
+        rightOut = AnimationUtils.loadAnimation(this, R.anim.translate_right_out);
     }
 
     // dispatchKeyEvent ↓↓↓↓↓↓↓
@@ -175,18 +185,12 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         lastTab = tab;
 
         fm = this.getSupportFragmentManager();
-        // 隐藏上一个
-        if(lastTabContainId != -1){
-            FrameLayout lastFrame = (FrameLayout) findViewById(lastTabContainId);
-            lastFrame.setVisibility(View.GONE);
-            ft = fm.beginTransaction();
-            final BaseFragment lastFragment = (BaseFragment) fm.findFragmentByTag(lastTabContainId+"_fgm");
-            ft.hide(lastFragment);
-            ft.commit();
-        }
-
-        // 显示当前的
+        // 显示当前
         currentTabContainId = getContainId(tab);
+        currentFL = (FrameLayout) findViewById(currentTabContainId);
+        if(lastTabContainId != -1)
+            lastFL = (FrameLayout) findViewById(lastTabContainId);
+
         currentFragment = (BaseFragment) fm.findFragmentByTag(currentTabContainId+"_fgm");
         if(currentFragment == null) {
             switch (tab) {
@@ -206,7 +210,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 case ArtConstants.mall:
                     break;
             }
-
             // 第一次添加
             ft = fm.beginTransaction();
             ft.add(currentTabContainId, currentFragment, currentTabContainId+"_fgm");
@@ -222,10 +225,28 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 MsgHelper.sendMessage(handler, ArtConstants.RIGHTSCROLLCREATE);
             }
         }
-        FrameLayout currentFrame = (FrameLayout) findViewById(currentTabContainId);
-        currentFrame.setVisibility(View.VISIBLE);
-        lastTabContainId = currentTabContainId;
+        currentFL.setVisibility(View.VISIBLE);
 
+
+        // 隐藏上一个
+        if(lastFL != null){
+            lastFL.setVisibility(View.GONE);
+            BaseFragment lastFragment = (BaseFragment) fm.findFragmentByTag(lastTabContainId+"_fgm");
+            ft = fm.beginTransaction();
+            ft.hide(lastFragment);
+            ft.commit();
+        }
+
+        if(lastFL != null) {
+//            currentFL.setVisibility(View.VISIBLE);
+//            lastFL.setVisibility(View.VISIBLE);
+//            currentFL.setAnimation(rightIn);
+//            lastFL.setAnimation(leftOut);
+
+        }
+
+        //
+        lastTabContainId = currentTabContainId;
     }
 
     // replace
