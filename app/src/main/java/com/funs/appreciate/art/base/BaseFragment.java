@@ -49,12 +49,6 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    // 设置默认 0 ，获取焦点
-    public void setIndexFocus(int index){
-        if(fr != null ){
-            fr.setIndexFocus(index);
-        }
-    }
 
     // 最后获取焦点view
     public void setLastFocus(){

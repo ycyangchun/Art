@@ -43,7 +43,6 @@ public class OilFragment extends BaseFragment implements  PictureFocusRelative.P
         fr.addViews(lms);
         fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
         fr.setmPictureFocusKeyEvent(this);
-//        fr.setIndexFocus(0);
     }
 
 

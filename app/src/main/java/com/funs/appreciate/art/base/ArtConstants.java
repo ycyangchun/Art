@@ -6,9 +6,10 @@ package com.funs.appreciate.art.base;
  */
 
 public interface ArtConstants {
-    int KEYTOP = 0;//上方向键
-    int KEYLEFT = 1;//左方向键
-    int KEYRIGHT = 2;//右方向键
+    int KEYTOP = 0;//上 方向键
+    int KEYLEFT = 1;//左 方向键
+    int KEYRIGHT = 2;//右 方向键
+    int RIGHTSCROLLCREATE = 3;// 右 滑动创建fragment时获取第一个焦点
 
     String recommends = "精品推荐";
     String oil = "油画";

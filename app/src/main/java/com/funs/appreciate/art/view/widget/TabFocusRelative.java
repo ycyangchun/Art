@@ -208,7 +208,7 @@ public class TabFocusRelative extends FocusRelative {
             public void run() {
                 lms.get(itemFocusIndex).getFocusView().requestFocus();
             }
-        },200);
+        },100);
     }
     public void setmAnimationFocusController() {
         mAnimationFocusController = new AnimFocusTabManager(getContext(), this);

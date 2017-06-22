@@ -159,11 +159,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         tabFocusRelative.setIndexFocus(tabIndex);
 
         // 切换界面
-        switchPage(listMainTab.get(tabIndex));
+        switchPage(listMainTab.get(tabIndex) , -1);
     }
 
     // 切换界面
-    private void switchPage(String tab) {
+    private void switchPage(String tab , int type) {
         if(tab.equals(lastTab)) return;
         lastTab = tab;
 
@@ -206,7 +206,9 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             ft = fm.beginTransaction();
             ft.add(currentTabContainId, currentFragment, currentTabContainId+"_fgm");
             ft.commit();
-            currentFragment.setIndexFocus(0);
+            if(type == ArtConstants.KEYRIGHT) { // 右 滑动创建fragment时获取第一个焦点
+                MsgHelper.sendMessageDelayed(handler, ArtConstants.RIGHTSCROLLCREATE, 100);
+            }
         } else {
             ft = fm.beginTransaction();
             ft.show(currentFragment);
@@ -266,15 +268,19 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 case ArtConstants.KEYRIGHT:
                     leftOrRight(ArtConstants.KEYRIGHT);
                     break;
-                case 3:
+                case ArtConstants.RIGHTSCROLLCREATE: //
+                    currentFragment.setLastFocus();
                     break;
             }
 
         }
         // 左右切换
         private void leftOrRight(int keyCode) {
+            if( ArtConstants.KEYLEFT == keyCode ){
+                currentFragment.setScroller();
+            }
             int key = tabFocusRelative.switchPageNext(keyCode, tabIndex);
-            switchPage(listMainTab.get(key));
+            switchPage(listMainTab.get(key) ,keyCode);
             tabFocusRelative.setTextColorByPageChange(key);
             currentFragment.setLastFocus();
         }
@@ -283,6 +289,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     @Override
     public void tabChangeListener(String tab) {
-        switchPage(tab);
+        switchPage(tab , -1);
     }
 }

@@ -169,15 +169,6 @@ public class PictureFocusRelative extends FocusRelative {
         }
         return penultimate;
     }
-    public void setIndexFocus(final int index){
-        this.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lms.get(index).getFocusView().requestFocus();
-            }
-        },300);
-    }
-
 
     public void setLastFocus(){
         if(lastFocusChangeView == null){
@@ -188,7 +179,7 @@ public class PictureFocusRelative extends FocusRelative {
             public void run() {
                 lastFocusChangeView.requestFocus();
             }
-        },200);
+        },100);
     }
 
     // 按键监听
