@@ -40,7 +40,7 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        intViewData();
+        System.out.println("===========onActivityCreated============>");
         fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
         fr.addViews(lms);
         fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
@@ -51,17 +51,22 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     public void setArguments(Bundle args) {
         super.setArguments(args);
         String lays = args.getString("layout");
+        System.out.println("===========setArguments============>"+lays);
         LayoutModel lm = new Gson().fromJson(lays, LayoutModel.class);
         List<LayoutModel.LayoutBean> list =  lm.getLayout();
-        for(int i = 0 ; i < list.size() ; i ++){
-            LayoutModel.LayoutBean lb = list.get(i);
-            PictureModel pm  = new PictureModel(lb, ArtConfig.getMainActivity());
-            lms.add(pm);
+        if(list == null) {
+            intViewData();// 测试
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                LayoutModel.LayoutBean lb = list.get(i);
+                PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
+                lms.add(pm);
+            }
         }
     }
 
     private void intViewData() {
-
+        mainActivity = ArtConfig.getMainActivity();
         PictureModel lm1  = new PictureModel(1,560,484,0,0,mainActivity);
         PictureModel lm2  = new PictureModel(2,560,200,1,0,mainActivity);
         PictureModel lm3  = new PictureModel(3,270,484,0,1,mainActivity);

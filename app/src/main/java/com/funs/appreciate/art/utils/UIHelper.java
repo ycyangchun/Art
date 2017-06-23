@@ -39,7 +39,7 @@ import java.lang.reflect.Field;
 
 public final class UIHelper {
 
-	private static float density = 1.0f;
+	private static float density = 2.0f;
 	
 	private static int statusBarHeight = 0;
 	
@@ -60,15 +60,6 @@ public final class UIHelper {
 	public static void initialize(Activity activity, boolean hLarge){
 		if(!initialized){
 			initialized = true;
-			getResolution(activity, hLarge);
-			measureResolutionZoomFactor();
-		}
-	}
-	public static void initialize(Activity activity, int sResolutionX, int sResolutionY, boolean hLarge){
-		if(!initialized){
-			initialized = true;
-			standardResolutionX = sResolutionX;
-			standardResolutionY = sResolutionY;
 			getResolution(activity, hLarge);
 			measureResolutionZoomFactor();
 		}

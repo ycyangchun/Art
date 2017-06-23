@@ -26,6 +26,7 @@ import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.MsgHelper;
+import com.funs.appreciate.art.utils.UIHelper;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
 
@@ -168,6 +169,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         tabFocusRelative.setTabSelect(this);
         tabFocusRelative.setIndexFocus(tabIndex);
 
+//        switchPage(listMainTab.get(tabIndex) , -1);
     }
 
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓

@@ -1,7 +1,10 @@
 package com.funs.appreciate.art;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+
+import com.funs.appreciate.art.base.BaseActivity;
 
 /**
  *
@@ -17,7 +20,7 @@ public class ArtConfig {
             Log.d(tag , msg);
     }
 
-    private static Activity mainActivity;
+    private static BaseActivity mainActivity;
 
     /**
      * 测试环境
@@ -52,11 +55,11 @@ public class ArtConfig {
 
     }
 
-    public static Activity getMainActivity() {
+    public static BaseActivity getMainActivity() {
         return mainActivity;
     }
 
-    public static void setMainActivity(Activity mainActivity) {
+    public static void setMainActivity(BaseActivity mainActivity) {
         ArtConfig.mainActivity = mainActivity;
     }
 }
