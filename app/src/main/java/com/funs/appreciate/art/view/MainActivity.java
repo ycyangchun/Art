@@ -1,6 +1,8 @@
 package com.funs.appreciate.art.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -26,7 +28,6 @@ import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.MsgHelper;
-import com.funs.appreciate.art.utils.UIHelper;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
 
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     private BaseFragment currentFragment;// 当前 fragment
     private String layoutString;// 布局数据
     private Animation leftIn, leftOut,rightIn, rightOut;// 动画
-    private FrameLayout currentFL , lastFL;
+    private FrameLayout currentFL , lastFL;// 当前fragment，上个fragment
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,13 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         mainPresenter.loadLayout();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //屏保
+        MsgHelper.sendMessageDelayed(handler, SCREENPROTECTION , 10 * 1000);
+    }
+
     private void initData() {
         tabIndex = 0;//默认 0
         lastTab = "";
@@ -91,6 +99,10 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
+            //屏保
+            handler.removeMessages(SCREENPROTECTION);
+            MsgHelper.sendMessageDelayed(handler, SCREENPROTECTION , 10 * 1000);
+
             int keyCode = event.getKeyCode();
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_LEFT:
@@ -285,6 +297,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     }
     //////////// MainContract.View ↑↑↑↑↑↑
 
+    final static int SCREENPROTECTION = 10; //屏保
     public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -301,6 +314,10 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                     break;
                 case ArtConstants.RIGHTSCROLLCREATE: //
                     currentFragment.setFocus();
+                    break;
+                case SCREENPROTECTION:
+                    startActivity(new Intent(MainActivity.this , ScreenProtectionActivity.class));
+                    handler.removeMessages(SCREENPROTECTION);
                     break;
             }
 

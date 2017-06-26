@@ -27,6 +27,11 @@
         <activity android:name=".view.MainActivity"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".view.ScreenProtectionActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"
+            />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -34,4 +39,8 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 屏保 -->
+    <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 </manifest>

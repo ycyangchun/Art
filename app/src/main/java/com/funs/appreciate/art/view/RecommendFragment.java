@@ -40,7 +40,6 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        System.out.println("===========onActivityCreated============>");
         fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
         fr.addViews(lms);
         fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
