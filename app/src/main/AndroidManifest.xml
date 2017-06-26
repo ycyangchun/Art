@@ -28,10 +28,15 @@
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"/>
 
+        <!-- 屏保 -->
         <activity android:name=".view.ScreenProtectionActivity"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"
             />
+        <!-- 专题 -->
+        <activity android:name=".view.SpecialActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -1,5 +1,6 @@
 package com.funs.appreciate.art.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -110,7 +111,7 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
          } else if("right".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT  , rl);
          } else if("center".equals(keyType)) {
-            System.out.println("======================  center ==>"+keyType);
+            startActivity(new Intent(mainActivity, SpecialActivity.class));
         }
     }
 
