@@ -1,5 +1,6 @@
 package com.funs.appreciate.art.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.RelativeLayout;
@@ -51,7 +52,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
         } else if("right".equals(keyType)) {
 
         } else if("center".equals(keyType)) {
-            System.out.println("======================  pictureListener ==>"+keyType);
+            startActivity(new Intent(this , BrowseActivity.class));
         }
     }
 
