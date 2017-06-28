@@ -11,6 +11,8 @@ public interface ArtConstants {
     int KEYRIGHT = 2;//右 方向键
     int RIGHTSCROLLCREATE = 3;// 右 滑动创建fragment时获取第一个焦点
 
+    int START_STATUS = 4;//开始
+
     String recommends = "精品推荐";
     String oil = "油画";
     String landscape = "山水画";
