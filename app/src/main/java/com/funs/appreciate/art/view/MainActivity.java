@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.ArtConfig;
@@ -119,7 +120,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                             bubbleFocusEvent(tabFocusRelative,false);
                             if (keyCode == KeyEvent.KEYCODE_BACK ) {// item按 (返回键) 导航获取焦点
                                 lastFocusStatus();
-                                return true;
+//                                return true;
                             }
                         } else {
 
@@ -128,7 +129,8 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
                     // 退出应用
                     if(keyCode == KeyEvent.KEYCODE_BACK){
-
+                        sps_intent.putExtra("screen_status", "remove");
+                        startService(sps_intent);
                     }
 
                     break;
@@ -140,9 +142,21 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     }
 
     // tab 最后焦点状态
-    private void lastFocusStatus() {
-        bubbleFocusEvent(tabFocusRelative,true);
-        tabFocusRelative.getLastFocusChangeView().requestFocus();
+    private boolean lastFocusStatus() {
+        if(tabFocusRelative != null) {
+            bubbleFocusEvent(tabFocusRelative, true);
+            try {
+                RelativeLayout rl = tabFocusRelative.getLastFocusChangeView();
+                if(rl != null){
+                    rl.requestFocus();
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 
 

@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
 import com.funs.appreciate.art.R;
-import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.utils.UIHelper;
 
 /**
@@ -19,7 +18,7 @@ import com.funs.appreciate.art.utils.UIHelper;
 
 public class ScreenProtectionActivity extends FragmentActivity{
 
-    PowerManager.WakeLock mWakeLock;
+    PowerManager.WakeLock wakeLock;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,20 +31,34 @@ public class ScreenProtectionActivity extends FragmentActivity{
                 .newKeyguardLock("KeyguardLock");
         lock.disableKeyguard();
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
-        System.out.println("=============== 锁屏 ===============>");
+        wakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
         setContentView(R.layout.activity_splash);
+        System.out.println("=============== 屏保 ===============>");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mWakeLock.acquire();
+        if ((wakeLock != null) && (wakeLock.isHeld() == false)) {
+            wakeLock.acquire();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mWakeLock.acquire();
+        if ((wakeLock != null) && (wakeLock.isHeld() == false)) {
+            wakeLock.acquire();
+        }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (wakeLock != null) {
+            wakeLock.release();
+            wakeLock = null;
+        }
+    }
+
 }

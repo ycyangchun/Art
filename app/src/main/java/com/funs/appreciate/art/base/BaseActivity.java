@@ -18,7 +18,7 @@ import com.funs.appreciate.art.utils.UIHelper;
 
 public class BaseActivity extends FragmentActivity {
 
-    private Intent sps_intent;
+    public Intent sps_intent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +49,19 @@ public class BaseActivity extends FragmentActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            sps_intent.putExtra("screen_status", "start");
-            startService(sps_intent);
+            int keyCode = event.getKeyCode();
+            if(keyCode != KeyEvent.KEYCODE_BACK) {
+                sps_intent.putExtra("screen_status", "start");
+                startService(sps_intent);
+            }
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        sps_intent.putExtra("screen_status","remove");
+//        startService(sps_intent);
     }
 }

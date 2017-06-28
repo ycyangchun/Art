@@ -1,6 +1,5 @@
 package com.funs.appreciate.art.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -36,7 +35,7 @@ public class ScreenProtectionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.println(" === > onCreate ");
+        System.out.println(" = Service == > onCreate ");
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -59,13 +58,16 @@ public class ScreenProtectionService extends Service {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        System.out.println(" === > onStartCommand " + flags + " " + startId +" "+intent.getStringExtra("screen_status"));
-        String status = intent.getStringExtra("screen_status");
-        if( status != null ){
-            if("start".equals(status)){
-                UtilTimer.timerStart();
-            } else if("remove".equals(status)){
-                UtilTimer.timerRemove();
+        if(intent != null) {
+            System.out.println(" == Service = > onStartCommand " + flags + " " + startId + " " + intent.getStringExtra("screen_status"));
+            String status = intent.getStringExtra("screen_status");
+            if (status != null) {
+                if ("start".equals(status)) {
+                    UtilTimer.timerStart();
+                } else if ("remove".equals(status)) {
+                    UtilTimer.timerRemove();
+                    stopSelf();
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -76,6 +78,6 @@ public class ScreenProtectionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println(" === > onDestroy ");
+        System.out.println(" == Service = > onDestroy ");
     }
 }
