@@ -55,7 +55,7 @@ public class OilFragment extends BaseFragment implements  PictureFocusRelative.P
         PictureModel lm5  = new PictureModel(5,270,484,0,4,mainActivity);
         PictureModel lm6  = new PictureModel(6,270,200,5,4,mainActivity);
         PictureModel lm7  = new PictureModel(7,270,484,0,5,mainActivity);
-        PictureModel lm8  = new PictureModel(8,270,484,0,6,mainActivity);
+        PictureModel lm8  = new PictureModel(8,270,484,0,7,mainActivity);
         PictureModel lm9  = new PictureModel(9,270,200,8,5,mainActivity);
         PictureModel lm10  = new PictureModel(10,270,484,0,8,mainActivity);
         PictureModel lm11  = new PictureModel(11,270,200,10,8,mainActivity);

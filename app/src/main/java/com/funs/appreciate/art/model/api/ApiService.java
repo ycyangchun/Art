@@ -23,5 +23,5 @@ public interface ApiService {
      * 3、获取栏目列表和第一个栏目的布局、内容
      */
     @POST("column")
-    Observable<String> getColumnList(@Query("m") String getColumnList);
+    Observable<String> getColumnList(@Query("m") String getColumnList , @Query("columnid") String columnId);
 }

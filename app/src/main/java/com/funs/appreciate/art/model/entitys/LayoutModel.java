@@ -262,4 +262,16 @@ public class LayoutModel {
         }
         return names;
     }
+
+    public List<String> getColumnIds(){
+        List<String> names = new ArrayList<>();
+        names.clear();
+        column = this.getColumn();
+        if(column != null){
+            for( ColumnBean cb : column){
+                names.add(cb.getId());
+            }
+        }
+        return names;
+    }
 }

@@ -23,9 +23,8 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void loadLayout() {
-
-        apiService.getColumnList("getColumnList")
+    public void loadLayout(String m , String columnId) {
+        apiService.getColumnList(m,columnId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<String>() {

@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.di.components.DaggerScreenProtectionComponent;
-import com.funs.appreciate.art.di.components.DaggerSplashComponent;
 import com.funs.appreciate.art.di.modules.SplashModule;
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.presenter.SplashContract;
@@ -35,7 +34,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     PowerManager.WakeLock wakeLock;
     ImageView splash_iv;
     String urls[];
-    ScreenProtectionActivity instance;
+    Context instance;
     static int picIndex;
     int duration;
 
@@ -61,7 +60,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         setContentView(R.layout.activity_splash);
         splash_iv = (ImageView) findViewById(R.id.splash_iv);
         findViewById(R.id.count_down_tv).setVisibility(View.GONE);
-        instance = this;
+        instance = this.getApplicationContext();
         System.out.println("=============== 屏保 ===============>");
         DaggerScreenProtectionComponent.builder()
                 .netComponent(ArtApp.get(this).getNetComponent())

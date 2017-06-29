@@ -4,14 +4,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.funs.appreciate.art.ArtApp;
@@ -19,7 +18,6 @@ import com.funs.appreciate.art.ArtConfig;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
 import com.funs.appreciate.art.base.BaseActivity;
-import com.funs.appreciate.art.base.BaseFragment;
 import com.funs.appreciate.art.di.components.DaggerMainComponent;
 import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
@@ -47,19 +45,12 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     private TabFocusRelative tabFocusRelative;// tab 布局
     private List<PictureModel> lpms = new ArrayList<>();// tab model数据
-    private int currentTabContainId  = -1 ;//当前选择tab ContainId
-    private int lastTabContainId = -1;//上次选择tab ContainId
     private int tabIndex ; //默认 tab index
     private String lastTab;//上次显示 tab
-    List<String> listMainTab;// tab 数据
-    private FragmentManager fm;//
-    private FragmentTransaction ft;//
-    private BaseFragment currentFragment;// 当前 fragment
-    private String layoutString;// 布局数据
-    private Animation leftIn, leftOut,rightIn, rightOut;// 动画
-    private FrameLayout currentFL , lastFL;// 当前fragment，上个fragment
+    List<String> listMainTab , listMainIds;// tab 数据
 
-
+    ViewPager contentVp;
+    MyPagerAdapter myPagerAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +60,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         ArtConfig.setMainActivity(this);
 
         tabFocusRelative = (TabFocusRelative) findViewById(R.id.focus_linear);
+        contentVp = (ViewPager) findViewById(R.id.main_fragment);
         initData();
 
         DaggerMainComponent.builder()
@@ -76,7 +68,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
              .mainModule(new MainModule(this))
              .build().inject(this);
 
-        mainPresenter.loadLayout();
+        mainPresenter.loadLayout("getColumnList","");
     }
 
     @Override
@@ -87,10 +79,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     private void initData() {
         tabIndex = 0;//默认 0
         lastTab = "";
-        leftIn = AnimationUtils.loadAnimation(this, R.anim.translate_left_in);
-        leftOut = AnimationUtils.loadAnimation(this, R.anim.translate_left_out);
-        rightIn = AnimationUtils.loadAnimation(this, R.anim.translate_right_in);
-        rightOut = AnimationUtils.loadAnimation(this, R.anim.translate_right_out);
     }
 
 
@@ -170,9 +158,9 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     @Override
     public void loadLayoutSuccess(String lay) {
         if(lay != null) {
-            layoutString = lay;
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
             listMainTab = lm.getColumnNames();
+            listMainIds = lm.getColumnIds();
             int section = 80;
             for (int i = 0; i < listMainTab.size(); i++) {
                 int len = listMainTab.get(i).length();
@@ -180,15 +168,23 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 lpms.add(pm);
             }
 
+            //tab
             tabFocusRelative.addViews(lpms);
             tabFocusRelative.setAnimation(R.anim.scale_small, R.anim.scale_big);
             tabFocusRelative.setTabSelect(this);
             tabFocusRelative.setIndexFocus(tabIndex);
 
-//        switchPage(listMainTab.get(tabIndex) , -1);
+            //content
+            myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
+            contentVp.setAdapter(myPagerAdapter);
         }
     }
 
+    @Override
+    public void loadLayoutFailed(Throwable throwable) {
+
+    }
+    //////////// MainContract.View ↑↑↑↑↑↑
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
     //tab 切换
     @Override
@@ -202,87 +198,71 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         System.out.println("======= tab ======> "+tab+"  =  "+ tabIndex +" = "+lastTab);
         if(tab.equals(lastTab)) return;
         lastTab = tab;
+        contentVp.setCurrentItem(tabIndex);
 
-        fm = this.getSupportFragmentManager();
-        // 显示当前
-        currentTabContainId = getContainId(tab);
-        currentFL = (FrameLayout) findViewById(currentTabContainId);
-        if(lastTabContainId != -1)
-            lastFL = (FrameLayout) findViewById(lastTabContainId);
-
-        currentFragment = (BaseFragment) fm.findFragmentByTag(currentTabContainId+"_fgm");
-        if(currentFragment == null) {
-            switch (tab) {
-                case ArtConstants.recommends:
-                    currentFragment = new RecommendFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("layout",layoutString);
-                    currentFragment.setArguments(bundle);
-                    break;
-                case ArtConstants.oil:
-                    currentFragment = new OilFragment();
-                    break;
-                case ArtConstants.landscape:
-                    currentFragment = new OilFragment();
-                    break;
-                case ArtConstants.migratory:
-                    currentFragment = new OilFragment();
-                    break;
-                case ArtConstants.mall:
-                    currentFragment = new OilFragment();
-                    break;
-            }
-            // 第一次添加
-            ft = fm.beginTransaction();
-            ft.add(currentTabContainId, currentFragment, currentTabContainId+"_fgm");
-            ft.commit();
-            if(type == ArtConstants.KEYRIGHT) { // 右 滑动创建fragment时获取第一个焦点
-                MsgHelper.sendMessageDelayed(handler, ArtConstants.RIGHTSCROLLCREATE, 100);
-            }
-        } else {
-            ft = fm.beginTransaction();
-            ft.show(currentFragment);
-            ft.commit();
-            if(type != -1) { // 左右切换 ，回复上次焦点
-                MsgHelper.sendMessage(handler, ArtConstants.RIGHTSCROLLCREATE);
-            }
-        }
-        currentFL.setVisibility(View.VISIBLE);
-
-
-        // 隐藏上一个
-        if(lastFL != null){
-            lastFL.setVisibility(View.GONE);
-            BaseFragment lastFragment = (BaseFragment) fm.findFragmentByTag(lastTabContainId+"_fgm");
-            ft = fm.beginTransaction();
-            ft.hide(lastFragment);
-            ft.commit();
-        }
-
-        if(lastFL != null) {
-//            currentFL.setVisibility(View.VISIBLE);
-//            lastFL.setVisibility(View.VISIBLE);
-//            currentFL.setAnimation(rightIn);
-//            lastFL.setAnimation(leftOut);
-
-        }
-
-        //
-        lastTabContainId = currentTabContainId;
     }
 
-    // replace
-    private int getContainId(String  tab ){
-        int container_id = 0;
-        switch(tab){
-            case ArtConstants.recommends: container_id = R.id.frameLayout1; break;
-            case ArtConstants.oil:        container_id = R.id.frameLayout2; break;
-            case ArtConstants.landscape:  container_id = R.id.frameLayout3; break;
-            case ArtConstants.migratory:  container_id = R.id.frameLayout4; break;
-            case ArtConstants.mall:       container_id = R.id.frameLayout5; break;
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        return container_id;
+        @Override
+        public int getCount() {
+            return listMainTab.size();
+        }
+
+        @Override
+        public Fragment getItem(int position) {//只会在新建 Fragment 时执行一次
+            Fragment f = null;
+            String tab = listMainTab.get(position);
+            switch(tab){
+            case ArtConstants.recommends:
+                f = new RecommendFragment();
+                break;
+            case ArtConstants.oil:
+                f = new RecommendFragment();
+                break;
+            case ArtConstants.landscape:
+                f = new RecommendFragment();
+                break;
+            case ArtConstants.migratory:
+                f = new RecommendFragment();
+                break;
+            case ArtConstants.mall:
+                f = new RecommendFragment();
+                break;
+        }
+            Bundle bundle = new Bundle();
+            bundle.putString("columnId",listMainIds.get(position));
+            f.setArguments(bundle);
+            return f;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+            //FragmentStatePagerAdapter 在会在因 POSITION_NONE
+            // 触发调用的 destroyItem() 中
+            // 真正的释放资源，重新建立一个新的 Fragment
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return super.isViewFromObject(view, object);
+        }
+
+
     }
 
     // frameLayout 处理焦点
@@ -299,11 +279,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 v.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);//本身进行处理
         }
     }
-    @Override
-    public void loadLayoutFailed(Throwable throwable) {
 
-    }
-    //////////// MainContract.View ↑↑↑↑↑↑
 
     public Handler handler = new Handler() {
         @Override
@@ -319,17 +295,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 case ArtConstants.KEYRIGHT:
                     leftOrRight(ArtConstants.KEYRIGHT);
                     break;
-                case ArtConstants.RIGHTSCROLLCREATE: //
-                    currentFragment.setFocus();
-                    break;
             }
 
         }
         // 左右切换
         private void leftOrRight(int keyCode) {
-            if( ArtConstants.KEYLEFT == keyCode ){
-                currentFragment.setScroller();
-            }
             int key = tabFocusRelative.switchPageNext(keyCode, tabIndex);
             switchPage(listMainTab.get(key) ,keyCode);
             tabFocusRelative.setTextColorByPageChange(key);

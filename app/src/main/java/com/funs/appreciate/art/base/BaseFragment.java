@@ -32,10 +32,10 @@ public class BaseFragment extends Fragment {
 
     // 再次显示时位置不在 0,0
     public void setScroller(){
-        if( getView() != null) {
-            HorizontalScrollView horizontalScrollView = (HorizontalScrollView) getView().findViewById(R.id.scroll_view);
-            horizontalScrollView.smoothScrollTo(0, 0);
-        }
+//        if( getView() != null) {
+//            HorizontalScrollView horizontalScrollView = (HorizontalScrollView) getView().findViewById(R.id.scroll_view);
+//            horizontalScrollView.smoothScrollTo(0, 0);
+//        }
     }
 
 

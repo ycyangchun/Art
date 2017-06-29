@@ -9,12 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.ArtConfig;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
 import com.funs.appreciate.art.base.BaseFragment;
+import com.funs.appreciate.art.di.components.DaggerMainComponent;
+import com.funs.appreciate.art.di.components.DaggerRecommendFragmentComponent;
+import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
+import com.funs.appreciate.art.presenter.MainContract;
+import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
@@ -22,15 +28,21 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by yc on 2017/6/15.
  *  今日推荐
  */
 
-public class RecommendFragment extends BaseFragment implements  PictureFocusRelative.PictureFocusKeyEvent{
+public class RecommendFragment extends BaseFragment implements  PictureFocusRelative.PictureFocusKeyEvent ,MainContract.View{
     List<PictureModel> lms = new ArrayList<>();
     View view;
     FragmentActivity mainActivity;
+    String columnId;
+
+    @Inject
+    MainPresenter mainPresenter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainActivity = getActivity();
@@ -41,63 +53,54 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
-        fr.addViews(lms);
-        fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
-        fr.setmPictureFocusKeyEvent(this);
+        DaggerRecommendFragmentComponent.builder()
+                .netComponent(ArtApp.get(mainActivity).getNetComponent())
+                .mainModule(new MainModule(this))
+                .build().inject(this);
+
+        mainPresenter.loadLayout("getLayoutAndContent",columnId);
     }
 
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        String lays = args.getString("layout");
-        System.out.println("===========setArguments============>"+lays);
-        LayoutModel lm = new Gson().fromJson(lays, LayoutModel.class);
-        List<LayoutModel.LayoutBean> list =  lm.getLayout();
-        if(list == null) {
-            intViewData();// 测试
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                LayoutModel.LayoutBean lb = list.get(i);
-                PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
-                lms.add(pm);
+        columnId = args.getString("columnId");
+        System.out.println("===========setArguments============>"+columnId);
+    }
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void loadLayoutSuccess(String lay) {
+        if(lay != null) {
+            LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
+            List<LayoutModel.LayoutBean> list =  lm.getLayout();
+            if( list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    LayoutModel.LayoutBean lb = list.get(i);
+                    PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
+                    lms.add(pm);
+                }
+                fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
+                fr.addViews(lms);
+                fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
+                fr.setmPictureFocusKeyEvent(this);
             }
         }
     }
 
-    private void intViewData() {
-        mainActivity = ArtConfig.getMainActivity();
-        PictureModel lm1  = new PictureModel(1,560,484,0,0,mainActivity);
-        PictureModel lm2  = new PictureModel(2,560,200,1,0,mainActivity);
-        PictureModel lm3  = new PictureModel(3,270,484,0,1,mainActivity);
-        PictureModel lm4  = new PictureModel(4,560,200,3,1,mainActivity);
-        PictureModel lm5  = new PictureModel(5,270,484,0,3,mainActivity);
-        PictureModel lm6  = new PictureModel(6,270,484,0,5,mainActivity);
-        PictureModel lm7  = new PictureModel(7,560,200,6,5,mainActivity);
-        PictureModel lm8  = new PictureModel(8,270,484,0,6,mainActivity);
-        PictureModel lm9  = new PictureModel(9,270,484,0,8,mainActivity);
-        PictureModel lm10  = new PictureModel(10,560,200,9,8,mainActivity);
-        PictureModel lm11  = new PictureModel(11,270,484,0,9,mainActivity);
-        PictureModel lm12  = new PictureModel(12,270,484,0,11,mainActivity);
-        PictureModel lm13  = new PictureModel(13,560,200,12,11,mainActivity);
-        PictureModel lm14  = new PictureModel(14,270,484,0,12,mainActivity);
-
-        lms.add(lm1);
-        lms.add(lm2);
-        lms.add(lm3);
-        lms.add(lm4);
-        lms.add(lm5);
-        lms.add(lm6);
-        lms.add(lm7);
-        lms.add(lm8);
-        lms.add(lm9);
-        lms.add(lm10);
-        lms.add(lm11);
-        lms.add(lm12);
-        lms.add(lm13);
-        lms.add(lm14);
+    @Override
+    public void loadLayoutFailed(Throwable throwable) {
 
     }
+
 
     /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 

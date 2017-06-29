@@ -6,13 +6,13 @@
     <RelativeLayout
         android:id="@+id/special_rl"
         android:layout_width="match_parent"
-        android:layout_height="400px">
+        android:layout_height="200dp">
 
     </RelativeLayout>
 
     <include
-        android:layout_marginRight="60px"
-        android:layout_marginLeft="60px"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         layout="@layout/activity_focus_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

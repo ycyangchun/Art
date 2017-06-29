@@ -10,7 +10,7 @@ import com.funs.appreciate.art.base.BaseView;
 
 public interface MainContract {
     interface Presenter extends BasePresenter {
-        void loadLayout();
+        void loadLayout(String m , String columnId);
     }
 
     interface View extends BaseView {
