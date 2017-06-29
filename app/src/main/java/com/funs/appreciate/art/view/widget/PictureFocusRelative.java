@@ -8,10 +8,13 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.funs.appreciate.art.R;
+import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.utils.AnimFocusContentManager;
 import com.funs.appreciate.art.utils.AnimFocusTabManager;
@@ -68,24 +71,34 @@ public class PictureFocusRelative extends FocusRelative {
 
                 lp.setMargins(marginW, marginH, marginW, marginH);
 
-                ///////////////
-                TextView tv = new TextView(mContext);
-                tv.setFocusable(false);
-                tv.setId(lm.getId()+ 1000);
-                tv.setText(lm.getId()+"");
-                tv.setTextSize(30f);
-                tv.setGravity(Gravity.CENTER);
-                tv.setTextColor(Color.parseColor("#E6000000"));
-                if( i % 2 == 0) {
-                    tv.setBackgroundColor(Color.parseColor("#FF86C739"));
-                } else {
-                    tv.setBackgroundColor(Color.parseColor("#FFCCCCCC"));
-                }
                 LayoutParams lpc = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
 //                lpc.setMargins(6, 6, 6, 6);
                 final RelativeLayout rl = lm.getRootView();
                 rl.setId(lm.getId());
-                rl.addView(tv,lpc);
+                ///////////////
+                if(lm.getContentBean() == null) {
+                    TextView tv = new TextView(mContext);
+                    tv.setFocusable(false);
+                    tv.setId(lm.getId() + 1000);
+                    tv.setText(lm.getId() + "");
+                    tv.setTextSize(30f);
+                    tv.setGravity(Gravity.CENTER);
+                    tv.setTextColor(Color.parseColor("#E6000000"));
+                    if (i % 2 == 0) {
+                        tv.setBackgroundColor(Color.parseColor("#FF86C739"));
+                    } else {
+                        tv.setBackgroundColor(Color.parseColor("#FFCCCCCC"));
+                    }
+                    rl.addView(tv,lpc);
+                } else {
+                    ImageView iv = new ImageView(mContext);
+                    iv.setFocusable(false);
+                    iv.setId(lm.getId() + 1000);
+                    iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    LayoutModel.LayoutBean.ContentBean cb = lm.getContentBean().get(0);
+                    Glide.with(mContext).load(cb.getSurfaceimage()).into(iv);
+                    rl.addView(iv,lpc);
+                }
                 ///////////////
                 // 阴影
                 StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(), null ,

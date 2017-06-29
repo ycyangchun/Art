@@ -1,5 +1,6 @@
 package com.funs.appreciate.art.model.entitys;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -248,5 +249,17 @@ public class LayoutModel {
         public void setId(String id) {
             this.id = id;
         }
+    }
+
+    public List<String> getColumnNames(){
+        List<String> names = new ArrayList<>();
+        names.clear();
+        column = this.getColumn();
+        if(column != null){
+            for( ColumnBean cb : column){
+                names.add(cb.getName());
+            }
+        }
+        return names;
     }
 }

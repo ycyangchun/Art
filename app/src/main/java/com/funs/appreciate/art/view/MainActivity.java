@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 //                            System.out.println("======= 焦点在item =======>");
                             bubbleFocusEvent(tabFocusRelative,false);
                             if (keyCode == KeyEvent.KEYCODE_BACK ) {// item按 (返回键) 导航获取焦点
-                                lastFocusStatus();
+                                return lastFocusStatus();
 //                                return true;
                             }
                         } else {
@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -173,27 +173,24 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     @Override
     public void loadLayoutSuccess(String lay) {
-        //////////////////////////////////
         if(lay != null) {
             layoutString = lay;
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
-        }
-        //////////////////////////////////
-        String mainTab[] = new  String[]{ "精品推荐" , "油画" };//,"山水画" ,"候鸟摄影" ,"精品商城"};
-        listMainTab = Arrays.asList(mainTab);
-        int section = 80;
-        for(int i = 0; i<  listMainTab.size() ;i++){
-            int len = listMainTab.get(i).length();
-            PictureModel pm = new PictureModel( i+1 , len * section , 100 , mainTab[i], i  ,this);
-            lpms.add(pm);
-        }
-        
-        tabFocusRelative.addViews(lpms);
-        tabFocusRelative.setAnimation(R.anim.scale_small, R.anim.scale_big);
-        tabFocusRelative.setTabSelect(this);
-        tabFocusRelative.setIndexFocus(tabIndex);
+            listMainTab = lm.getColumnNames();
+            int section = 80;
+            for (int i = 0; i < listMainTab.size(); i++) {
+                int len = listMainTab.get(i).length();
+                PictureModel pm = new PictureModel(i + 1, len * section, 100, listMainTab.get(i), i, this);
+                lpms.add(pm);
+            }
+
+            tabFocusRelative.addViews(lpms);
+            tabFocusRelative.setAnimation(R.anim.scale_small, R.anim.scale_big);
+            tabFocusRelative.setTabSelect(this);
+            tabFocusRelative.setIndexFocus(tabIndex);
 
 //        switchPage(listMainTab.get(tabIndex) , -1);
+        }
     }
 
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
@@ -230,10 +227,13 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                     currentFragment = new OilFragment();
                     break;
                 case ArtConstants.landscape:
+                    currentFragment = new OilFragment();
                     break;
                 case ArtConstants.migratory:
+                    currentFragment = new OilFragment();
                     break;
                 case ArtConstants.mall:
+                    currentFragment = new OilFragment();
                     break;
             }
             // 第一次添加

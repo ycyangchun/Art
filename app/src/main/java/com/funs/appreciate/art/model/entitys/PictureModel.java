@@ -3,6 +3,8 @@ package com.funs.appreciate.art.model.entitys;
 import android.content.Context;
 import android.widget.RelativeLayout;
 
+import java.util.List;
+
 /**
  * Created by yc on 2017/6/12.
  */
@@ -20,6 +22,8 @@ public class PictureModel {
     private String columnid;
     private int topid ;
 
+    private List<LayoutModel.LayoutBean.ContentBean> contentBean;
+
     public RelativeLayout getRootView() {
         return mRootView;
     }
@@ -29,7 +33,7 @@ public class PictureModel {
     }
 
     public PictureModel(LayoutModel.LayoutBean lb, Context mContext) {
-        this.id = Integer.parseInt(lb.getId()) * 1000 ;
+        this.id = Integer.parseInt(lb.getId())  ;
         this.width = Integer.parseInt(lb.getWidth());
         this.height = Integer.parseInt(lb.getHeight());
         Object ot = lb.getTopid();
@@ -37,8 +41,9 @@ public class PictureModel {
         int it  = 0, il = 0;
         if(ot != null && ot instanceof  String)  it = Integer.parseInt((String) ot);
         if(ol != null && ol instanceof  String)  il = Integer.parseInt((String) ol);
-        this.topid = it * 1000;
-        this.leftid = il * 1000;
+        this.topid = it ;
+        this.leftid = il ;
+        this.contentBean = lb.getContent();
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(this.id);
@@ -118,5 +123,9 @@ public class PictureModel {
 
     public void setTypeRrc(String typeRrc) {
         this.typeRrc = typeRrc;
+    }
+
+    public List<LayoutModel.LayoutBean.ContentBean> getContentBean() {
+        return contentBean;
     }
 }

@@ -13,10 +13,10 @@ public interface ArtConstants {
 
     int START_STATUS = 4;//开始
 
-    String recommends = "精品推荐";
+    String recommends = "今日推荐";
     String oil = "油画";
     String landscape = "山水画";
-    String migratory  = "候鸟摄影";
+    String migratory  = "候鸟旅游";
     String mall = "精品商城";
 
 }
