@@ -1,6 +1,8 @@
 package com.funs.appreciate.art.model.api;
 
 
+import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
+
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -15,7 +17,7 @@ public interface ApiService {
      * 获取待机屏保信息 type = 1
      */
     @POST("appconfig")
-    Observable<String> getAppConfig(@Query("m") String getColumnList , @Query("type") String type);
+    Observable<SplashPictureEntity> getAppConfig(@Query("m") String getAppConfig , @Query("type") String type);
 
     /**
      * 3、获取栏目列表和第一个栏目的布局、内容

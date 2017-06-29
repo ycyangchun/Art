@@ -35,8 +35,8 @@ public class PictureModel {
         Object ot = lb.getTopid();
         Object ol = lb.getLeftid();
         int it  = 0, il = 0;
-        if(!ot.equals(null) && ot instanceof  String)  it = Integer.parseInt((String) ot);
-        if(!ol.equals(null) && ol instanceof  String)  il = Integer.parseInt((String) ol);
+        if(ot != null && ot instanceof  String)  it = Integer.parseInt((String) ot);
+        if(ol != null && ol instanceof  String)  il = Integer.parseInt((String) ol);
         this.topid = it * 1000;
         this.leftid = il * 1000;
         // 添加root
