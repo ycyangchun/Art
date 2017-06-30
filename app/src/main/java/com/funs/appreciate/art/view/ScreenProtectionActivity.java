@@ -18,9 +18,12 @@ import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.di.components.DaggerScreenProtectionComponent;
 import com.funs.appreciate.art.di.modules.SplashModule;
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
+import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
+import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.UIHelper;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
@@ -107,8 +110,22 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     }
 
     @Override
-    public void loadSplashSuccess(SplashPictureEntity splash) {
-        SplashPictureEntity.ConfigBean  cb = splash.getConfig();
+    public void loadSplashSuccess(String splash) {
+        ArtResourceUtils.setScreenRes(splash);
+        loadData(splash);
+    }
+
+    @Override
+    public void loadSplashFailed(Throwable throwable) {
+        if(throwable instanceof NoNetworkException){
+            String splash = ArtResourceUtils.getSplashRes();
+            if(splash != null)
+                loadData(splash);
+        }
+    }
+    private void loadData(String splash) {
+        SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
+        SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
         if(picUrl.contains(";")){
             urls = picUrl.split(";");
@@ -132,10 +149,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         }
     }
 
-    @Override
-    public void loadSplashFailed(Throwable throwable) {
 
-    }
     public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

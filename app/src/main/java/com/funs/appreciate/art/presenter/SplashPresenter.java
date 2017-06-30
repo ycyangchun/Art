@@ -30,14 +30,10 @@ public class SplashPresenter implements  SplashContract.Presenter{
         apiService.getAppConfig("getAppConfig",type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<SplashPictureEntity>() {
+                .subscribe(new Action1<String>() {
                     @Override
-                    public void call(SplashPictureEntity s) {
-                       if("1".equals(s.getStatus())) {
-                           view.loadSplashSuccess(s);
-                       } else {
-                           view.loadSplashFailed(new Throwable(" 启动图异常"));
-                       }
+                    public void call(String s) {
+                        view.loadSplashSuccess(s);
                     }
                 }, new Action1<Throwable>() {
                     @Override

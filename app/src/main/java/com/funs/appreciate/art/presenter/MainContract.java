@@ -9,6 +9,8 @@ import com.funs.appreciate.art.base.BaseView;
  */
 
 public interface MainContract {
+    int TYPELAYOUT = 0;
+    int TYPECONTENT = 1;
     interface Presenter extends BasePresenter {
         void loadLayout(String m , String columnId);
         void loadContent(String m, String id , String type);
@@ -17,6 +19,6 @@ public interface MainContract {
     interface View extends BaseView {
         void loadLayoutSuccess(String lay);
         void loadContentSuccess(String content , String type);
-        void loadLayoutFailed(Throwable throwable);
+        void loadLayoutFailed(Throwable throwable , int type);
     }
 }

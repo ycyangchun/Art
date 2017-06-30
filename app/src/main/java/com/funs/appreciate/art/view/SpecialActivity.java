@@ -124,7 +124,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
     }
 
     @Override
-    public void loadLayoutFailed(Throwable throwable) {
+    public void loadLayoutFailed(Throwable throwable , int type) {
 
     }
 }

@@ -1,5 +1,6 @@
 package com.funs.appreciate.art.view;
 
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,8 +15,11 @@ import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.di.components.DaggerSplashComponent;
 import com.funs.appreciate.art.di.modules.SplashModule;
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
+import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
+import com.funs.appreciate.art.utils.ArtResourceUtils;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
@@ -57,8 +61,22 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
     @Override
-    public void loadSplashSuccess(SplashPictureEntity splash) {
-        SplashPictureEntity.ConfigBean  cb = splash.getConfig();
+    public void loadSplashSuccess(String splash) {
+        ArtResourceUtils.setSplashRes(splash);
+        loadData(splash);
+    }
+
+    @Override
+    public void loadSplashFailed(Throwable throwable) {
+        if(throwable instanceof NoNetworkException){
+            String splash = ArtResourceUtils.getSplashRes();
+            if(splash != null)
+                loadData(splash);
+        }
+    }
+    private void loadData(String splash) {
+        SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
+        SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
         if(picUrl.contains(";")){
 
@@ -90,8 +108,5 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         }
     }
 
-    @Override
-    public void loadSplashFailed(Throwable throwable) {
 
-    }
 }

@@ -15,7 +15,7 @@ public interface SplashContract {
         }
 
         interface View extends BaseView{
-            void loadSplashSuccess(SplashPictureEntity splash);
+            void loadSplashSuccess(String splash);
             void loadSplashFailed(Throwable throwable);
         }
 }

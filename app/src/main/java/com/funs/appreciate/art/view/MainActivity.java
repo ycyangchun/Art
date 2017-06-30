@@ -22,8 +22,10 @@ import com.funs.appreciate.art.di.components.DaggerMainComponent;
 import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
+import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
+import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
@@ -157,6 +159,27 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
     @Override
     public void loadLayoutSuccess(String lay) {
+        ArtResourceUtils.setLayoutRes(lay, "main");
+        loadData(lay);
+    }
+
+
+
+    @Override
+    public void loadLayoutFailed(Throwable throwable ,int type) {
+        if(throwable instanceof NoNetworkException){
+            String lay = ArtResourceUtils.getLayoutRes("main");
+            if(lay != null)
+                loadData(lay);
+        }
+    }
+
+    @Override
+    public void loadContentSuccess(String content , String type) {
+
+    }
+
+    private void loadData(String lay) {
         if(lay != null) {
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
             listMainTab = lm.getColumnNames();
@@ -180,17 +203,6 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             contentVp.setOffscreenPageLimit(listMainTab.size());
         }
     }
-
-    @Override
-    public void loadLayoutFailed(Throwable throwable) {
-
-    }
-
-    @Override
-    public void loadContentSuccess(String content , String type) {
-
-    }
-
     //////////// MainContract.View ↑↑↑↑↑↑
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
     //tab 切换

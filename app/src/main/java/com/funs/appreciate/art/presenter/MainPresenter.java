@@ -8,6 +8,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static com.funs.appreciate.art.presenter.MainContract.TYPECONTENT;
+import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
+
 /**
  * Created by yc on 2017/6/15.
  */
@@ -35,7 +38,7 @@ public class MainPresenter implements MainContract.Presenter {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        view.loadLayoutFailed(throwable);
+                        view.loadLayoutFailed(throwable , TYPELAYOUT);
                     }
                 });
     }
@@ -53,7 +56,7 @@ public class MainPresenter implements MainContract.Presenter {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
+                        view.loadLayoutFailed(throwable , TYPECONTENT);
                     }
                 });
     }

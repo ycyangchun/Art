@@ -17,7 +17,7 @@ public interface ApiService {
      *,2，获取待机屏保信息 type = 1
      */
     @POST("appconfig")
-    Observable<SplashPictureEntity> getAppConfig(@Query("m") String getAppConfig , @Query("type") String type);
+    Observable<String> getAppConfig(@Query("m") String getAppConfig , @Query("type") String type);
 
     /**
      * 3、获取栏目列表和第一个栏目的布局、内容  m=getColumnList

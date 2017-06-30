@@ -18,8 +18,10 @@ import com.funs.appreciate.art.di.components.DaggerRecommendFragmentComponent;
 import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
+import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
+import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
 
 /**
  * Created by yc on 2017/6/15.
@@ -78,26 +82,24 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
 
     @Override
     public void loadLayoutSuccess(String lay) {
-        if(lay != null) {
-            LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
-            List<LayoutModel.LayoutBean> list =  lm.getLayout();
-            if( list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    LayoutModel.LayoutBean lb = list.get(i);
-                    PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
-                    lms.add(pm);
-                }
-                fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
-                fr.addViews(lms);
-                fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
-                fr.setmPictureFocusKeyEvent(this);
-            }
-        }
+        ArtResourceUtils.setLayoutRes(lay, columnId+"");
+        loadData(lay);
     }
 
-    @Override
-    public void loadLayoutFailed(Throwable throwable) {
 
+
+    @Override
+    public void loadLayoutFailed(Throwable throwable,int type) {
+        if(throwable instanceof NoNetworkException){
+            if(type == TYPELAYOUT) {
+                String lay = ArtResourceUtils.getLayoutRes(columnId + "");
+                if (lay != null)
+                    loadData(lay);
+            }else if(type == TYPELAYOUT){
+
+            }
+            
+        }
     }
 
     @Override
@@ -114,6 +116,23 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
         }
     }
 
+    private void loadData(String lay) {
+        if(lay != null) {
+            LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
+            List<LayoutModel.LayoutBean> list =  lm.getLayout();
+            if( list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    LayoutModel.LayoutBean lb = list.get(i);
+                    PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
+                    lms.add(pm);
+                }
+                fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
+                fr.addViews(lms);
+                fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
+                fr.setmPictureFocusKeyEvent(this);
+            }
+        }
+    }
 /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
