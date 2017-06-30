@@ -3,8 +3,11 @@ package com.funs.appreciate.art.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.BaseActivity;
@@ -15,7 +18,6 @@ import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
-import com.funs.appreciate.art.view.widget.DialogErr;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
 
@@ -37,6 +39,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
     MainPresenter mainPresenter;
 
     String content;
+    ImageView iv_special;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +82,14 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
 
     public void loadContent() {
         content = this.getIntent().getStringExtra("content");
+        iv_special = (ImageView) findViewById(R.id.iv_special);
         if(content != null) {
             ContentEntity lm = new Gson().fromJson(content, ContentEntity.class);
             List<LayoutModel.LayoutBean.ContentBean> ls = lm.getData().getContent();
+            String bgImg = lm.getData().getBgimage();
+            if(bgImg != null){
+                Glide.with(this).load(bgImg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(iv_special);
+            }
             if( ls != null) {
                for(int i = 0 ; i < ls.size() ; i++){
                    PictureModel pm  = new PictureModel( i+1 ,315 , 560, "tag_content", i, ls ,this);
