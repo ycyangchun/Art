@@ -39,4 +39,22 @@ public class MainPresenter implements MainContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void loadContent(String m, String id , final String type) {
+        apiService.getContentDetail(m ,id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        view.loadContentSuccess(s , type);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+    }
 }

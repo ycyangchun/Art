@@ -177,6 +177,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             //content
             myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
             contentVp.setAdapter(myPagerAdapter);
+            contentVp.setOffscreenPageLimit(listMainTab.size());
         }
     }
 
@@ -184,6 +185,12 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     public void loadLayoutFailed(Throwable throwable) {
 
     }
+
+    @Override
+    public void loadContentSuccess(String content , String type) {
+
+    }
+
     //////////// MainContract.View ↑↑↑↑↑↑
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
     //tab 切换

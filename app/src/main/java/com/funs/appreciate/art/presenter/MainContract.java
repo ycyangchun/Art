@@ -11,10 +11,12 @@ import com.funs.appreciate.art.base.BaseView;
 public interface MainContract {
     interface Presenter extends BasePresenter {
         void loadLayout(String m , String columnId);
+        void loadContent(String m, String id , String type);
     }
 
     interface View extends BaseView {
         void loadLayoutSuccess(String lay);
+        void loadContentSuccess(String content , String type);
         void loadLayoutFailed(Throwable throwable);
     }
 }

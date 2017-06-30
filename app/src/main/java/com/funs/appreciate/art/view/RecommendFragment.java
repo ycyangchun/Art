@@ -14,7 +14,6 @@ import com.funs.appreciate.art.ArtConfig;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.ArtConstants;
 import com.funs.appreciate.art.base.BaseFragment;
-import com.funs.appreciate.art.di.components.DaggerMainComponent;
 import com.funs.appreciate.art.di.components.DaggerRecommendFragmentComponent;
 import com.funs.appreciate.art.di.modules.MainModule;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
@@ -101,8 +100,21 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
 
     }
 
+    @Override
+    public void loadContentSuccess(String content , String type) {
+        if("0".equals(type) || "1".equals(type)){//图片 or 视频
+            Intent intent = new Intent(mainActivity, DetailActivity.class);
+            intent.putExtra("content",content);
+            intent.putExtra("type",type);
+            startActivity(intent);
+        } else if("2".equals(type)){//专题
+            Intent intent = new Intent(mainActivity, SpecialActivity.class);
+            intent.putExtra("content",content);
+            startActivity(intent);
+        }
+    }
 
-    /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
+/////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
     public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
@@ -118,15 +130,11 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
             if(contents != null) {
                 LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
                 String type = contentBean.getType();
+                String contentId = contentBean.getContentid();
                 if("0".equals(type) || "1".equals(type)){//图片 or 视频
-                    Intent intent = new Intent(mainActivity, DetailActivity.class);
-                    intent.putExtra("contentId",contentBean.getContentid());
-                    intent.putExtra("type",type);
-                    startActivity(intent);
+                    mainPresenter.loadContent("getContentDetail", contentId, type);
                 } else if("2".equals(type)){//专题
-                    Intent intent = new Intent(mainActivity, SpecialActivity.class);
-                    intent.putExtra("contentId",contentBean.getContentid());
-                    startActivity(intent);
+                    mainPresenter.loadContent("getSubject", contentId,type);
                 }
             }
         }

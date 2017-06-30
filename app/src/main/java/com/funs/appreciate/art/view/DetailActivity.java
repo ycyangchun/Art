@@ -5,34 +5,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.BaseActivity;
-import com.funs.appreciate.art.di.components.DaggerDetailComponent;
-import com.funs.appreciate.art.di.modules.ContentModule;
 import com.funs.appreciate.art.model.entitys.DetailEntity;
-import com.funs.appreciate.art.presenter.ContentContract;
-import com.funs.appreciate.art.presenter.ContentPresenter;
 import com.google.gson.Gson;
-
-import javax.inject.Inject;
 
 /**
  * Created by yc on 2017/6/26.
  * 详情
  */
 
-public class DetailActivity extends BaseActivity implements ContentContract.View{
-
-    @Inject
-    ContentPresenter contentPresenter;
-
-    String contentId  , type;
+public class DetailActivity extends BaseActivity{
+    String content  , type;
     ImageView browse_iv;
     ImageButton  img_left,img_right;
     String urls[];
@@ -41,18 +29,12 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activty_browse);
-        DaggerDetailComponent.builder()
-                .netComponent(ArtApp.get(this).getNetComponent())
-                .contentModule(new ContentModule(this))
-                .build().inject(this);
-        contentId = this.getIntent().getStringExtra("contentId");
-        type = this.getIntent().getStringExtra("type");
+
         browse_iv = (ImageView) findViewById(R.id.browse_iv);
         img_left = (ImageButton) findViewById(R.id.img_left);
         img_right = (ImageButton) findViewById(R.id.img_right);
-        if(contentId != null) {
-            contentPresenter.loadLayout("getContentDetail", contentId);
-        }
+        loadContent();
+
         browse_iv.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -77,20 +59,11 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
         });
     }
 
-
-    @Override
-    public void showProgress() {
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void loadLayoutSuccess(String lay) {
-        if(lay != null) {
-            DetailEntity de = new Gson().fromJson(lay, DetailEntity.class);
+    public void loadContent() {
+        content = this.getIntent().getStringExtra("content");
+        type = this.getIntent().getStringExtra("type");
+        if(content != null) {
+            DetailEntity de = new Gson().fromJson(content, DetailEntity.class);
             DetailEntity.DataBean cb = de.getData();
             String picUrl = cb.getDatajson();
             if("0".equals(type)) {
@@ -114,10 +87,6 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
         }
     }
 
-    @Override
-    public void loadLayoutFailed(Throwable throwable) {
-
-    }
     private int getRightShow(){
         int temp = ++picIndex;
         if(temp > urls.length ){
