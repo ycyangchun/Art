@@ -35,14 +35,14 @@ public class ScreenProtectionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.println(" = Service == > onCreate ");
+//        System.out.println(" = Service == > onCreate ");
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what){
                     case START_STATUS:
-                        System.out.println(" Handler === > START_STATUS ");
+//                        System.out.println(" Handler === > START_STATUS ");
                         Intent intent  = new Intent(ScreenProtectionService.this , ScreenProtectionActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -59,7 +59,7 @@ public class ScreenProtectionService extends Service {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if(intent != null) {
-            System.out.println(" == Service = > onStartCommand " + flags + " " + startId + " " + intent.getStringExtra("screen_status"));
+//            System.out.println(" == Service = > onStartCommand " + flags + " " + startId + " " + intent.getStringExtra("screen_status"));
             String status = intent.getStringExtra("screen_status");
             if (status != null) {
                 if ("start".equals(status)) {
@@ -78,6 +78,6 @@ public class ScreenProtectionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println(" == Service = > onDestroy ");
+//        System.out.println(" == Service = > onDestroy ");
     }
 }

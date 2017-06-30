@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.ArtConfig;
@@ -98,7 +97,7 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
             }else if(type == TYPELAYOUT){
 
             }
-            
+
         }
     }
 

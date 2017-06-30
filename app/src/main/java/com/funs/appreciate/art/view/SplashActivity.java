@@ -1,6 +1,5 @@
 package com.funs.appreciate.art.view;
 
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -114,5 +113,9 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        closeScreenService();
+    }
 }
