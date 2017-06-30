@@ -15,6 +15,7 @@ import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
+import com.funs.appreciate.art.view.widget.DialogErr;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
 

@@ -19,6 +19,7 @@ import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
+import com.funs.appreciate.art.view.widget.DialogErr;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -72,6 +73,11 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
             String splash = ArtResourceUtils.getSplashRes();
             if(splash != null)
                 loadData(splash);
+        }
+        try {
+            new DialogErr(this,throwable.getMessage()).show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private void loadData(String splash) {
