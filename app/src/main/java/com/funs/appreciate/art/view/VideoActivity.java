@@ -24,16 +24,17 @@ public class VideoActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         videoView = (VideoView) findViewById(R.id.video_vv);
-
         videoUrl = getIntent().getStringExtra("videoUrl");
-        Uri uri = Uri.parse(videoUrl);
-        //设置视频控制器
-        videoView.setMediaController(new MediaController(this));
-        //播放完成回调
-        videoView.setOnCompletionListener( new MyPlayerOnCompletionListener());
-        videoView.setVideoURI(uri);
-        videoView.start();
-        videoView.requestFocus();
+        if(videoUrl != null) {
+            Uri uri = Uri.parse(videoUrl);
+            //设置视频控制器
+            videoView.setMediaController(new MediaController(this));
+            //播放完成回调
+            videoView.setOnCompletionListener(new MyPlayerOnCompletionListener());
+            videoView.setVideoURI(uri);
+            videoView.start();
+            videoView.requestFocus();
+        }
     }
     class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
