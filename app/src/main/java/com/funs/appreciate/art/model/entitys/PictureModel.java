@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by yc on 2017/6/12.
+ *  数据类型转化
  */
 
 public class PictureModel {
@@ -51,6 +52,9 @@ public class PictureModel {
         setRootView(rl);
     }
 
+
+
+
     public PictureModel(int id, int width, int height, int toBelowId, int toRightId , Context mContext) {
         this.id = id * 1000 ;
         this.width = width;
@@ -64,6 +68,19 @@ public class PictureModel {
         setRootView(rl);
     }
 
+    public PictureModel(int id, int width, int height, String typeRrc, int toRightId ,List<LayoutModel.LayoutBean.ContentBean>cb, Context mContext) {
+        this.id = id * 200 ;
+        this.width = width;
+        this.height = height;
+        this.typeRrc = typeRrc;
+        this.leftid = toRightId * 200;
+        this.contentBean = cb;
+        // 添加root
+        RelativeLayout rl = new RelativeLayout(mContext);
+        rl.setId(id);
+        rl.setFocusable(true);
+        setRootView(rl);
+    }
     public PictureModel(int id, int width, int height, String typeRrc,int toRightId,  Context mContext) {
         this.id = id * 100;
         this.width = width;

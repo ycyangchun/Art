@@ -155,6 +155,8 @@ public class LayoutModel {
             private String type;
             private String layoutid;
 
+            private String remark;
+
             public String getSurfaceimage() {
                 return surfaceimage;
             }
@@ -201,6 +203,14 @@ public class LayoutModel {
 
             public void setLayoutid(String layoutid) {
                 this.layoutid = layoutid;
+            }
+
+            public String getRemark() {
+                return remark;
+            }
+
+            public void setRemark(String remark) {
+                this.remark = remark;
             }
         }
     }

@@ -32,8 +32,8 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        sps_intent.putExtra("screen_status","start");
-        startService(sps_intent);
+//        sps_intent.putExtra("screen_status","start");
+//        startService(sps_intent);
     }
 
     @Override
@@ -51,9 +51,9 @@ public class BaseActivity extends FragmentActivity {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             int keyCode = event.getKeyCode();
             if(keyCode != KeyEvent.KEYCODE_BACK) {
-                sps_intent.putExtra("screen_status", "start");
-                startService(sps_intent);
-                return false;
+//                sps_intent.putExtra("screen_status", "start");
+//                startService(sps_intent);
+//                return false;
             }
         }
         return super.dispatchKeyEvent(event);

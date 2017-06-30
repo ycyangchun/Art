@@ -65,7 +65,7 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     public void setArguments(Bundle args) {
         super.setArguments(args);
         columnId = args.getString("columnId");
-        System.out.println("===========setArguments============>"+columnId);
+//        System.out.println("===========setArguments============>"+columnId);
     }
     @Override
     public void showProgress() {
@@ -114,7 +114,22 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
          } else if("right".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT  , rl);
          } else if("center".equals(keyType)) {
-            startActivity(new Intent(mainActivity, SpecialActivity.class));
+            List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
+            if(contents != null) {
+                LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
+                String type = contentBean.getType();
+                if("0".equals(type)){//图片
+                    Intent intent = new Intent(mainActivity, DetailActivity.class);
+                    intent.putExtra("contentId",contentBean.getContentid());
+                    startActivity(intent);
+                } else if("1".equals(type)){//视频
+
+                } else if("2".equals(type)){//专题
+                    Intent intent = new Intent(mainActivity, SpecialActivity.class);
+                    intent.putExtra("contentId",contentBean.getContentid());
+                    startActivity(intent);
+                }
+            }
         }
     }
 

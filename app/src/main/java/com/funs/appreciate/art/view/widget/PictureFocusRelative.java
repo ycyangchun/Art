@@ -95,9 +95,17 @@ public class PictureFocusRelative extends FocusRelative {
                     iv.setFocusable(false);
                     iv.setId(lm.getId() + 1000);
                     iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    LayoutModel.LayoutBean.ContentBean cb = lm.getContentBean().get(0);
-                    Glide.with(mContext).load(cb.getSurfaceimage()).into(iv);
                     rl.addView(iv,lpc);
+                    LayoutModel.LayoutBean.ContentBean cb = null;
+                    if("tag_content".equals(lm.getTypeRrc())){// 显示内容时，TypeRrc = “tag_content”
+                        cb = lm.getContentBean().get(i);
+                    } else {
+                        cb = lm.getContentBean().get(0);
+                    }
+                    if( cb != null) {
+                        Glide.with(mContext).load(cb.getSurfaceimage()).error(R.drawable.bg_splash).into(iv);
+                    }
+
                 }
                 ///////////////
                 // 阴影

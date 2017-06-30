@@ -42,6 +42,11 @@
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"/>
 
+        <!-- 详情 -->
+        <activity android:name=".view.DetailActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"/>
+
         <!-- 屏保service -->
         <service android:name=".service.ScreenProtectionService" />
     </application>

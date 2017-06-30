@@ -112,6 +112,8 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         String picUrl = cb.getDataJson();
         if(picUrl.contains(";")){
             urls = picUrl.split(";");
+        } else{
+            Glide.with(instance).load(picUrl).error(R.drawable.bg_splash).into(splash_iv);
         }
         duration = 5;//默认
         try {
