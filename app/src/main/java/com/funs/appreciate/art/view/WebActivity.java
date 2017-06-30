@@ -48,7 +48,7 @@ public class WebActivity extends Activity implements Runnable {
 
         Intent intent = getIntent();
         if (intent != null)
-            theUrl = intent.getStringExtra("golive_advert_url");
+            theUrl = intent.getStringExtra("art_url");
 
         if (!TextUtils.isEmpty(theUrl)) {
             webView.loadUrl(theUrl);
@@ -108,7 +108,7 @@ public class WebActivity extends Activity implements Runnable {
 
     @Override
     public void run() {
-        checkCooperation1();
+//        checkCooperation1();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
