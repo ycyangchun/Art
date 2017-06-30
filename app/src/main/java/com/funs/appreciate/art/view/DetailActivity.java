@@ -5,29 +5,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.di.components.DaggerDetailComponent;
-import com.funs.appreciate.art.di.components.DaggerSpecialComponent;
 import com.funs.appreciate.art.di.modules.ContentModule;
-import com.funs.appreciate.art.model.entitys.ContentEntity;
 import com.funs.appreciate.art.model.entitys.DetailEntity;
-import com.funs.appreciate.art.model.entitys.LayoutModel;
-import com.funs.appreciate.art.model.entitys.PictureModel;
-import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.presenter.ContentContract;
 import com.funs.appreciate.art.presenter.ContentPresenter;
-import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,7 +32,7 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
     @Inject
     ContentPresenter contentPresenter;
 
-    String contentId;
+    String contentId  , type;
     ImageView browse_iv;
     ImageButton  img_left,img_right;
     String urls[];
@@ -55,6 +46,7 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
                 .contentModule(new ContentModule(this))
                 .build().inject(this);
         contentId = this.getIntent().getStringExtra("contentId");
+        type = this.getIntent().getStringExtra("type");
         browse_iv = (ImageView) findViewById(R.id.browse_iv);
         img_left = (ImageButton) findViewById(R.id.img_left);
         img_right = (ImageButton) findViewById(R.id.img_right);
@@ -98,19 +90,26 @@ public class DetailActivity extends BaseActivity implements ContentContract.View
     @Override
     public void loadLayoutSuccess(String lay) {
         if(lay != null) {
-            DetailEntity de = new Gson().fromJson(lay , DetailEntity.class);
-            DetailEntity.DataBean  cb = de.getData();
+            DetailEntity de = new Gson().fromJson(lay, DetailEntity.class);
+            DetailEntity.DataBean cb = de.getData();
             String picUrl = cb.getDatajson();
-            if(picUrl.contains(";")){
-                urls = picUrl.split(";");
-                if(urls.length > 1){
-                    img_left.setVisibility(View.VISIBLE);
-                    img_right.setVisibility(View.VISIBLE);
+            if("0".equals(type)) {
+                if (picUrl.contains(";")) {
+                    urls = picUrl.split(";");
+                    if (urls.length > 1) {
+                        img_left.setVisibility(View.VISIBLE);
+                        img_right.setVisibility(View.VISIBLE);
+                    }
+                    picIndex = 0;
+                    Glide.with(this).load(urls[picIndex]).error(R.drawable.bg_splash).into(browse_iv);
+                } else {
+                    Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(browse_iv);
                 }
-                picIndex  = 0;
-                Glide.with(this).load(urls[picIndex]).error(R.drawable.bg_splash).into(browse_iv);
-            } else {
-                Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(browse_iv);
+            }else if("1".equals(type)){
+                Intent intent = new Intent(this, WebActivity.class);
+                intent.putExtra("art_url",picUrl);
+                startActivity(intent);
+                finish();
             }
         }
     }

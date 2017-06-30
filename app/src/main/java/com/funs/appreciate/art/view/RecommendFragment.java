@@ -118,12 +118,11 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
             if(contents != null) {
                 LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
                 String type = contentBean.getType();
-                if("0".equals(type)){//图片
+                if("0".equals(type) || "1".equals(type)){//图片 or 视频
                     Intent intent = new Intent(mainActivity, DetailActivity.class);
                     intent.putExtra("contentId",contentBean.getContentid());
+                    intent.putExtra("type",type);
                     startActivity(intent);
-                } else if("1".equals(type)){//视频
-
                 } else if("2".equals(type)){//专题
                     Intent intent = new Intent(mainActivity, SpecialActivity.class);
                     intent.putExtra("contentId",contentBean.getContentid());
