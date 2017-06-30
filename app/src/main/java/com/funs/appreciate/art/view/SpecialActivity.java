@@ -66,7 +66,21 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
         } else if("right".equals(keyType)) {
 
         } else if("center".equals(keyType)) {
-
+            List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
+            if(contents != null) {
+                LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
+                String type = contentBean.getType();
+                if("0".equals(type) || "1".equals(type)){//图片 or 视频
+                    Intent intent = new Intent(this, DetailActivity.class);
+                    intent.putExtra("contentId",contentBean.getContentid());
+                    intent.putExtra("type",type);
+                    startActivity(intent);
+                } else if("2".equals(type)){//专题
+                    Intent intent = new Intent(this, SpecialActivity.class);
+                    intent.putExtra("contentId",contentBean.getContentid());
+                    startActivity(intent);
+                }
+            }
         }
     }
 

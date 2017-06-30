@@ -28,6 +28,7 @@ import com.funs.appreciate.art.R;
 ;
 
 public class WebActivity extends Activity implements Runnable {
+
     private String theUrl;
     private WebView webView;
     private boolean handleBackEvent;
@@ -42,25 +43,26 @@ public class WebActivity extends Activity implements Runnable {
         theUrl = "";
         handleBackEvent = false;
         handler = new Handler();
-        webView = (WebView)findViewById(R.id.webView);
+        webView = (WebView) findViewById(R.id.webView);
         initWebView();
 
         Intent intent = getIntent();
         if (intent != null)
-            theUrl = intent.getStringExtra("art_url");
+            theUrl = intent.getStringExtra("golive_advert_url");
 
-        if (!TextUtils.isEmpty(theUrl)){
+        if (!TextUtils.isEmpty(theUrl)) {
             webView.loadUrl(theUrl);
             handler.postDelayed(this, 2000);
-        }
-        else{
+        } else {
             handleBackEvent = true;
         }
+
+
     }
+
 
     @Override
     protected void onDestroy() {
-//        Utils.removeMessagesWithHandler(handler);
         destroyWebView();
         super.onDestroy();
     }
@@ -68,31 +70,35 @@ public class WebActivity extends Activity implements Runnable {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_LEFT://左
-                jsCall("golive_left()");
-                break;
-            case KeyEvent.KEYCODE_DPAD_UP://上
-                jsCall("golive_up()");
-                break;
-            case KeyEvent.KEYCODE_DPAD_RIGHT://右
-                jsCall("golive_right()");
-                break;
-            case KeyEvent.KEYCODE_DPAD_DOWN://下
-                jsCall("golive_down()");
-                break;
-            case KeyEvent.KEYCODE_DPAD_CENTER://确定
-            case KeyEvent.KEYCODE_ENTER:
-                jsCall("golive_ok()");
-                break;
-            case KeyEvent.KEYCODE_MENU://菜单
-                jsCall("golive_menu()");
-                break;
+//            case KeyEvent.KEYCODE_DPAD_LEFT://左
+//                jsCall("golive_left()");
+//                break;
+//            case KeyEvent.KEYCODE_DPAD_UP://上
+//                jsCall("golive_up()");
+//                break;
+//            case KeyEvent.KEYCODE_DPAD_RIGHT://右
+//                jsCall("golive_right()");
+//                break;
+//            case KeyEvent.KEYCODE_DPAD_DOWN://下
+//                jsCall("golive_down()");
+//                break;
+//            case KeyEvent.KEYCODE_DPAD_CENTER://确定
+//            case KeyEvent.KEYCODE_ENTER:
+//                jsCall("golive_ok()");
+//                break;
+//            case KeyEvent.KEYCODE_MENU://菜单
+//                jsCall("golive_menu()");
+//                break;
             case KeyEvent.KEYCODE_BACK://返回
-                if (handleBackEvent){
-                    finish();
-                }
-                else{
-                    jsCall("golive_back()");
+//        	if (handleBackEvent){
+//        		finish();
+//        	}
+//        	else{
+//	        	jsCall("golive_back()");
+//	        	return true;
+//        	}
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回前一个页面
                     return true;
                 }
                 break;
@@ -106,17 +112,49 @@ public class WebActivity extends Activity implements Runnable {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void initWebView(){
+    private void initWebView() {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webView.setFocusable(false);
-        webView.setFocusableInTouchMode(false);
-        webView.clearFocus();
-        webView.addJavascriptInterface(new AndroidBridge(), "golive");
+        webView.setFocusable(true);
+        webView.setFocusableInTouchMode(true);
+//		webView.clearFocus();
+        /***打开本地缓存提供JS调用**/
+        webView.getSettings().setDomStorageEnabled(true);
+        // Set cache size to 8 mb by default. should be more than enough
+        webView.getSettings().setAppCacheMaxSize(1024 * 1024 * 8);
+        // This next one is crazy. It's the DEFAULT location for your app's cache
+        // But it didn't work for me without this line.
+        // UPDATE: no hardcoded path. Thanks to Kevin Hawkins
+        String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+        webView.getSettings().setAppCachePath(appCachePath);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        // 设置 缓存模式
+        webView.getSettings().setCacheMode(
+                WebSettings.LOAD_NO_CACHE);
+        // webView.getSettings().setBlockNetworkImage(true);// 把图片加载放在最后来加载渲染
+        //清除网页访问留下的缓存
+        //由于内核缓存是全局的因此这个方法不仅仅针对webview而是针对整个应用程序.
+        webView.clearCache(true);
+
+        //清除当前webview访问的历史记录
+        //只会webview访问历史记录里的所有记录除了当前访问记录
+        webView.clearHistory();
+
+        //这个api仅仅清除自动完成填充的表单数据，并不会清除WebView存储到本地的数据
+        webView.clearFormData();
+        webView.getSettings().setRenderPriority(RenderPriority.HIGH);
+        // 支持多窗口
+        webView.getSettings().setSupportMultipleWindows(true);
+        // 开启 DOM storage API 功能
+        webView.getSettings().setDomStorageEnabled(true);
+        // 开启 Application Caches 功能
+        webView.getSettings().setAppCacheEnabled(true);
+//		webView.addJavascriptInterface(new AndroidBridge(), "android");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("AdvertWebActivity: "+url);
+                System.out.println("WebActivity: " + url);
                 view.loadUrl(url);
                 return true;
             }
@@ -154,11 +192,11 @@ public class WebActivity extends Activity implements Runnable {
     }
 
     @SuppressLint("NewApi")
-    private void jsCall(String jsCode){
+    private void jsCall(String jsCode) {
         if (TextUtils.isEmpty(jsCode)) return;
 
         try {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 webView.evaluateJavascript("javascript:" + jsCode + ";", null);
             } else {
                 webView.loadUrl("javascript:" + jsCode);
@@ -169,9 +207,9 @@ public class WebActivity extends Activity implements Runnable {
     }
 
     @SuppressLint("NewApi")
-    private void checkCooperation1(){
+    private void checkCooperation1() {
         try {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 webView.evaluateJavascript("javascript:golive_advert_cooperation;", new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String value) {
@@ -186,17 +224,15 @@ public class WebActivity extends Activity implements Runnable {
         }
     }
 
-    private void checkCooperation2(String value){
-        if (TextUtils.isEmpty(value) || "null".equalsIgnoreCase(value) || "undefined".equalsIgnoreCase(value)){
+    private void checkCooperation2(String value) {
+        if (TextUtils.isEmpty(value) || "null".equalsIgnoreCase(value) || "undefined".equalsIgnoreCase(value)) {
             checkCount += 1;
-            if (checkCount >= 2){
+            if (checkCount >= 2) {
                 handleBackEvent = true;
-            }
-            else{
+            } else {
                 handler.postDelayed(this, 2000);
             }
-        }
-        else{
+        } else {
             handleBackEvent = false;
         }
     }
@@ -214,33 +250,38 @@ public class WebActivity extends Activity implements Runnable {
 //        }
     }
 
-    public class AndroidBridge {
+	public class AndroidBridge {
 
-        @JavascriptInterface
+		@JavascriptInterface
         public void isCooperation(String value) {
-            checkCooperation2(value);
+			checkCooperation2(value);
         }
 
-        @JavascriptInterface
+		@JavascriptInterface
         public void exit() {
-            finish();
+			finish();
         }
+
+		@JavascriptInterface
+	    public void playVideo(String url) {
+
+	    }
 
     }
 
-    public void destroyWebView() {
-        try {
-            if (webView != null){
-                ViewParent vp = webView.getParent();
-                if (vp != null && vp instanceof ViewGroup){
-                    ViewGroup vg = (ViewGroup)vp;
-                    vg.removeView(webView);
-                }
-                webView.removeAllViews();
-                webView.destroy();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+	public void destroyWebView() {
+		try {
+			if (webView != null){
+				ViewParent vp = webView.getParent();
+				if (vp != null && vp instanceof ViewGroup){
+					ViewGroup vg = (ViewGroup)vp;
+					vg.removeView(webView);
+				}
+				webView.removeAllViews();
+				webView.destroy();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }
