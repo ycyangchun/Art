@@ -90,17 +90,17 @@ public class WebActivity extends Activity implements Runnable {
 //                jsCall("golive_menu()");
 //                break;
             case KeyEvent.KEYCODE_BACK://返回
-//        	if (handleBackEvent){
-//        		finish();
-//        	}
+        	if (handleBackEvent){
+        		finish();
+        	}
 //        	else{
 //	        	jsCall("golive_back()");
 //	        	return true;
 //        	}
-                if (webView.canGoBack()) {
+               /* if (webView.canGoBack()) {
                     webView.goBack();// 返回前一个页面
                     return true;
-                }
+                }*/
                 break;
         }
         return super.onKeyDown(keyCode, event);
