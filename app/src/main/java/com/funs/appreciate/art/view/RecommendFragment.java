@@ -117,14 +117,14 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
 /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
-    public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
+    public void pictureListener(String keyType, PictureModel lm , int index) {
 
         if("top".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYTOP);
         } else if("left".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYLEFT);
          } else if("right".equals(keyType)) {
-            MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT  , rl);
+            MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT );
          } else if("center".equals(keyType)) {
             List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
             if(contents != null) {

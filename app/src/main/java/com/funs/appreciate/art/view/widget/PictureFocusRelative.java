@@ -120,6 +120,7 @@ public class PictureFocusRelative extends FocusRelative {
                 rl.setTag(R.id.tag_to_below,lm.getTopid());
                 rl.setTag(R.id.tag_to_right,lm.getLeftid());
                 rl.setTag(R.id.tag_index,i);
+                final int finalI = i;
                 rl.setOnKeyListener(new OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -131,14 +132,14 @@ public class PictureFocusRelative extends FocusRelative {
                                     // 布局位于 top 边界
                                     if (keyCode == KeyEvent.KEYCODE_DPAD_UP && (int) rl.getTag(R.id.tag_to_below) == 0) {
 //                                        System.out.println("== top === >" + rl.getId());
-                                        mPictureFocusKeyEvent.pictureListener("top",lm , rl);
+                                        mPictureFocusKeyEvent.pictureListener("top",lm , finalI);
                                         return true;
                                     }
 
                                     // 布局位于 left边界
                                     if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && (int) rl.getTag(R.id.tag_to_right) == 0) {
 //                                        System.out.println("== left === >" + rl.getId());
-                                        mPictureFocusKeyEvent.pictureListener("left",lm , rl);
+                                        mPictureFocusKeyEvent.pictureListener("left",lm , finalI);
                                         return true;
                                     }
                                     // 布局位于 right 边界  ：数据倒数第一个 （或  倒数第二个）
@@ -147,13 +148,13 @@ public class PictureFocusRelative extends FocusRelative {
                                         int size = lms.size();
                                         if (size >= 1 && tag_index == size - 1) {//数据倒数第一个
 //                                            System.out.println("== right === >" + rl.getId());
-                                            mPictureFocusKeyEvent.pictureListener("right",lm , rl);
+                                            mPictureFocusKeyEvent.pictureListener("right",lm , finalI);
                                             return true;
                                         }
 
                                         if(penultimate(rl)){//倒数第二个是靠边的
 //                                            System.out.println("== right === >" + rl.getId());
-                                            mPictureFocusKeyEvent.pictureListener("right",lm , rl);
+                                            mPictureFocusKeyEvent.pictureListener("right",lm , finalI);
                                             return true;
                                         }
                                     }
@@ -161,7 +162,7 @@ public class PictureFocusRelative extends FocusRelative {
 
                                 case KeyEvent.KEYCODE_DPAD_CENTER:
                                 case KeyEvent.KEYCODE_ENTER:
-                                    mPictureFocusKeyEvent.pictureListener("center",lm , rl);
+                                    mPictureFocusKeyEvent.pictureListener("center",lm , finalI);
                                     return true;
                             }
 
@@ -207,7 +208,7 @@ public class PictureFocusRelative extends FocusRelative {
 
     // 按键监听
     public interface PictureFocusKeyEvent{
-        void pictureListener(String keyType, PictureModel lm , RelativeLayout rl);
+        void pictureListener(String keyType, PictureModel lm , int index);
     }
 
     public void setmPictureFocusKeyEvent(PictureFocusKeyEvent mPictureFocusKeyEvent) {

@@ -83,7 +83,7 @@ public class OilFragment extends BaseFragment implements  PictureFocusRelative.P
     /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
-    public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
+    public void pictureListener(String keyType, PictureModel lm , int index) {
 
         if("top".equals(keyType)) {
             MsgHelper.sendMessage(null, ArtConstants.KEYTOP);

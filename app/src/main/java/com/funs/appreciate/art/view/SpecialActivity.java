@@ -51,7 +51,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
     /////////// PictureFocusKeyEvent ↓↓↓↓↓↓
 
     @Override
-    public void pictureListener(String keyType, PictureModel lm , RelativeLayout rl) {
+    public void pictureListener(String keyType, PictureModel lm , int index) {
 
         if("top".equals(keyType)) {
 
@@ -62,7 +62,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
         } else if("center".equals(keyType)) {
             List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
             if(contents != null) {
-                LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
+                LayoutModel.LayoutBean.ContentBean contentBean = contents.get(index);
                 String type = contentBean.getType();
                 String contentId = contentBean.getId();
                 if("0".equals(type) || "1".equals(type)){//图片 or 视频
