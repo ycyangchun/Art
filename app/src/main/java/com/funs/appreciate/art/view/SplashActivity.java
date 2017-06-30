@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.base.BaseActivity;
@@ -78,6 +79,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        closeScreenService();
     }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
@@ -86,7 +88,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         if(picUrl.contains(";")){
 
         } else {
-            Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(splash_iv);
+            Glide.with(this).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
         }
 
         int duration = 5;//默认
@@ -116,6 +118,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        closeScreenService();
+
     }
 }

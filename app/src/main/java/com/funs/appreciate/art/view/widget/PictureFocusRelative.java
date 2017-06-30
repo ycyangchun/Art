@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
@@ -103,7 +104,7 @@ public class PictureFocusRelative extends FocusRelative {
                         cb = lm.getContentBean().get(0);
                     }
                     if( cb != null) {
-                        Glide.with(mContext).load(cb.getSurfaceimage()).error(R.drawable.bg_splash).into(iv);
+                        Glide.with(mContext).load(cb.getSurfaceimage()).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(iv);
                     }
 
                 }

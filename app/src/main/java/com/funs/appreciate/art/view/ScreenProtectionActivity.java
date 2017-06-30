@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.di.components.DaggerScreenProtectionComponent;
@@ -130,7 +131,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         if(picUrl.contains(";")){
             urls = picUrl.split(";");
         } else{
-            Glide.with(instance).load(picUrl).error(R.drawable.bg_splash).into(splash_iv);
+            Glide.with(instance).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
         }
         duration = 5;//默认
         try {
@@ -140,7 +141,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         } finally {
             if(urls != null) {
                 picIndex  = 0;
-                Glide.with(instance).load(urls[picIndex]).error(R.drawable.bg_splash).into(splash_iv);
+                Glide.with(instance).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
                 if(urls.length > 1){
                     picIndex = getCurrentShow();
                     handler.sendEmptyMessageDelayed(0 , duration * 1000);
@@ -157,7 +158,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             switch (msg.what) {
                 case 0:
 //                    System.out.println("======== picIndex =========>"+picIndex);
-                    Glide.with(instance).load(urls[picIndex]).error(R.drawable.bg_splash).into(splash_iv);
+                    Glide.with(instance).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
                     picIndex = getCurrentShow();
                     handler.sendEmptyMessageDelayed(0 , duration * 1000);
                     break;
