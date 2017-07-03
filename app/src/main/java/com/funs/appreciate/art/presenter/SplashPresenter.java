@@ -27,19 +27,23 @@ public class SplashPresenter implements  SplashContract.Presenter{
 
     @Override
     public void loadSplash(String type) {
-        apiService.getAppConfig("getAppConfig",type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        view.loadSplashSuccess(s);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        view.loadSplashFailed(throwable);
-                    }
-                });
+        try {
+            apiService.getAppConfig("getAppConfig",type)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            view.loadSplashSuccess(s);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            view.loadSplashFailed(throwable);
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

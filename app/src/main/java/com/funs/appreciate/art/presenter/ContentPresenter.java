@@ -25,13 +25,14 @@ public class ContentPresenter implements ContentContract.Presenter {
 
     @Override
     public void loadLayout(String m, String id) {
+        try {
             apiService.getContentDetail(m ,id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {
-                            view.loadLayoutSuccess(s); 
+                            view.loadLayoutSuccess(s);
                         }
                     }, new Action1<Throwable>() {
                         @Override
@@ -39,5 +40,8 @@ public class ContentPresenter implements ContentContract.Presenter {
 
                         }
                     });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

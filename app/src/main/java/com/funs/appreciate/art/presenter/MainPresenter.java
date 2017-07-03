@@ -27,37 +27,45 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void loadLayout(String m , String columnId) {
-        apiService.getColumnList(m,columnId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        view.loadLayoutSuccess(s);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        view.loadLayoutFailed(throwable , TYPELAYOUT);
-                    }
-                });
+        try {
+            apiService.getColumnList(m,columnId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            view.loadLayoutSuccess(s);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            view.loadLayoutFailed(throwable , TYPELAYOUT);
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void loadContent(String m, String id , final String type) {
-        apiService.getContentDetail(m ,id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        view.loadContentSuccess(s , type);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        view.loadLayoutFailed(throwable , TYPECONTENT);
-                    }
-                });
+        try {
+            apiService.getContentDetail(m ,id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            view.loadContentSuccess(s , type);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            view.loadLayoutFailed(throwable , TYPECONTENT);
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
