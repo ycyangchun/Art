@@ -138,6 +138,8 @@ public class LayoutModel {
             this.content = content;
         }
 
+
+
         public static class ContentBean {
             /**
              * surfaceimage : http://img.ad.test.lhq-golive.com:7180/resource/image/20170628/2017062816192078ad142315ce7ae83887fb7.png
@@ -212,6 +214,8 @@ public class LayoutModel {
             public void setRemark(String remark) {
                 this.remark = remark;
             }
+
+
         }
     }
 

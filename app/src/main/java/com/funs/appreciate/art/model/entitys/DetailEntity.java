@@ -45,6 +45,9 @@ public class DetailEntity {
         private String remark;
         private String id;
         private String datajson;
+        private String contentid;
+        private String type;
+        private String layoutid;
 
         public String getSurfaceimage() {
             return surfaceimage;
@@ -84,6 +87,30 @@ public class DetailEntity {
 
         public void setDatajson(String datajson) {
             this.datajson = datajson;
+        }
+
+        public String getContentid() {
+            return contentid;
+        }
+
+        public void setContentid(String contentid) {
+            this.contentid = contentid;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getLayoutid() {
+            return layoutid;
+        }
+
+        public void setLayoutid(String layoutid) {
+            this.layoutid = layoutid;
         }
     }
 }

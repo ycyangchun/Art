@@ -68,7 +68,14 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
                 LayoutModel.LayoutBean.ContentBean contentBean = contents.get(index);
                 String type = contentBean.getType();
                 String contentId = contentBean.getId();
-                if("0".equals(type) || "1".equals(type)){//图片 or 视频
+                if("0".equals(type)){//图片
+                    String json = new Gson().toJson(contents);
+                    Intent intent = new Intent(this, DetailActivity.class);
+                    intent.putExtra("content", json);
+                    intent.putExtra("type", type);
+                    intent.putExtra("picIndex", index);
+                    startActivity(intent);
+                } else if("1".equals(type)){//视频
                     mainPresenter.loadContent("getContentDetail", contentId, type);
                 } else if("2".equals(type)){//专题
                     mainPresenter.loadContent("getSubject", contentId,type);
@@ -119,10 +126,10 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
 
     @Override
     public void loadContentSuccess(String content, String type) {
-        if("0".equals(type) || "1".equals(type)){//图片 or 视频
+        if("0".equals(type) || "1".equals(type)) {//图片 or 视频
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra("content",content);
-            intent.putExtra("type",type);
+            intent.putExtra("content", content);
+            intent.putExtra("type", type);
             startActivity(intent);
         } else if("2".equals(type)){//专题
             Intent intent = new Intent(this, SpecialActivity.class);
