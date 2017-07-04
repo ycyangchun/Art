@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,6 +32,7 @@ public class DetailActivity extends BaseActivity{
     ImageButton  img_left,img_right;
     String urls[];
     static int picIndex;
+    TextView detail_title_tv,detail_content_tv;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,9 @@ public class DetailActivity extends BaseActivity{
         browse_iv = (ImageView) findViewById(R.id.browse_iv);
         img_left = (ImageButton) findViewById(R.id.img_left);
         img_right = (ImageButton) findViewById(R.id.img_right);
+        detail_title_tv = (TextView) findViewById(R.id.detail_title_tv);
+        detail_content_tv = (TextView) findViewById(R.id.detail_content_tv);
+
         loadContent();
 
     }
@@ -50,16 +55,24 @@ public class DetailActivity extends BaseActivity{
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_LEFT:
                     if(img_left.isShown()) {
-                        picIndex = getLeftShow();
-//                        System.out.println("======= left ========>" + picIndex);
-                        glideImg();
+                        int leftIndex = getLeftShow();
+                        System.out.println("======= left ========>" + leftIndex);
+                        if(leftIndex != picIndex) {
+                            picIndex = leftIndex;
+                            setViewVisibility();
+                            glideImg();
+                        }
                     }
                     return true;
                 case KeyEvent.KEYCODE_DPAD_RIGHT:
                     if(img_right.isShown()) {
-                        picIndex = getRightShow();
-//                        System.out.println("======= right ========>" + picIndex);
-                        glideImg();
+                        int rightIndex = getRightShow();
+                        System.out.println("======= right ========>" + rightIndex);
+                        if(rightIndex != picIndex) {
+                            picIndex = rightIndex;
+                            setViewVisibility();
+                            glideImg();
+                        }
                     }
                     return true;
             }
@@ -73,16 +86,16 @@ public class DetailActivity extends BaseActivity{
         picIndex = this.getIntent().getIntExtra("picIndex",-1);
         if(content != null) {
             if(picIndex == -1) {
+                picIndex = 0;
                 DetailEntity de = new Gson().fromJson(content, DetailEntity.class);
                 DetailEntity.DataBean cb = de.getData();
                 String picUrl = cb.getDatajson();
+                detail_title_tv.setText(cb.getName());
+                detail_content_tv.setText(cb.getRemark());
                 if ("0".equals(type)) {
                     if (picUrl.contains(";")) {
                         urls = picUrl.split(";");
-                        if (urls.length > 1) {
-                            img_left.setVisibility(View.VISIBLE);
-                            img_right.setVisibility(View.VISIBLE);
-                        }
+                        setViewVisibility();
                         glideImg();
                     } else {
                         Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(browse_iv);
@@ -103,17 +116,34 @@ public class DetailActivity extends BaseActivity{
                 Type type = new TypeToken<List<LayoutModel.LayoutBean.ContentBean>>(){}.getType();
                 List<LayoutModel.LayoutBean.ContentBean> cbs = new Gson().fromJson(content, type);
                 urls = getImages(cbs);
-                if (urls.length > 1) {
-                    img_left.setVisibility(View.VISIBLE);
-                    img_right.setVisibility(View.VISIBLE);
-                }
+                setViewVisibility();
                 glideImg();
             }
         }
     }
 
+    private void setViewVisibility() {
+        if(urls.length > 1) {
+            if (picIndex >= 0 && picIndex < urls.length - 1) {
+                img_right.setVisibility(View.VISIBLE);
+            } else {
+                img_right.setVisibility(View.GONE);
+            }
+
+            if (picIndex >= 1 && picIndex < urls.length) {
+                img_left.setVisibility(View.VISIBLE);
+            } else {
+                img_left.setVisibility(View.GONE);
+            }
+        } else {
+            img_right.setVisibility(View.GONE);
+            img_left.setVisibility(View.GONE);
+        }
+    }
+
     private void glideImg() {
-        Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(browse_iv);
+        if(urls != null && urls.length >= 1)
+            Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(browse_iv);
     }
 
     public String[] getImages(List<LayoutModel.LayoutBean.ContentBean> list){
@@ -127,22 +157,24 @@ public class DetailActivity extends BaseActivity{
         return arr;
     }
     private int getRightShow(){
-        int temp = ++picIndex;
+        int temp = picIndex;
+        temp = ++ temp;
         if(temp >= urls.length ){
-            picIndex = 0;
-        } else{
-            picIndex = temp;
+            temp = -- temp;
+        } else {
+
         }
-        return picIndex;
+        return temp;
     }
 
     private int getLeftShow(){
-        int temp = --picIndex;
+        int temp = picIndex;
+        temp = -- temp;
         if(temp >= 0 && temp < urls.length){
-            picIndex = temp;
+
         } else{
-            picIndex = urls.length -1;
+            temp = ++ temp;
         }
-        return picIndex;
+        return temp;
     }
 }
