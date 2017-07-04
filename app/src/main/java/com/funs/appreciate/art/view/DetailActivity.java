@@ -33,6 +33,8 @@ public class DetailActivity extends BaseActivity{
     String urls[];
     static int picIndex;
     TextView detail_title_tv,detail_content_tv;
+    int special;
+    List<LayoutModel.LayoutBean.ContentBean> cbs;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,22 +58,28 @@ public class DetailActivity extends BaseActivity{
                 case KeyEvent.KEYCODE_DPAD_LEFT:
                     if(img_left.isShown()) {
                         int leftIndex = getLeftShow();
-                        System.out.println("======= left ========>" + leftIndex);
                         if(leftIndex != picIndex) {
                             picIndex = leftIndex;
                             setViewVisibility();
-                            glideImg();
+                            if(special == -1) {
+                                glideImg();
+                            } else {
+                                glideImg(cbs);
+                            }
                         }
                     }
                     return true;
                 case KeyEvent.KEYCODE_DPAD_RIGHT:
                     if(img_right.isShown()) {
                         int rightIndex = getRightShow();
-                        System.out.println("======= right ========>" + rightIndex);
                         if(rightIndex != picIndex) {
                             picIndex = rightIndex;
                             setViewVisibility();
-                            glideImg();
+                            if(special == -1) {
+                                glideImg();
+                            } else {
+                                glideImg(cbs);
+                            }
                         }
                     }
                     return true;
@@ -83,10 +91,11 @@ public class DetailActivity extends BaseActivity{
     public void loadContent() {
         content = this.getIntent().getStringExtra("content");
         type = this.getIntent().getStringExtra("type");
-        picIndex = this.getIntent().getIntExtra("picIndex",-1);
+        picIndex = this.getIntent().getIntExtra("picIndex",0);
+        special = this.getIntent().getIntExtra("special",-1);
+
         if(content != null) {
-            if(picIndex == -1) {
-                picIndex = 0;
+            if(special == -1) {
                 DetailEntity de = new Gson().fromJson(content, DetailEntity.class);
                 DetailEntity.DataBean cb = de.getData();
                 String picUrl = cb.getDatajson();
@@ -114,10 +123,10 @@ public class DetailActivity extends BaseActivity{
                 }
             } else { // 专题数据展示
                 Type type = new TypeToken<List<LayoutModel.LayoutBean.ContentBean>>(){}.getType();
-                List<LayoutModel.LayoutBean.ContentBean> cbs = new Gson().fromJson(content, type);
+                cbs = new Gson().fromJson(content, type);
                 urls = getImages(cbs);
                 setViewVisibility();
-                glideImg();
+                glideImg(cbs);
             }
         }
     }
@@ -144,6 +153,17 @@ public class DetailActivity extends BaseActivity{
     private void glideImg() {
         if(urls != null && urls.length >= 1)
             Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(browse_iv);
+    }
+
+    private void glideImg(List<LayoutModel.LayoutBean.ContentBean> cbs) {
+        if(urls != null && urls.length >= 1)
+            Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(browse_iv);
+
+        if(cbs != null) {
+            LayoutModel.LayoutBean.ContentBean cb = cbs.get(picIndex);
+            detail_title_tv.setText(cb.getName());
+            detail_content_tv.setText(cb.getRemark());
+        }
     }
 
     public String[] getImages(List<LayoutModel.LayoutBean.ContentBean> list){

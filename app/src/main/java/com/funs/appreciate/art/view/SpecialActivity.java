@@ -74,6 +74,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
                     intent.putExtra("content", json);
                     intent.putExtra("type", type);
                     intent.putExtra("picIndex", index);
+                    intent.putExtra("special", 100);
                     startActivity(intent);
                 } else if("1".equals(type)){//视频
                     mainPresenter.loadContent("getContentDetail", contentId, type);
