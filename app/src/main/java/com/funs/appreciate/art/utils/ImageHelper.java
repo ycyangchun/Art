@@ -194,7 +194,23 @@ public final class ImageHelper {
 			return null;
 		}
 	}
-	
+
+	public synchronized static StateListDrawable makeSelector2(Resources res, Drawable normal, Drawable pressed, Drawable focused, Drawable unable){
+		try {
+			StateListDrawable drawable = new StateListDrawable();
+
+			drawable.addState(new int[] { android.R.attr.state_pressed }, pressed);
+			drawable.addState(new int[] { android.R.attr.state_focused }, focused);
+			drawable.addState(new int[] { android.R.attr.state_enabled }, normal);
+			drawable.addState(new int[] { android.R.attr.state_focused }, focused);
+			drawable.addState(new int[] { android.R.attr.state_window_focused }, unable);
+			drawable.addState(new int[] {}, normal);
+
+			return drawable;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 	public synchronized static StateListDrawable makeSelectorNinePatch(Resources res, int id,
                                                                        boolean normalImage, int normalResid,
                                                                        boolean pressedImage, int pressedResid,

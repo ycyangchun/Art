@@ -41,7 +41,7 @@ public class PictureFocusRelative extends FocusRelative {
 
     public PictureFocusRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
-        margin = 10;
+        margin = 0;
     }
 
     public PictureFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -109,9 +109,11 @@ public class PictureFocusRelative extends FocusRelative {
                 }
                 ///////////////
                 // 阴影
-                StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(), null ,
-                        mContext.getResources().getDrawable(R.drawable.not_foucs_shadow),
-                        mContext.getResources().getDrawable(R.drawable.foucs_bg2), null);
+                StateListDrawable bg = ImageHelper.makeSelector2(mContext.getResources(),
+                        mContext.getResources().getDrawable(R.drawable.not_foucs_shadow) ,
+                        null ,
+                        mContext.getResources().getDrawable(R.drawable.foucs_bg),
+                       null);
                 rl.setBackground(bg);
                 addView(rl, lp);
                 addFocusItem(lm);

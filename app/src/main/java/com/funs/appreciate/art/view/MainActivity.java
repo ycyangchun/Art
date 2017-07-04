@@ -184,10 +184,10 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
             listMainTab = lm.getColumnNames();
             listMainIds = lm.getColumnIds();
-            int section = 80;
+            int section = 96;
             for (int i = 0; i < listMainTab.size(); i++) {
                 int len = listMainTab.get(i).length();
-                PictureModel pm = new PictureModel(i + 1, len * section, 100, listMainTab.get(i), i, this);
+                PictureModel pm = new PictureModel(i + 1, len * section, 96, listMainTab.get(i), i, this);
                 lpms.add(pm);
             }
 

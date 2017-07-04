@@ -16,7 +16,7 @@ public class UtilTimer {
     //归零 --> 开始 -- > 结束
 
     private static UtilTimer utilTimer;
-    private static long times = 10 * 1000; //定时时间
+    private static long times = 10 * 60 * 1000; //定时时间
     private static boolean startTimer = true;// 开启定时
     private Context mContext;
     private static Handler mHandler;

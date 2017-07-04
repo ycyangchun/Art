@@ -133,7 +133,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         } else{
             Glide.with(instance).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
         }
-        duration = 5;//默认
+        duration =  5 ;//默认
         try {
             duration = Integer.parseInt(cb.getDuration());
         } catch (NumberFormatException e) {

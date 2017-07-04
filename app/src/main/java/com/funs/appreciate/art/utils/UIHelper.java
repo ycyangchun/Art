@@ -39,10 +39,10 @@ import java.lang.reflect.Field;
 
 public final class UIHelper {
 
-	private static float density = 2.0f;
+	private static float density = 1.0f;
 	
 	private static int statusBarHeight = 0;
-	
+
 	private static int standardResolutionX = 1080;
 	private static int standardResolutionY = 1920;
 
@@ -134,8 +134,8 @@ public final class UIHelper {
 	}
 	
 	private static void measureResolutionZoomFactor(){
-		zoomFactorX = (float)getCurrentResolutionX()/standardResolutionX;
-		zoomFactorY = (float)getCurrentResolutionY()/standardResolutionY;
+		zoomFactorX = (float)getCurrentResolutionX()/standardResolutionX  * (1 + density / 100);
+		zoomFactorY = (float)getCurrentResolutionY()/standardResolutionY  * (1 + density / 100);
 	}
 	
 	

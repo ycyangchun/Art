@@ -42,7 +42,7 @@ public class TabFocusRelative extends FocusRelative {
         super(context, attrs);
         margin = 10;
         childViews = new ArrayList<>();
-        colorDefault = Color.parseColor("#E6000000");
+        colorDefault = Color.parseColor("#FFFEFF");
         colorSelect = Color.parseColor("#01FFFF");
     }
 
@@ -74,7 +74,7 @@ public class TabFocusRelative extends FocusRelative {
                 tv.setFocusable(false);
                 tv.setId(lm.getId()+ 1000);
                 tv.setText(lm.getTypeRrc());
-                tv.setTextSize(marginW * 2.2f);
+                tv.setTextSize(marginW * 3f);
                 tv.setGravity(Gravity.CENTER);
                 tv.setTextColor(colorDefault);
                 LayoutParams lpc = new LayoutParams(size.width,size.height);
@@ -117,7 +117,7 @@ public class TabFocusRelative extends FocusRelative {
         focusView = rl;
 
         if(hasFocus) { // 字体颜色
-            tv.setTextColor(colorSelect);
+            tv.setTextColor(colorDefault);
             // 上次选择的view
             if(selectView != null && rl != selectView){
                 setChildTextColor(selectView , colorDefault);
@@ -128,13 +128,12 @@ public class TabFocusRelative extends FocusRelative {
             if(tag != null && tag.equals("downFragment")){
                 rl.setTag("");
                 selectView = rl;
-            } else {
-                tv.setTextColor(colorDefault);
+                tv.setTextColor(colorSelect);
             }
         }
 
         // tab 切换
-       if(hasFocus && colorSelect == tv.getCurrentTextColor()){
+       if(hasFocus && colorDefault == tv.getCurrentTextColor()){
            tabSelect.tabChangeListener(tv.getText().toString());
        }
     }
