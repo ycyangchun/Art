@@ -42,8 +42,8 @@ public class TabFocusRelative extends FocusRelative {
         super(context, attrs);
         margin = 10;
         childViews = new ArrayList<>();
-        colorDefault = Color.parseColor("#FFFEFF");
-        colorSelect = Color.parseColor("#01FFFF");
+        colorDefault = Color.parseColor("#ABAEB7");
+        colorSelect = Color.parseColor("#FFFEFF");
     }
 
     public TabFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -84,8 +84,9 @@ public class TabFocusRelative extends FocusRelative {
                 rl.addView(tv,lpc);
                 ///////////////
                 // 阴影
-                StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(), null ,
-                        mContext.getResources().getDrawable(R.drawable.not_foucs_shadow),
+                StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(),
+                        null ,
+                        null ,
                         mContext.getResources().getDrawable(R.drawable.tab_foucs_bg2), null);
                 rl.setBackground(bg);
                 addView(rl, lp);
@@ -117,7 +118,7 @@ public class TabFocusRelative extends FocusRelative {
         focusView = rl;
 
         if(hasFocus) { // 字体颜色
-            tv.setTextColor(colorDefault);
+            tv.setTextColor(colorSelect);
             // 上次选择的view
             if(selectView != null && rl != selectView){
                 setChildTextColor(selectView , colorDefault);
@@ -128,12 +129,13 @@ public class TabFocusRelative extends FocusRelative {
             if(tag != null && tag.equals("downFragment")){
                 rl.setTag("");
                 selectView = rl;
-                tv.setTextColor(colorSelect);
+            } else {
+                tv.setTextColor(colorDefault);
             }
         }
 
         // tab 切换
-       if(hasFocus && colorDefault == tv.getCurrentTextColor()){
+       if(hasFocus && colorSelect == tv.getCurrentTextColor()){
            tabSelect.tabChangeListener(tv.getText().toString());
        }
     }

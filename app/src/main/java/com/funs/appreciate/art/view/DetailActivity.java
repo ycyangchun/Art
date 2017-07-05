@@ -30,11 +30,11 @@ public class DetailActivity extends BaseActivity{
     String content  , type;
     ImageView browse_iv;
     ImageButton  img_left,img_right;
-    String urls[];
-    static int picIndex;
+    String urls[];//图片数组
+    static int picIndex;// 显示图片index
     TextView detail_title_tv,detail_content_tv;
-    int special;
-    List<LayoutModel.LayoutBean.ContentBean> cbs;
+    int special;// 专题tag
+    List<LayoutModel.LayoutBean.ContentBean> cbs;// 专题数据
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

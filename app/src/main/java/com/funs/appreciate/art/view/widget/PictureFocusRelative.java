@@ -41,7 +41,7 @@ public class PictureFocusRelative extends FocusRelative {
 
     public PictureFocusRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
-        margin = 0;
+        margin = -12;
     }
 
     public PictureFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -56,7 +56,9 @@ public class PictureFocusRelative extends FocusRelative {
         if(lms != null && lms.size() != 0) {
             for (int i = 0; i < lms.size(); i++) {
                 final PictureModel lm = lms.get(i);
-                UIHelper.Size size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth(), UIHelper.ZoomMode.KeepHV), UIHelper.zoomH(lm.getHeight(), UIHelper.ZoomMode.KeepHV));
+                UIHelper.Size size;
+                size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth()+ 22 , UIHelper.ZoomMode.KeepHV),
+                        UIHelper.zoomH(lm.getHeight() + 22, UIHelper.ZoomMode.KeepHV));
 //                System.out.println("====== width ======== height  ==========>"+size.width+ " "+size.height);
                 LayoutParams lp = new LayoutParams(size.width, size.height);
 

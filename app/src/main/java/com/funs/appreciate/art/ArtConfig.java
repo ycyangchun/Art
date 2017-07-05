@@ -36,7 +36,7 @@ public class ArtConfig {
     /**
      * 测试环境根路径
      */
-    public static final String SERVER_ROOT_TEST = "http://211.99.241.8:7082/art-service/";
+    public static final String SERVER_ROOT_TEST = "http://211.99.241.9:7082/ad-art-service/";
     /**
      * 生产版本根路径
      */
