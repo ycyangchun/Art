@@ -84,11 +84,11 @@ public class TabFocusRelative extends FocusRelative {
                 rl.addView(tv,lpc);
                 ///////////////
                 // 阴影
-                StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(),
-                        null ,
-                        null ,
-                        mContext.getResources().getDrawable(R.drawable.tab_foucs_bg2), null);
-                rl.setBackground(bg);
+//                StateListDrawable bg = ImageHelper.makeSelector(mContext.getResources(),
+//                        null ,
+//                        null ,
+//                        mContext.getResources().getDrawable(R.drawable.tab_foucs_bg2), null);
+//                rl.setBackground(bg);
                 addView(rl, lp);
                 childViews.add(rl);
                 addFocusItem(lm);
