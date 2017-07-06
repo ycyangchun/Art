@@ -46,7 +46,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private static int picIndex;
     private int duration;
     private final static int webPic = 0;
-    private final static int localPic = 1;
 
     @Inject
     SplashPresenter presenter;
@@ -161,17 +160,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 //                .decoder()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.2f)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
+//                .asBitmap()
                 .error(R.drawable.bg_splash)
                 .into(splash_iv);
     }
@@ -192,9 +181,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                         picIndex = getCurrentShow();
                         handler.sendEmptyMessageDelayed(webPic, duration * 1000);
                     }
-                    break;
-                case localPic:
-
                     break;
             }
 

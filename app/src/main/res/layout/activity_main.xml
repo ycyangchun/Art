@@ -7,10 +7,11 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
-        android:background="@drawable/logo"
-        android:layout_alignParentRight="true"/>
+        android:layout_marginTop="40dp"
+        android:background="@drawable/logo" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,19 +21,20 @@
             android:id="@+id/focus_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="75dp"
             android:layout_marginLeft="150dp"
+            android:layout_marginTop="75dp"
             android:descendantFocusability="afterDescendants">
 
         </com.funs.appreciate.art.view.widget.TabFocusRelative>
     </HorizontalScrollView>
 
     <android.support.v4.view.ViewPager
-        android:orientation="horizontal"
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp">
+        android:layout_marginTop="150dp"
+        android:orientation="horizontal">
+
     </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

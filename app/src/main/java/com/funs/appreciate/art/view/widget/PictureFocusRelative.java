@@ -96,7 +96,7 @@ public class PictureFocusRelative extends FocusRelative {
                     ImageView iv = new ImageView(mContext);
                     iv.setFocusable(false);
                     iv.setId(lm.getId() + 1000);
-                    iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    iv.setScaleType(ImageView.ScaleType.FIT_XY);
                     rl.addView(iv,lpc);
                     LayoutModel.LayoutBean.ContentBean cb = null;
                     if("tag_content".equals(lm.getTypeRrc())){// 显示内容时，TypeRrc = “tag_content”
@@ -114,7 +114,7 @@ public class PictureFocusRelative extends FocusRelative {
                 StateListDrawable bg = ImageHelper.makeSelector2(mContext.getResources(),
                         mContext.getResources().getDrawable(R.drawable.not_foucs_shadow) ,
                         null ,
-                        mContext.getResources().getDrawable(R.drawable.foucs_bg),
+                        mContext.getResources().getDrawable(R.drawable.focus_bg),
                        null);
                 rl.setBackground(bg);
                 addView(rl, lp);

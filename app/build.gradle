@@ -42,5 +42,4 @@ dependencies {
     compile "com.hwangjr.rxbus:rxbus:$rootProject.ext.rxbus"
     //xutils 3
 //    compile "org.xutils:xutils:$rootProject.ext.xutils"
-
 }
