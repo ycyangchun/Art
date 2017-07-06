@@ -57,8 +57,8 @@ public class PictureFocusRelative extends FocusRelative {
             for (int i = 0; i < lms.size(); i++) {
                 final PictureModel lm = lms.get(i);
                 UIHelper.Size size;
-                size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth()+ 22 , UIHelper.ZoomMode.KeepHV),
-                        UIHelper.zoomH(lm.getHeight() + 22, UIHelper.ZoomMode.KeepHV));
+                size = new UIHelper.Size(UIHelper.zoomW(lm.getWidth() + 44, UIHelper.ZoomMode.KeepHV),
+                        UIHelper.zoomH(lm.getHeight() + 44, UIHelper.ZoomMode.KeepHV));
 //                System.out.println("====== width ======== height  ==========>"+size.width+ " "+size.height);
                 LayoutParams lp = new LayoutParams(size.width, size.height);
 
