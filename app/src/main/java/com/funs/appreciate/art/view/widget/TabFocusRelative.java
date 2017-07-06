@@ -118,7 +118,8 @@ public class TabFocusRelative extends FocusRelative {
         focusView = rl;
 
         if(hasFocus) { // 字体颜色
-            tv.setTextColor(colorSelect);
+//            tv.setTextColor(colorSelect);
+            setChildTextColor(rl , colorSelect);
             // 上次选择的view
             if(selectView != null && rl != selectView){
                 setChildTextColor(selectView , colorDefault);
@@ -129,8 +130,10 @@ public class TabFocusRelative extends FocusRelative {
             if(tag != null && tag.equals("downFragment")){
                 rl.setTag("");
                 selectView = rl;
+                setChildTextColor(selectView , colorSelect);
             } else {
-                tv.setTextColor(colorDefault);
+//                tv.setTextColor(colorDefault);
+                setChildTextColor(rl , colorDefault);
             }
         }
 
@@ -178,9 +181,15 @@ public class TabFocusRelative extends FocusRelative {
     // 设置 relative child的文本颜色
     private void setChildTextColor(RelativeLayout rl , int textColor) {
         int count = rl.getChildCount();
+        int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
         if (count > 0) {
             TextView tv = (TextView) rl.getChildAt(0);
             tv.setTextColor(textColor);
+            if(textColor == colorDefault){
+                tv.setTextSize(marginW * 3f );
+            } else if(textColor == colorSelect){
+                tv.setTextSize(marginW * 3f * 1.3f);
+            }
         }
     }
 

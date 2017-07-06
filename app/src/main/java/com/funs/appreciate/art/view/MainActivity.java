@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
             //tab
             tabFocusRelative.addViews(lpms);
-            tabFocusRelative.setAnimation(R.anim.scale_text_small, R.anim.scale_text_big);
+//            tabFocusRelative.setAnimation(R.anim.scale_text_small, R.anim.scale_text_big);
             tabFocusRelative.setTabSelect(this);
             tabFocusRelative.setIndexFocus(tabIndex);
 
