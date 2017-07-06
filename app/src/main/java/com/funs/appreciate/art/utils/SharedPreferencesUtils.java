@@ -254,6 +254,16 @@ public class SharedPreferencesUtils {
     /**
      * Retrieve a int value from the preferences.
      *
+     * @param key
+     * @return
+     */
+    public static int getInt(String key , int defaultInt) {
+        return getSharedPreferences("").getInt(key,defaultInt);
+    }
+
+    /**
+     * Retrieve a int value from the preferences.
+     *
      * @param name
      * @param key
      * @return

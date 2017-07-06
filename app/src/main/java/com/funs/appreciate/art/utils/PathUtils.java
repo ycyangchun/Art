@@ -58,32 +58,32 @@ public class PathUtils implements Serializable {
      * call this library application create the folder in the card and create
      * other folder in root folder to use another communications.
      */
-    static String rootPath;
+    public static String rootPath;
 
 
     /**
      * when application in test model log will not output if application
      * exception the reason be write to file and upload to server
      */
-    static String exlogPath;
+    public static String exlogPath;
 
     /**
      * auto create database to this path or delete database from this path when
      * the application update self or come data error
      */
-    static String databasePath;
+    public static String databasePath;
 
 
     /**
      * put some temporary file to this path
      */
-    static String downloadPath;
+    public static String downloadPath;
 
     /**
      * resource in this path
      */
 
-    static String resourcePath;
+    public static String resourcePath;
 
     public String getRootPath() {
         return rootPath;

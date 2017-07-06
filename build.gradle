@@ -42,5 +42,6 @@ ext {
     jodaVersion = '2.9.3'
     //rxbux
     rxbus = '1.0.5'
-
+    //xutils 3
+    xutils = '3.5.0'
 }

@@ -9,6 +9,7 @@ public class ArtResourceUtils {
 //    private static String splashRes;
 //    private static String layoutRes;
 //    private static String screenRes;
+//    private static int screenSaverTime;
 
     public static String getSplashRes() {
         return SharedPreferencesUtils.getString("splashRes");
@@ -32,5 +33,13 @@ public class ArtResourceUtils {
 
     public static void setScreenRes(String screenRes) {
         SharedPreferencesUtils.put("screenRes",screenRes);
+    }
+
+    public static int getScreenSaverTime(int defaultTime) {
+        return SharedPreferencesUtils.getInt("screenSaverTime",defaultTime);
+    }
+
+    public static void setScreenSaverTime(int screenSaverTime) {
+        SharedPreferencesUtils.put("screenSaverTime",screenSaverTime);
     }
 }

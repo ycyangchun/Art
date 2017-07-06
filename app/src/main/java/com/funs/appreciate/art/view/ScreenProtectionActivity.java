@@ -26,6 +26,8 @@ import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -35,16 +37,17 @@ import javax.inject.Inject;
 
 public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View{
 
-    PowerManager.WakeLock wakeLock;
-    ImageView splash_iv;
-    String urls[];
-    Context instance;
-    static int picIndex;
-    int duration;
+    private PowerManager.WakeLock wakeLock;
+    private ImageView splash_iv;
+    private Context instance;
+    private static int picIndex;
+    private int duration;
+    private final static int webPic = 0;
+    private final static int localPic = 1;
 
     @Inject
     SplashPresenter presenter;
-
+    List<SplashPictureEntity.ConfigBean.DataJsonBean>  dataJsonBeen;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         findViewById(R.id.count_down_tv).setVisibility(View.GONE);
         instance = this.getApplicationContext();
         System.out.println("=============== 屏保 ===============>");
+
         DaggerScreenProtectionComponent.builder()
                 .netComponent(ArtApp.get(this).getNetComponent())
                 .splashModule(new SplashModule(this))
@@ -127,27 +131,37 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean  cb = se.getConfig();
-        String picUrl = cb.getDataJson();
-        if(picUrl.contains(";")){
-            urls = picUrl.split(";");
-        } else{
-            Glide.with(instance).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
-        }
+        dataJsonBeen = cb.getImageArray();
         duration =  5 ;//默认
         try {
-            duration = Integer.parseInt(cb.getDuration());
+            duration = Integer.parseInt(cb.getScreenSaverTime());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } finally {
-            if(urls != null) {
+            if(dataJsonBeen != null) {
                 picIndex  = 0;
-                Glide.with(instance).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
-                if(urls.length > 1){
+                showPic();
+                if(dataJsonBeen.size()> 1){
                     picIndex = getCurrentShow();
-                    handler.sendEmptyMessageDelayed(0 , duration * 1000);
+                    handler.sendEmptyMessageDelayed(webPic , duration * 1000);
                 }
             }
         }
+    }
+
+    private void showPic() {
+        String url = getPicUrl();
+//        System.out.println("======== url =========>"+url+" picIndex "+picIndex);
+        Glide.with(instance)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.5f)
+                .error(R.drawable.bg_splash)
+                .into(splash_iv);
+    }
+
+    private String getPicUrl() {
+        return dataJsonBeen.get(picIndex).getImgUrl();
     }
 
 
@@ -156,11 +170,15 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-//                    System.out.println("======== picIndex =========>"+picIndex);
-                    Glide.with(instance).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
-                    picIndex = getCurrentShow();
-                    handler.sendEmptyMessageDelayed(0 , duration * 1000);
+                case webPic:
+                    if(dataJsonBeen != null) {
+                        showPic();
+                        picIndex = getCurrentShow();
+                        handler.sendEmptyMessageDelayed(webPic, duration * 1000);
+                    }
+                    break;
+                case localPic:
+
                     break;
             }
 
@@ -169,7 +187,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private int getCurrentShow(){
         int temp = ++picIndex;
-        if(temp > urls.length -1){
+        if(temp > dataJsonBeen.size() -1){
             picIndex = 0;
         } else{
             picIndex = temp;

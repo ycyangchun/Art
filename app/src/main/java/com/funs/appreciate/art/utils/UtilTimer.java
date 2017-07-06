@@ -13,10 +13,9 @@ import static com.funs.appreciate.art.base.ArtConstants.START_STATUS;
 
 public class UtilTimer {
     //定时器
-    //归零 --> 开始 -- > 结束
 
     private static UtilTimer utilTimer;
-    private static long times = 10 * 60 * 1000; //定时时间
+    private static long times ; //定时时间
     private static boolean startTimer = true;// 开启定时
     private Context mContext;
     private static Handler mHandler;
@@ -26,6 +25,7 @@ public class UtilTimer {
     private UtilTimer(Context context, Handler handle) {
         this.mContext = context.getApplicationContext();//单例的生命周期和应用的一样长，这样就防止了内存泄漏。
         this.mHandler = handle;
+        times = ArtResourceUtils.getScreenSaverTime(30) * 60 * 1000;
     }
 
     // 提供一个全局的静态方法

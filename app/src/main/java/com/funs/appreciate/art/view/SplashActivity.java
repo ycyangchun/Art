@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -85,6 +86,11 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
+        String screenTime = cb.getScreenSaverTime();
+        if(!TextUtils.isEmpty(screenTime)){
+            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
+        }
+
         if(picUrl.contains(";")){
 
         } else {
