@@ -32,6 +32,7 @@ import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.util.List;
@@ -91,6 +92,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         if ((wakeLock != null) && (wakeLock.isHeld() == false)) {
             wakeLock.acquire();
         }
+        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -99,6 +101,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         if ((wakeLock != null) && (wakeLock.isHeld() == false)) {
             wakeLock.acquire();
         }
+        MobclickAgent.onPause(this);
     }
 
     @Override
