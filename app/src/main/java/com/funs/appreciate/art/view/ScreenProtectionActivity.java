@@ -13,8 +13,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapper;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.funs.appreciate.art.ArtApp;
@@ -29,6 +33,7 @@ import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -157,12 +162,34 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         Glide.with(instance)
                 .load(url)
                 .override(1980, 1080)
-//                .decoder()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.2f)
-//                .asBitmap()
                 .error(R.drawable.bg_splash)
-                .into(splash_iv);
+                .decoder(new ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper>() {
+                    @Override
+                    public Resource<GifBitmapWrapper> decode(ImageVideoWrapper source, int width, int height) throws IOException {
+
+                        return null;
+                    }
+
+                    @Override
+                    public String getId() {
+                        return null;
+                    }
+                })
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(splash_iv)
+        ;
     }
 
     private String getPicUrl() {

@@ -8,6 +8,7 @@ import com.funs.appreciate.art.di.components.NetComponent;
 import com.funs.appreciate.art.di.modules.NetModule;
 import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by yc on 2017/6/14.

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.funs.appreciate.art.service.ScreenProtectionService;
 import com.funs.appreciate.art.utils.UIHelper;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by yc on 2017/6/14.
@@ -34,6 +35,13 @@ public class BaseActivity extends FragmentActivity {
         super.onResume();
         sps_intent.putExtra("screen_status","start");
         startService(sps_intent);
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

@@ -19,9 +19,11 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
+import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.view.widget.DialogErr;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import javax.inject.Inject;
 
@@ -49,6 +51,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                 .build().inject(this);
 
         presenter.loadSplash("0");
+        //umeng
+        String mac = AppUtil.getMacByWifi(this);
+//        MobclickAgent.setDebugMode(true);
+
     }
 
     ///////////////////////////////////////////////////////
@@ -80,7 +86,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        closeScreenService();
+        closeScreenService();//
     }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);

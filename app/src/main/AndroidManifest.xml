@@ -5,6 +5,7 @@
         android:name="android.software.leanback"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <application
         android:name=".ArtApp"
         android:allowBackup="true"
@@ -56,6 +57,11 @@
         <!-- 屏保service -->
         <service android:name=".service.ScreenProtectionService"
             />
+
+        <!-- umeng -->
+        <meta-data android:value="595f1f689f06fd62d9001063" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="funs_art" android:name="UMENG_CHANNEL"/>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
