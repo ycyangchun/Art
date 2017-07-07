@@ -62,6 +62,16 @@
         <meta-data android:value="595f1f689f06fd62d9001063" android:name="UMENG_APPKEY"/>
         <meta-data android:value="funs_art" android:name="UMENG_CHANNEL"/>
 
+        <!-- talkingData-->
+        <service android:name="com.talkingdata.sdk.TDAntiCheatingService"
+            android:process="com.talkingdata.sdk.TDAntiCheatingService">  <!--用户质量评估Service可以配置在主进程或者单独进程-->
+            <intent-filter>
+                <action android:name="com.talkingdata.sdk.TDAntiCheatingService" />
+            </intent-filter>
+        </service>
+        <meta-data android:name="TD_APP_ID" android:value="D2E556DCEAF34FBEA8DB243CB3FFC5F5" />
+        <meta-data android:name="TD_CHANNEL_ID" android:value="funs_art" />
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -26,7 +26,6 @@ dependencies {
     //dagger2
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-
     //okhttp3
     compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okhttpVersion"
@@ -41,7 +40,8 @@ dependencies {
     // RxBus
     compile "com.hwangjr.rxbus:rxbus:$rootProject.ext.rxbus"
     //xutils 3
-//    compile "org.xutils:xutils:$rootProject.ext.xutils"
+    //    compile "org.xutils:xutils:$rootProject.ext.xutils"
     //umeng
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile files('libs/SaaS_AppAnalytics_Android_SDK_V4.0.3.jar')
 }
