@@ -25,11 +25,13 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
+import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SourcePictureDownload;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -60,6 +62,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UIHelper.initialize(this, false);
+        AppUtil.initialize(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
@@ -164,45 +167,8 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private void showPic() {
         String url = getPicUrl();
-//        System.out.println("======== url =========>"+url+" picIndex "+picIndex);
-        if(url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/201707061831199e6774a355038597396ddb27ec530379.jpg")
-            ||url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/20170706183046c4e500fee0d982fccb1ceea56fa76884.jpg")){
-            picIndex = getCurrentShow();
-            url = getPicUrl();
-        }
-        Glide.with(instance)
-                .load(url)
-                .override(1980, 1080)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.2f)
-                .error(R.drawable.bg_splash)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, final String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        System.out.println(" model "+model);
-//                        if(decodeFialeds.contains(model)){
-//                            String name = model.substring(model.lastIndexOf("/") + 1, model.length());
-//                            String path = PathUtils.resourcePath + File.separator + name;
-//                            downSuccess(model,path,picIndex);
-//                        } else {
-//                            decodeFialeds.add(model);
-//                            // 下载图片显示
-//                            new Thread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    sDownload.downloadX(model , picIndex);
-//                                }
-//                            }).start();
-//                        }
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(splash_iv);
+        System.out.println("======== url =========>"+url+" picIndex "+picIndex);
+        ImageLoader.getInstance().displayImage(url,splash_iv);
     }
 
     private String getPicUrl() {
