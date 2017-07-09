@@ -13,12 +13,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapper;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.funs.appreciate.art.ArtApp;
@@ -30,11 +26,14 @@ import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
+import com.funs.appreciate.art.utils.PathUtils;
+import com.funs.appreciate.art.utils.SourcePictureDownload;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,7 +43,7 @@ import javax.inject.Inject;
  *  屏保
  */
 
-public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View{
+public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View , SourcePictureDownload.DownloadListener {
 
     private PowerManager.WakeLock wakeLock;
     private ImageView splash_iv;
@@ -52,10 +51,11 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private static int picIndex;
     private int duration;
     private final static int webPic = 0;
-
+    private SourcePictureDownload sDownload;
     @Inject
     SplashPresenter presenter;
     List<SplashPictureEntity.ConfigBean.DataJsonBean>  dataJsonBeen;
+    List<String> decodeFialeds ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +84,9 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .build().inject(this);
 
         presenter.loadSplash("1");
+
+        sDownload = new SourcePictureDownload(this , this);
+        decodeFialeds = new ArrayList<>();
     }
 
     @Override
@@ -162,28 +165,36 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private void showPic() {
         String url = getPicUrl();
 //        System.out.println("======== url =========>"+url+" picIndex "+picIndex);
+        if(url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/201707061831199e6774a355038597396ddb27ec530379.jpg")
+            ||url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/20170706183046c4e500fee0d982fccb1ceea56fa76884.jpg")){
+            picIndex = getCurrentShow();
+            url = getPicUrl();
+        }
         Glide.with(instance)
                 .load(url)
                 .override(1980, 1080)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.2f)
                 .error(R.drawable.bg_splash)
-                .decoder(new ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper>() {
-                    @Override
-                    public Resource<GifBitmapWrapper> decode(ImageVideoWrapper source, int width, int height) throws IOException {
-
-                        return null;
-                    }
-
-                    @Override
-                    public String getId() {
-                        return null;
-                    }
-                })
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
+                    public boolean onException(Exception e, final String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        System.out.println(" model "+model);
+//                        if(decodeFialeds.contains(model)){
+//                            String name = model.substring(model.lastIndexOf("/") + 1, model.length());
+//                            String path = PathUtils.resourcePath + File.separator + name;
+//                            downSuccess(model,path,picIndex);
+//                        } else {
+//                            decodeFialeds.add(model);
+//                            // 下载图片显示
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    sDownload.downloadX(model , picIndex);
+//                                }
+//                            }).start();
+//                        }
+                        return true;
                     }
 
                     @Override
@@ -191,8 +202,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                         return false;
                     }
                 })
-                .into(splash_iv)
-        ;
+                .into(splash_iv);
     }
 
     private String getPicUrl() {
@@ -225,5 +235,25 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             picIndex = temp;
         }
         return picIndex;
+    }
+
+    //////////////////// SourcePictureDownload.DownloadListener ////////////////////////
+    @Override
+    public void downSuccess(String url, String path, int position) {
+        System.out.println(" path "+path);
+        if(position == picIndex){
+            Glide.with(instance)
+                    .load(path)
+                    .override(1980, 1080)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.2f)
+                    .error(R.drawable.bg_splash)
+                    .into(splash_iv);
+        }
+    }
+
+    @Override
+    public void downFailed(Throwable t, String url) {
+
     }
 }

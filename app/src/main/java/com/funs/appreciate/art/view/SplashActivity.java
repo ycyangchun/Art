@@ -51,10 +51,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                 .build().inject(this);
 
         presenter.loadSplash("0");
-        //umeng
-        String mac = AppUtil.getMacByWifi(this);
-//        MobclickAgent.setDebugMode(true);
-
     }
 
     ///////////////////////////////////////////////////////

@@ -40,8 +40,11 @@ dependencies {
     // RxBus
     compile "com.hwangjr.rxbus:rxbus:$rootProject.ext.rxbus"
     //xutils 3
-    //    compile "org.xutils:xutils:$rootProject.ext.xutils"
+    compile "org.xutils:xutils:$rootProject.ext.xutils"
     //umeng
     compile 'com.umeng.analytics:analytics:latest.integration'
+    // talkingdata
     compile files('libs/SaaS_AppAnalytics_Android_SDK_V4.0.3.jar')
+
+
 }
