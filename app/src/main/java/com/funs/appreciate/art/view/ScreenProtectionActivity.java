@@ -31,6 +31,7 @@ import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SourcePictureDownload;
 import com.funs.appreciate.art.utils.UIHelper;
+import com.funs.appreciate.art.utils.WebResHelper;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
@@ -58,7 +59,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     @Inject
     SplashPresenter presenter;
     List<SplashPictureEntity.ConfigBean.DataJsonBean>  dataJsonBeen;
-    List<String> decodeFialeds ;
+    List<String> decodeFaileds ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +91,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         presenter.loadSplash("1");
 
         sDownload = new SourcePictureDownload(this , this);
-        decodeFialeds = new ArrayList<>();
+        decodeFaileds = new ArrayList<>();
     }
 
     @Override
@@ -163,7 +164,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 picIndex  = 0;
                 showPic();
                 if(dataJsonBeen.size()> 1){
-                    picIndex = getCurrentShow();
                     handler.sendEmptyMessageDelayed(webPic , duration * 1000);
                 }
             }
@@ -171,48 +171,72 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     }
 
     private void showPic() {
-        String url = getPicUrl();
-//        System.out.println("======== url =========>"+url+" picIndex "+picIndex);
-        if(url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/201707061831199e6774a355038597396ddb27ec530379.jpg")
-            ||url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/20170706183046c4e500fee0d982fccb1ceea56fa76884.jpg")
-                ||url.equals("http://hksytest.oss-cn-beijing.aliyuncs.com/2017070611290271c2d021da7692ed8a4408ab766af6fd.jpg")
-                ){
-            picIndex = getCurrentShow();
-            url = getPicUrl();
-        }
-        Glide.with(instance)
-                .load(url)
-                .override(1980, 1080)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.2f)
-                .error(R.drawable.bg_splash)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, final String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        System.out.println(" model "+model);
-//                        if(decodeFialeds.contains(model)){
+        final String url = getPicUrl();
+        System.out.println("=====url =====>" + url+" picIndex  "+picIndex);
+//        Glide.with(instance)
+//                .load(url)
+//                .override(1920, 1080)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .thumbnail(0.2f)
+//                .error(R.drawable.bg_splash)
+//                .listener(new RequestListener<String, GlideDrawable>() {
+//                    @Override
+//                    public boolean onException(Exception e, final String model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                        boolean needDownload = false;
+//                        System.err.println("=====model =====>" + model+" picIndex "+picIndex);
+//                        if(decodeFaileds.contains(model)){
 //                            String name = model.substring(model.lastIndexOf("/") + 1, model.length());
 //                            String path = PathUtils.resourcePath + File.separator + name;
-//                            downSuccess(model,path,picIndex);
+//                            File file = new File(path);
+//                            if(file.exists() ) {
+//                                downSuccess(model, path, picIndex);
+//                            } else {
+//                                needDownload = true;
+//                            }
 //                        } else {
-//                            decodeFialeds.add(model);
-//                            // 下载图片显示
+//                            decodeFaileds.add(model);
+//                            needDownload = true;
+//                        }
+//
+//                        // 下载图片显示
+//                        if(needDownload) {
 //                            new Thread(new Runnable() {
 //                                @Override
 //                                public void run() {
-//                                    sDownload.downloadX(model , picIndex);
+//                                    sDownload.downloadX(model, picIndex);
 //                                }
 //                            }).start();
 //                        }
-                        return true;
-                    }
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                        return false;
+//                    }
+//                })
+//                .into(splash_iv);
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(splash_iv);
+
+        boolean needDownload = false;
+        String name = url.substring(url.lastIndexOf("/") + 1, url.length());
+        String path = PathUtils.resourcePath + File.separator + name;
+        File file = new File(path);
+        if(file.exists() ) {
+            downSuccess(url, path, picIndex);
+        } else {
+            needDownload = true;
+        }
+
+        // 下载图片显示
+        if(needDownload) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    sDownload.downloadX(url, picIndex);
+                }
+            }).start();
+        }
     }
 
     private String getPicUrl() {
@@ -227,8 +251,8 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             switch (msg.what) {
                 case webPic:
                     if(dataJsonBeen != null) {
-                        showPic();
                         picIndex = getCurrentShow();
+                        showPic();
                         handler.sendEmptyMessageDelayed(webPic, duration * 1000);
                     }
                     break;
@@ -250,15 +274,9 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     //////////////////// SourcePictureDownload.DownloadListener ////////////////////////
     @Override
     public void downSuccess(String url, String path, int position) {
-        System.out.println(" path "+path);
+        System.out.println("downSuccess path "+path+" position "+position);
         if(position == picIndex){
-            Glide.with(instance)
-                    .load(path)
-                    .override(1980, 1080)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .thumbnail(0.2f)
-                    .error(R.drawable.bg_splash)
-                    .into(splash_iv);
+            splash_iv.setImageBitmap(WebResHelper.loadImageLocal(path));
         }
     }
 
