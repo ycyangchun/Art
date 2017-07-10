@@ -47,7 +47,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private static int picIndex;
     private int duration;
     private final static int webPic = 0;
-    private SourcePictureDownload sDownload;
     @Inject
     SplashPresenter presenter;
     List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen;
