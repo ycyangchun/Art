@@ -45,5 +45,4 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     // talkingdata
     compile files('libs/SaaS_AppAnalytics_Android_SDK_V4.0.3.jar')
-    compile files('libs/universal-image-loader-1.9.5.jar')
 }

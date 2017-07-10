@@ -2,15 +2,12 @@ package com.funs.appreciate.art;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.funs.appreciate.art.di.components.DaggerNetComponent;
 import com.funs.appreciate.art.di.components.NetComponent;
 import com.funs.appreciate.art.di.modules.NetModule;
 import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SharedPreferencesUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.tendcloud.tenddata.TCAgent;
 import com.umeng.analytics.MobclickAgent;
 

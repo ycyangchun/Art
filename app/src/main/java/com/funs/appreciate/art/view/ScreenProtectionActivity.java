@@ -15,9 +15,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.di.components.DaggerScreenProtectionComponent;
@@ -26,17 +23,12 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
-import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
-import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SourcePictureDownload;
 import com.funs.appreciate.art.utils.UIHelper;
-import com.funs.appreciate.art.utils.WebResHelper;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +36,10 @@ import javax.inject.Inject;
 
 /**
  * Created by yc on 2017/6/23.
- *  屏保
+ * 屏保
  */
 
-public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View , SourcePictureDownload.DownloadListener {
+public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View{
 
     private PowerManager.WakeLock wakeLock;
     private ImageView splash_iv;
@@ -58,13 +50,13 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private SourcePictureDownload sDownload;
     @Inject
     SplashPresenter presenter;
-    List<SplashPictureEntity.ConfigBean.DataJsonBean>  dataJsonBeen;
-    List<String> decodeFaileds ;
+    List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen;
+    List<String> decodeFaileds;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UIHelper.initialize(this, false);
-        AppUtil.initialize(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
@@ -90,7 +82,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
         presenter.loadSplash("1");
 
-        sDownload = new SourcePictureDownload(this , this);
         decodeFaileds = new ArrayList<>();
     }
 
@@ -140,31 +131,32 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     @Override
     public void loadSplashFailed(Throwable throwable) {
-        if(throwable instanceof NoNetworkException){
+        if (throwable instanceof NoNetworkException) {
             String splash = ArtResourceUtils.getSplashRes();
-            if(splash != null)
+            if (splash != null)
                 loadData(splash);
         }
     }
+
     private void loadData(String splash) {
-        SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
-        SplashPictureEntity.ConfigBean  cb = se.getConfig();
+        SplashPictureEntity se = new Gson().fromJson(splash, SplashPictureEntity.class);
+        SplashPictureEntity.ConfigBean cb = se.getConfig();
         String screenTime = cb.getScreenSaverTime();
-        if(!TextUtils.isEmpty(screenTime)){
+        if (!TextUtils.isEmpty(screenTime)) {
             ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
         }
         dataJsonBeen = cb.getImageArray();
-        duration =  5 ;//默认
+        duration = 5;//默认
         try {
             duration = Integer.parseInt(cb.getScreenSaverTime());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } finally {
-            if(dataJsonBeen != null) {
-                picIndex  = 0;
+            if (dataJsonBeen != null) {
+                picIndex = 0;
                 showPic();
-                if(dataJsonBeen.size()> 1){
-                    handler.sendEmptyMessageDelayed(webPic , duration * 1000);
+                if (dataJsonBeen.size() > 1) {
+                    handler.sendEmptyMessageDelayed(webPic, duration * 1000);
                 }
             }
         }
@@ -172,71 +164,16 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private void showPic() {
         final String url = getPicUrl();
-        System.out.println("=====url =====>" + url+" picIndex  "+picIndex);
-//        Glide.with(instance)
-//                .load(url)
-//                .override(1920, 1080)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .thumbnail(0.2f)
-//                .error(R.drawable.bg_splash)
-//                .listener(new RequestListener<String, GlideDrawable>() {
-//                    @Override
-//                    public boolean onException(Exception e, final String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                        boolean needDownload = false;
-//                        System.err.println("=====model =====>" + model+" picIndex "+picIndex);
-//                        if(decodeFaileds.contains(model)){
-//                            String name = model.substring(model.lastIndexOf("/") + 1, model.length());
-//                            String path = PathUtils.resourcePath + File.separator + name;
-//                            File file = new File(path);
-//                            if(file.exists() ) {
-//                                downSuccess(model, path, picIndex);
-//                            } else {
-//                                needDownload = true;
-//                            }
-//                        } else {
-//                            decodeFaileds.add(model);
-//                            needDownload = true;
-//                        }
-//
-//                        // 下载图片显示
-//                        if(needDownload) {
-//                            new Thread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    sDownload.downloadX(model, picIndex);
-//                                }
-//                            }).start();
-//                        }
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        return false;
-//                    }
-//                })
-//                .into(splash_iv);
+//        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
+        Glide.with(instance)
+                .load(url)
+                .override(1920, 1080)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.2f)
+                .error(R.drawable.bg_splash)
+                .into(splash_iv);
 
 
-        boolean needDownload = false;
-        String name = url.substring(url.lastIndexOf("/") + 1, url.length());
-        String path = PathUtils.resourcePath + File.separator + name;
-        File file = new File(path);
-        if(file.exists() ) {
-            downSuccess(url, path, picIndex);
-        } else {
-            needDownload = true;
-        }
-
-        // 下载图片显示
-        if(needDownload) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sDownload.downloadX(url, picIndex);
-                }
-            }).start();
-        }
     }
 
     private String getPicUrl() {
@@ -250,7 +187,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             super.handleMessage(msg);
             switch (msg.what) {
                 case webPic:
-                    if(dataJsonBeen != null) {
+                    if (dataJsonBeen != null) {
                         picIndex = getCurrentShow();
                         showPic();
                         handler.sendEmptyMessageDelayed(webPic, duration * 1000);
@@ -261,27 +198,14 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         }
     };
 
-    private int getCurrentShow(){
+    private int getCurrentShow() {
         int temp = ++picIndex;
-        if(temp > dataJsonBeen.size() -1){
+        if (temp > dataJsonBeen.size() - 1) {
             picIndex = 0;
-        } else{
+        } else {
             picIndex = temp;
         }
         return picIndex;
     }
 
-    //////////////////// SourcePictureDownload.DownloadListener ////////////////////////
-    @Override
-    public void downSuccess(String url, String path, int position) {
-        System.out.println("downSuccess path "+path+" position "+position);
-        if(position == picIndex){
-            splash_iv.setImageBitmap(WebResHelper.loadImageLocal(path));
-        }
-    }
-
-    @Override
-    public void downFailed(Throwable t, String url) {
-
-    }
 }

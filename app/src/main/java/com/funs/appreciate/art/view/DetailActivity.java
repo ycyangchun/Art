@@ -156,8 +156,7 @@ public class DetailActivity extends BaseActivity{
     }
 
     private void glideImg(List<LayoutModel.LayoutBean.ContentBean> cbs) {
-        if(urls != null && urls.length >= 1)
-            Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(browse_iv);
+        glideImg();
 
         if(cbs != null) {
             LayoutModel.LayoutBean.ContentBean cb = cbs.get(picIndex);
