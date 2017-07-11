@@ -71,7 +71,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         splash_iv = (ImageView) findViewById(R.id.splash_iv);
         findViewById(R.id.count_down_tv).setVisibility(View.GONE);
         instance = this.getApplicationContext();
-        System.out.println("=============== 屏保 ===============>");
+        System.out.println("=============== 屏保 ===============>" +  ArtResourceUtils.getScreenSaverTime(10));
 
         DaggerScreenProtectionComponent.builder()
                 .netComponent(ArtApp.get(this).getNetComponent())

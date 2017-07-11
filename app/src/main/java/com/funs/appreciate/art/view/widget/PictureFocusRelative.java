@@ -41,7 +41,7 @@ public class PictureFocusRelative extends FocusRelative {
 
     public PictureFocusRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
-        margin = -12;
+        margin = -17;
     }
 
     public PictureFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -66,6 +66,7 @@ public class PictureFocusRelative extends FocusRelative {
                     lp.addRule(RelativeLayout.BELOW, lm.getTopid());
                 if (lm.getLeftid() != 0)
                     lp.addRule(RelativeLayout.RIGHT_OF, lm.getLeftid());
+                margin = lm.getMargin();
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
 //                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);

@@ -64,7 +64,16 @@ public class LayoutModel {
         private String leftdistance;
         private String leftid;
         private String topid;
+        private String isbottom;
         private List<ContentBean> content;
+
+        public String getIsbottom() {
+            return isbottom;
+        }
+
+        public void setIsbottom(String isbottom) {
+            this.isbottom = isbottom;
+        }
 
         public String getTopdistance() {
             return topdistance;
@@ -159,10 +168,10 @@ public class LayoutModel {
 
             private String remark;
 
+
             public String getSurfaceimage() {
                 return surfaceimage;
             }
-
             public void setSurfaceimage(String surfaceimage) {
                 this.surfaceimage = surfaceimage;
             }

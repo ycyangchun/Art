@@ -25,6 +25,7 @@ import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
+import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.utils.SharedPreferencesUtils;

@@ -99,7 +99,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
             }
             if( ls != null) {
                for(int i = 0 ; i < ls.size() ; i++){
-                   PictureModel pm  = new PictureModel( i+1 ,315 , 560, "tag_content", i, ls ,this);
+                   PictureModel pm  = new PictureModel( i+1 ,330 , 600, "tag_content", i, ls ,this);
                    lms.add(pm);
                }
                 fr = (PictureFocusRelative) findViewById(R.id.focus_relative);

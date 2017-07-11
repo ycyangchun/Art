@@ -22,6 +22,7 @@ public class PictureModel {
     private Object colorid;
     private String columnid;
     private int topid ;
+    private int margin = -16;
 
     private List<LayoutModel.LayoutBean.ContentBean> contentBean;
 
@@ -75,6 +76,7 @@ public class PictureModel {
         this.typeRrc = typeRrc;
         this.leftid = toRightId * 200;
         this.contentBean = cb;
+        this.margin = -16;
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(id);
@@ -92,6 +94,14 @@ public class PictureModel {
         rl.setId(id);
         rl.setFocusable(true);
         setRootView(rl);
+    }
+
+    public int getMargin() {
+        return margin;
+    }
+
+    public void setMargin(int margin) {
+        this.margin = margin;
     }
 
     public int getId() {
