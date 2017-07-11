@@ -256,6 +256,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 f = new RecommendFragment();
                 break;
         }
+            f = new RecommendFragment();
             Bundle bundle = new Bundle();
             bundle.putString("columnId",listMainIds.get(position));
             f.setArguments(bundle);

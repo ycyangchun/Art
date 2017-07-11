@@ -39,10 +39,10 @@ public class OilFragment extends BaseFragment implements  PictureFocusRelative.P
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         intViewData();
-        fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
-        fr.addViews(lms);
-        fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
-        fr.setmPictureFocusKeyEvent(this);
+        pfr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
+        pfr.addViews(lms);
+        pfr.setAnimation(R.anim.scale_small, R.anim.scale_big);
+        pfr.setmPictureFocusKeyEvent(this);
     }
 
 

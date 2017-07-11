@@ -53,7 +53,20 @@ public class PictureModel {
         setRootView(rl);
     }
 
-
+    public PictureModel(LayoutModel.LayoutBean lb, Context mContext , int index) {
+        this.id = (index + 1) * 300 ;
+        this.width = Integer.parseInt(lb.getWidth());
+        this.height = 80;
+        this.topid = 0 ;
+        this.leftid = index * 300 ;
+        this.contentBean = lb.getContent();
+        this.margin = 6;
+        // 添加root
+        RelativeLayout rl = new RelativeLayout(mContext);
+        rl.setId(this.id);
+        rl.setFocusable(true);
+        setRootView(rl);
+    }
 
 
     public PictureModel(int id, int width, int height, int toBelowId, int toRightId , Context mContext) {

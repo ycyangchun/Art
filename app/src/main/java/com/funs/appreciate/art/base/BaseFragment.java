@@ -10,6 +10,7 @@ import android.widget.HorizontalScrollView;
 
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
+import com.funs.appreciate.art.view.widget.PictureShadowRelative;
 
 /**
  * Created by yc on 2017/6/14.
@@ -18,7 +19,8 @@ import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 
 public class BaseFragment extends Fragment {
 
-    public  PictureFocusRelative fr;// content view
+    public  PictureFocusRelative pfr;// content view
+    public  PictureShadowRelative psr;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -33,8 +35,8 @@ public class BaseFragment extends Fragment {
 
     // 获取焦点view
     public void setFocus(){
-        if(fr != null ){
-            fr.setFocusView();
+        if(pfr != null ){
+            pfr.setFocusView();
         }
     }
 

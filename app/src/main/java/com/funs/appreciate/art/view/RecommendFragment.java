@@ -25,6 +25,7 @@ import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
 import com.funs.appreciate.art.view.widget.DialogErr;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
+import com.funs.appreciate.art.view.widget.PictureShadowRelative;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
 
 public class RecommendFragment extends BaseFragment implements  PictureFocusRelative.PictureFocusKeyEvent ,MainContract.View{
     List<PictureModel> lms = new ArrayList<>();
+    List<PictureModel> lmsBottom = new ArrayList<>();
     View view;
     FragmentActivity mainActivity;
     String columnId;
@@ -133,10 +135,22 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
                     PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity());
                     lms.add(pm);
                 }
-                fr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
-                fr.addViews(lms);
-                fr.setAnimation(R.anim.scale_small, R.anim.scale_big);
-                fr.setmPictureFocusKeyEvent(this);
+                pfr = (PictureFocusRelative) view.findViewById(R.id.focus_relative);
+                pfr.addViews(lms);
+                pfr.setAnimation(R.anim.scale_small, R.anim.scale_big);
+                pfr.setmPictureFocusKeyEvent(this);
+            }
+            //////////////
+            List<LayoutModel.LayoutBean> listBottom = lm.getBottomLayout();
+            if(listBottom != null) {
+                System.out.println("=======listBottom=======>"+listBottom.size());
+                for (int i = 0; i < listBottom.size(); i++) {
+                    LayoutModel.LayoutBean lb = listBottom.get(i);
+                    PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity(), i);
+                    lmsBottom.add(pm);
+                }
+                psr = (PictureShadowRelative) view.findViewById(R.id.shadow_relative);
+                psr.addViews(lmsBottom);
             }
         }
     }

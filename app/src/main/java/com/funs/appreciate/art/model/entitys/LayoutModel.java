@@ -31,6 +31,17 @@ public class LayoutModel {
         return layout;
     }
 
+    public List<LayoutBean> getBottomLayout() {
+        if(layout == null ) return  null;
+        List<LayoutBean> list = new ArrayList<>();
+        for(LayoutBean lb : layout){
+            if("1".equals(lb.getIsbottom())){
+                list.add(lb);
+            }
+        }
+        return list;
+    }
+
     public void setLayout(List<LayoutBean> layout) {
         this.layout = layout;
     }
