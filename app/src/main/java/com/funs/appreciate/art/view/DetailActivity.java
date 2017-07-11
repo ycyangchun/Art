@@ -136,18 +136,25 @@ public class DetailActivity extends BaseActivity{
     }
 
     private void setViewVisibility() {
+//        if(urls.length > 1) {
+//            if (picIndex >= 0 && picIndex < urls.length - 1) {
+//                img_right.setVisibility(View.VISIBLE);
+//            } else {
+//                img_right.setVisibility(View.GONE);
+//            }
+//
+//            if (picIndex >= 1 && picIndex < urls.length) {
+//                img_left.setVisibility(View.VISIBLE);
+//            } else {
+//                img_left.setVisibility(View.GONE);
+//            }
+//        } else {
+//            img_right.setVisibility(View.GONE);
+//            img_left.setVisibility(View.GONE);
+//        }
         if(urls.length > 1) {
-            if (picIndex >= 0 && picIndex < urls.length - 1) {
-                img_right.setVisibility(View.VISIBLE);
-            } else {
-                img_right.setVisibility(View.GONE);
-            }
-
-            if (picIndex >= 1 && picIndex < urls.length) {
-                img_left.setVisibility(View.VISIBLE);
-            } else {
-                img_left.setVisibility(View.GONE);
-            }
+            img_right.setVisibility(View.VISIBLE);
+            img_left.setVisibility(View.VISIBLE);
         } else {
             img_right.setVisibility(View.GONE);
             img_left.setVisibility(View.GONE);
@@ -185,7 +192,7 @@ public class DetailActivity extends BaseActivity{
         if(temp >= urls.length ){
             temp = -- temp;
         } else {
-
+            temp = 0;
         }
         return temp;
     }
@@ -194,7 +201,7 @@ public class DetailActivity extends BaseActivity{
         int temp = picIndex;
         temp = -- temp;
         if(temp >= 0 && temp < urls.length){
-
+            temp = urls.length -1;
         } else{
             temp = ++ temp;
         }
