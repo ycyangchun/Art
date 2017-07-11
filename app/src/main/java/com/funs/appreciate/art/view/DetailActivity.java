@@ -26,15 +26,16 @@ import java.util.List;
  * 详情
  */
 
-public class DetailActivity extends BaseActivity{
-    String content  , type;
+public class DetailActivity extends BaseActivity {
+    String content, type;
     ImageView browse_iv;
-    ImageButton  img_left,img_right;
+    ImageButton img_left, img_right;
     String urls[];//图片数组
     static int picIndex;// 显示图片index
-    TextView detail_title_tv,detail_content_tv;
+    TextView detail_title_tv, detail_content_tv;
     int special;// 专题tag
     List<LayoutModel.LayoutBean.ContentBean> cbs;// 专题数据
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +57,12 @@ public class DetailActivity extends BaseActivity{
             int keyCode = event.getKeyCode();
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_LEFT:
-                    if(img_left.isShown()) {
+                    if (img_left.isShown()) {
                         int leftIndex = getLeftShow();
-                        if(leftIndex != picIndex) {
+                        if (leftIndex != picIndex) {
                             picIndex = leftIndex;
-                            setViewVisibility();
-                            if(special == -1) {
+//                            setViewVisibility();
+                            if (special == -1) {
                                 glideImg();
                             } else {
                                 glideImg(cbs);
@@ -70,12 +71,12 @@ public class DetailActivity extends BaseActivity{
                     }
                     return true;
                 case KeyEvent.KEYCODE_DPAD_RIGHT:
-                    if(img_right.isShown()) {
+                    if (img_right.isShown()) {
                         int rightIndex = getRightShow();
-                        if(rightIndex != picIndex) {
+                        if (rightIndex != picIndex) {
                             picIndex = rightIndex;
-                            setViewVisibility();
-                            if(special == -1) {
+//                            setViewVisibility();
+                            if (special == -1) {
                                 glideImg();
                             } else {
                                 glideImg(cbs);
@@ -91,11 +92,11 @@ public class DetailActivity extends BaseActivity{
     public void loadContent() {
         content = this.getIntent().getStringExtra("content");
         type = this.getIntent().getStringExtra("type");
-        picIndex = this.getIntent().getIntExtra("picIndex",0);
-        special = this.getIntent().getIntExtra("special",-1);
+        picIndex = this.getIntent().getIntExtra("picIndex", 0);
+        special = this.getIntent().getIntExtra("special", -1);
 
-        if(content != null) {
-            if(special == -1) {
+        if (content != null) {
+            if (special == -1) {
                 DetailEntity de = new Gson().fromJson(content, DetailEntity.class);
                 DetailEntity.DataBean cb = de.getData();
                 try {
@@ -126,7 +127,8 @@ public class DetailActivity extends BaseActivity{
                     e.printStackTrace();
                 }
             } else { // 专题数据展示
-                Type type = new TypeToken<List<LayoutModel.LayoutBean.ContentBean>>(){}.getType();
+                Type type = new TypeToken<List<LayoutModel.LayoutBean.ContentBean>>() {
+                }.getType();
                 cbs = new Gson().fromJson(content, type);
                 urls = getImages(cbs);
                 setViewVisibility();
@@ -152,7 +154,7 @@ public class DetailActivity extends BaseActivity{
 //            img_right.setVisibility(View.GONE);
 //            img_left.setVisibility(View.GONE);
 //        }
-        if(urls.length > 1) {
+        if (urls.length > 1) {
             img_right.setVisibility(View.VISIBLE);
             img_left.setVisibility(View.VISIBLE);
         } else {
@@ -162,36 +164,36 @@ public class DetailActivity extends BaseActivity{
     }
 
     private void glideImg() {
-        if(urls != null && urls.length >= 1)
+        if (urls != null && urls.length >= 1)
             Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(browse_iv);
     }
 
     private void glideImg(List<LayoutModel.LayoutBean.ContentBean> cbs) {
         glideImg();
 
-        if(cbs != null) {
+        if (cbs != null) {
             LayoutModel.LayoutBean.ContentBean cb = cbs.get(picIndex);
             detail_title_tv.setText(cb.getName());
             detail_content_tv.setText(cb.getRemark());
         }
     }
 
-    public String[] getImages(List<LayoutModel.LayoutBean.ContentBean> list){
+    public String[] getImages(List<LayoutModel.LayoutBean.ContentBean> list) {
         String arr[] = null;
-        if(list != null) {
+        if (list != null) {
             arr = new String[list.size()];
-            for(int i = 0 ; i < list.size() ; i++){
+            for (int i = 0; i < list.size(); i++) {
                 arr[i] = list.get(i).getSurfaceimage();
             }
         }
         return arr;
     }
+
     private int getRightShow(){
         int temp = picIndex;
         temp = ++ temp;
         if(temp >= urls.length ){
-            temp = -- temp;
-        } else {
+//            temp = -- temp;
             temp = 0;
         }
         return temp;
@@ -201,10 +203,12 @@ public class DetailActivity extends BaseActivity{
         int temp = picIndex;
         temp = -- temp;
         if(temp >= 0 && temp < urls.length){
-            temp = urls.length -1;
+
         } else{
-            temp = ++ temp;
+//            temp = ++ temp;
+            temp = urls.length -1;
         }
         return temp;
     }
+
 }
