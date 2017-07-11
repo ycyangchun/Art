@@ -1,8 +1,13 @@
 package com.funs.appreciate.art.presenter;
 
+import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.model.api.ApiService;
 import com.funs.appreciate.art.model.entitys.CommonEntity;
+import com.funs.appreciate.art.utils.AppUtil;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -28,7 +33,7 @@ public class ContentPresenter implements ContentContract.Presenter {
     @Override
     public void loadLayout(String m, String id) {
         try {
-            apiService.getContentDetail(m ,id)
+            apiService.getContentDetail(m ,id , BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {

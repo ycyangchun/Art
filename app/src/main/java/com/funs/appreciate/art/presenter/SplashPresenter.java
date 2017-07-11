@@ -2,6 +2,7 @@ package com.funs.appreciate.art.presenter;
 
 import android.text.TextUtils;
 
+import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.model.api.ApiService;
 import com.funs.appreciate.art.model.entitys.CommonEntity;
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
@@ -35,7 +36,7 @@ public class SplashPresenter implements  SplashContract.Presenter{
     @Override
     public void loadSplash(final String type) {
         try {
-            apiService.getAppConfig("getAppConfig",type)
+            apiService.getAppConfig("getAppConfig",type, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {

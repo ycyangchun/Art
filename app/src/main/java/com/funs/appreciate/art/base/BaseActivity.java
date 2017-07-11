@@ -9,8 +9,12 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import com.funs.appreciate.art.service.ScreenProtectionService;
+import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by yc on 2017/6/14.
@@ -20,6 +24,7 @@ import com.umeng.analytics.MobclickAgent;
 public class BaseActivity extends FragmentActivity {
 
     public Intent sps_intent;
+    public static Map<String , String> map;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +33,10 @@ public class BaseActivity extends FragmentActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         //屏保
         sps_intent = new Intent(this, ScreenProtectionService.class);
+        /////
+        map = new HashMap<>();
+        map.put("version", AppUtil.getAppVersionName(this));
+        map.put("mac",AppUtil.getMacByWifi());
     }
 
     @Override

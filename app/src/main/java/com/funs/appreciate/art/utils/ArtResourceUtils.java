@@ -1,9 +1,7 @@
 package com.funs.appreciate.art.utils;
 
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

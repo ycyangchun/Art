@@ -1,5 +1,6 @@
 package com.funs.appreciate.art.presenter;
 
+import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.model.api.ApiService;
 import com.funs.appreciate.art.model.entitys.CommonEntity;
 import com.google.gson.Gson;
@@ -30,7 +31,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void loadLayout(String m , String columnId) {
         try {
-            apiService.getColumnList(m,columnId)
+            apiService.getColumnList(m,columnId, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
@@ -58,7 +59,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void loadContent(String m, String id , final String type) {
         try {
-            apiService.getContentDetail(m ,id)
+            apiService.getContentDetail(m ,id, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {

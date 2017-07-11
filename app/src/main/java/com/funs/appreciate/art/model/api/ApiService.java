@@ -3,8 +3,12 @@ package com.funs.appreciate.art.model.api;
 
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 
+import java.util.Map;
+
+import retrofit2.http.FieldMap;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -17,21 +21,21 @@ public interface ApiService {
      *,2，获取待机屏保信息 type = 1
      */
     @POST("appconfig")
-    Observable<String> getAppConfig(@Query("m") String getAppConfig , @Query("type") String type);
+    Observable<String> getAppConfig(@Query("m") String getAppConfig , @Query("type") String type , @QueryMap Map<String, String> map);
 
     /**
      * 3、获取栏目列表和第一个栏目的布局、内容  m=getColumnList
      * 4、获取某一个栏目的布局、内容            m=getLayoutAndContent&columnid=**
      */
     @POST("column")
-    Observable<String> getColumnList(@Query("m") String getColumnList , @Query("columnid") String columnId);
+    Observable<String> getColumnList(@Query("m") String getColumnList , @Query("columnid") String columnId, @QueryMap Map<String, String> map);
 
      /**
      * 5、获取某个内容的详情  m=getContentDetail&id=**
       *6、获取某个专题的详情  m=getSubject&id=**
      */
     @POST("content")
-    Observable<String> getContentDetail(@Query("m") String getContentDetail , @Query("id") String id);
+    Observable<String> getContentDetail(@Query("m") String getContentDetail , @Query("id") String id, @QueryMap Map<String, String> map);
 
 
 }
