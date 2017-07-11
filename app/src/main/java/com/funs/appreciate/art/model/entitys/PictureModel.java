@@ -23,6 +23,7 @@ public class PictureModel {
     private String columnid;
     private int topid ;
     private int margin = -16;
+    private String isbottom;
 
     private List<LayoutModel.LayoutBean.ContentBean> contentBean;
 
@@ -45,6 +46,7 @@ public class PictureModel {
         if(ol != null && ol instanceof  String)  il = Integer.parseInt((String) ol);
         this.topid = it ;
         this.leftid = il ;
+        this.isbottom = lb.getIsbottom();
         this.contentBean = lb.getContent();
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
@@ -64,7 +66,7 @@ public class PictureModel {
         // 添加root
         RelativeLayout rl = new RelativeLayout(mContext);
         rl.setId(this.id);
-        rl.setFocusable(true);
+        rl.setFocusable(false);
         setRootView(rl);
     }
 
@@ -107,6 +109,14 @@ public class PictureModel {
         rl.setId(id);
         rl.setFocusable(true);
         setRootView(rl);
+    }
+
+    public String getIsbottom() {
+        return isbottom;
+    }
+
+    public void setIsbottom(String isbottom) {
+        this.isbottom = isbottom;
     }
 
     public int getMargin() {

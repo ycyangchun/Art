@@ -151,7 +151,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         dataJsonBeen = cb.getImageArray();
         duration = 5;//默认
         try {
-            duration = Integer.parseInt(cb.getScreenSaverTime());
+            duration = Integer.parseInt(cb.getDuration());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } finally {
@@ -167,11 +167,11 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private void showPic() {
         final String url = getPicUrl();
-//        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
+        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
         Glide.with(instance)
                 .load(url)
                 .override(1920, 1080)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .thumbnail(0.2f)
                 .error(R.drawable.bg_err)
                 .into(splash_iv);

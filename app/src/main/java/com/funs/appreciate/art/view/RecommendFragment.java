@@ -143,7 +143,6 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
             //////////////
             List<LayoutModel.LayoutBean> listBottom = lm.getBottomLayout();
             if(listBottom != null) {
-                System.out.println("=======listBottom=======>"+listBottom.size());
                 for (int i = 0; i < listBottom.size(); i++) {
                     LayoutModel.LayoutBean lb = listBottom.get(i);
                     PictureModel pm = new PictureModel(lb, ArtConfig.getMainActivity(), i);

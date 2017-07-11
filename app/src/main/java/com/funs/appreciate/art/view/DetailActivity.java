@@ -109,7 +109,8 @@ public class DetailActivity extends BaseActivity {
                             setViewVisibility();
                             glideImg();
                         } else {
-                            Glide.with(this).load(picUrl).error(R.drawable.bg_err).into(browse_iv);
+                            Glide.with(this).load(picUrl)
+                                    .thumbnail(0.2f).error(R.drawable.bg_err).into(browse_iv);
                         }
                     } else if ("1".equals(type)) {
                         closeScreenService();
@@ -165,7 +166,10 @@ public class DetailActivity extends BaseActivity {
 
     private void glideImg() {
         if (urls != null && urls.length >= 1)
-            Glide.with(this).load(urls[picIndex]).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(browse_iv);
+            Glide.with(this).load(urls[picIndex])
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .thumbnail(0.2f)
+                    .error(R.drawable.bg_err).into(browse_iv);
     }
 
     private void glideImg(List<LayoutModel.LayoutBean.ContentBean> cbs) {

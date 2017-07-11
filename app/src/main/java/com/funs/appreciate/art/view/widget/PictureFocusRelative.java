@@ -19,7 +19,6 @@ import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.utils.AnimFocusContentManager;
 import com.funs.appreciate.art.utils.ImageHelper;
-import com.funs.appreciate.art.utils.RotateShadowTransformation;
 import com.funs.appreciate.art.utils.UIHelper;
 
 import java.util.List;
@@ -108,7 +107,9 @@ public class PictureFocusRelative extends FocusRelative {
                     }
                     if( cb != null) {
                         Glide.with(mContext).load(cb.getSurfaceimage())
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(iv);
+                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                .thumbnail(0.2f)
+                                .error(R.drawable.bg_err).into(iv);
                     }
 
                 }
@@ -136,6 +137,7 @@ public class PictureFocusRelative extends FocusRelative {
                                 case KeyEvent.KEYCODE_DPAD_LEFT:
                                 case KeyEvent.KEYCODE_DPAD_RIGHT:
                                 case KeyEvent.KEYCODE_DPAD_UP:
+                                case KeyEvent.KEYCODE_DPAD_DOWN:
                                     // 布局位于 top 边界
                                     if (keyCode == KeyEvent.KEYCODE_DPAD_UP && (int) rl.getTag(R.id.tag_to_below) == 0) {
 //                                        System.out.println("== top === >" + rl.getId());
@@ -164,6 +166,10 @@ public class PictureFocusRelative extends FocusRelative {
                                             mPictureFocusKeyEvent.pictureListener("right",lm , finalI);
                                             return true;
                                         }
+                                    }
+                                    // 布局位于 bottom边界
+                                    if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN && "1".equals(lm.getContentBean())){
+                                        return true;
                                     }
                                     break;
 

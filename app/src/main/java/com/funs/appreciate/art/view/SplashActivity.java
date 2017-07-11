@@ -53,7 +53,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         ////////////////
         Runtime rt=Runtime.getRuntime();
         long maxMemory=rt.maxMemory();
-        Log.i("=====>maxMemory:",Long.toString(maxMemory/(1024*1024)));
+        Log.i(" =====> maxMemory ",Long.toString(maxMemory/(1024*1024)));
     }
 
     ///////////////////////////////////////////////////////
@@ -91,15 +91,14 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
-//        String screenTime = cb.getScreenSaverTime();
-//        if(!TextUtils.isEmpty(screenTime)){
-//            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
-//        }
 
         if(picUrl.contains(";")){
 
         } else {
-            Glide.with(this).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(splash_iv);
+            Glide.with(this).load(picUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .thumbnail(0.2f)
+                    .error(R.drawable.bg_err).into(splash_iv);
         }
 
         int duration = 5;//默认

@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
@@ -32,20 +33,31 @@ import java.util.List;
  *  阴影
  */
 
-public class PictureShadowRelative extends FocusRelative {
+public class PictureShadowRelative extends RelativeLayout {
 
     private List<PictureModel> lms;
+    public int margin;
+    public Context mContext;
     public PictureShadowRelative(Context context) {
         super(context);
+        mContext = context;
+        setFocusable(false);
+        setFocusableInTouchMode(false);
     }
 
     public PictureShadowRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         margin = 6;
+        setFocusable(false);
+        setFocusableInTouchMode(false);
     }
 
     public PictureShadowRelative(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
+        setFocusable(false);
+        setFocusableInTouchMode(false);
     }
 
 
@@ -107,16 +119,16 @@ public class PictureShadowRelative extends FocusRelative {
                     }
                     if( cb != null) {
                          Glide.with(mContext).load(cb.getSurfaceimage())
-                                    .asBitmap() //必须
-                                    .transform(new RotateShadowTransformation(mContext))
-                                    .into(iv);
+                                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                 .thumbnail(0.2f)
+                                 .transform(new RotateShadowTransformation(mContext))
+                                 .into(iv);
 
                     }
 
                 }
                 ///////////////
                 addView(rl, lp);
-                addFocusItem(lm);
 
                 //////
                 rl.setTag(R.id.tag_to_below,lm.getTopid());
@@ -128,30 +140,4 @@ public class PictureShadowRelative extends FocusRelative {
 
     }
 
-    public static Bitmap createReflectedImage(Bitmap originalImage)
-    {
-        int width = originalImage.getWidth();
-        int height = originalImage.getHeight();
-        Matrix matrix = new Matrix();
-        // 实现图片翻转90度
-        matrix.preScale(1, -1);
-        // 创建倒影图片（是原始图片的一半大小）
-        Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0, height , width, height , matrix, false);
-        // 创建总图片（原图片 + 倒影图片）
-//        Bitmap finalReflection = Bitmap.createBitmap(width, (height + height / 2), Bitmap.Config.RGB_565);
-        // 创建画布
-        Canvas canvas = new Canvas(reflectionImage);
-        canvas.drawBitmap(originalImage, 0, 0, null);
-        //把倒影图片画到画布上
-        canvas.drawBitmap(reflectionImage, 0, height + 1, null);
-        Paint shaderPaint = new Paint();
-        //创建线性渐变LinearGradient对象
-        LinearGradient shader = new LinearGradient(0, originalImage.getHeight(), 0, reflectionImage.getHeight() + 1, 0x70ffffff,
-                0x00ffffff, Shader.TileMode.MIRROR);
-        shaderPaint.setShader(shader);
-        shaderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        //画布画出反转图片大小区域，然后把渐变效果加到其中，就出现了图片的倒影效果。
-        canvas.drawRect(0, height + 1, width, reflectionImage.getHeight(), shaderPaint);
-        return reflectionImage;
-    }
 }
