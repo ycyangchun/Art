@@ -27,6 +27,7 @@ import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
+import com.funs.appreciate.art.utils.SharedPreferencesUtils;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
 
@@ -115,6 +116,8 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
                     // 退出应用
                     if(keyCode == KeyEvent.KEYCODE_BACK){
+                        ArtResourceUtils.removeScreenSaverRes();
+                        ArtResourceUtils.removeLayouts();
                         sps_intent.putExtra("screen_status", "remove");
                         startService(sps_intent);
                     }
@@ -184,6 +187,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
             listMainTab = lm.getColumnNames();
             listMainIds = lm.getColumnIds();
+            ArtResourceUtils.setLayoutColumnIds(new Gson().toJson(listMainIds));
             int section = 96;
             for (int i = 0; i < listMainTab.size(); i++) {
                 int len = listMainTab.get(i).length();
@@ -193,14 +197,13 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
             //tab
             tabFocusRelative.addViews(lpms);
-//            tabFocusRelative.setAnimation(R.anim.scale_text_small, R.anim.scale_text_big);
             tabFocusRelative.setTabSelect(this);
             tabFocusRelative.setIndexFocus(tabIndex);
 
             //content
             myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
             contentVp.setAdapter(myPagerAdapter);
-            contentVp.setOffscreenPageLimit(listMainTab.size());
+//            contentVp.setOffscreenPageLimit(listMainTab.size());
         }
     }
     //////////// MainContract.View ↑↑↑↑↑↑

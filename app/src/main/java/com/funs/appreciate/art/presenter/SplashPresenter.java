@@ -1,8 +1,11 @@
 package com.funs.appreciate.art.presenter;
 
+import android.text.TextUtils;
+
 import com.funs.appreciate.art.model.api.ApiService;
 import com.funs.appreciate.art.model.entitys.CommonEntity;
 import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
+import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -30,7 +33,7 @@ public class SplashPresenter implements  SplashContract.Presenter{
 
 
     @Override
-    public void loadSplash(String type) {
+    public void loadSplash(final String type) {
         try {
             apiService.getAppConfig("getAppConfig",type)
                     .subscribeOn(Schedulers.io())
@@ -38,14 +41,26 @@ public class SplashPresenter implements  SplashContract.Presenter{
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {
-                            CommonEntity commonEntity = new Gson().fromJson(s , CommonEntity.class);
-                            String status = commonEntity.getStatus();
-                            if("1".equals(status)) {
-                                view.loadSplashSuccess(s);
-                            } else {
-                                view.loadSplashFailed(new Throwable(commonEntity.getMsg()));
-                            }
+                                CommonEntity commonEntity = new Gson().fromJson(s, CommonEntity.class);
+                                String status = commonEntity.getStatus();
+                                if ("1".equals(status)) {
+                                    if ("0".equals(type))//启动页
+                                        view.loadSplashSuccess(s);
+                                    else { // 屏保
+                                        ArtResourceUtils.setScreenSaverRes(s);
+                                        SplashPictureEntity se = new Gson().fromJson(s , SplashPictureEntity.class);
+                                        SplashPictureEntity.ConfigBean  cb = se.getConfig();
+                                        String screenTime = cb.getScreenSaverTime();
+                                        if(!TextUtils.isEmpty(screenTime)){
+                                            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
+                                        }
+                                    }
+                                } else {
+                                    if ("0".equals(type))//启动页
+                                    view.loadSplashFailed(new Throwable(commonEntity.getMsg()));
+                                }
                         }
+
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {

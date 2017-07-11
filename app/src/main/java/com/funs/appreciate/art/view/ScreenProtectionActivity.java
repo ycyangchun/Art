@@ -78,7 +78,12 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .splashModule(new SplashModule(this))
                 .build().inject(this);
 
-        presenter.loadSplash("1");
+        String res = ArtResourceUtils.getScreenSaverRes();
+        if(TextUtils.isEmpty(res)) {
+            presenter.loadSplash("1");
+        } else {
+            loadData(res);
+        }
 
         decodeFaileds = new ArrayList<>();
     }
@@ -123,14 +128,14 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     @Override
     public void loadSplashSuccess(String splash) {
-        ArtResourceUtils.setScreenRes(splash);
+        ArtResourceUtils.setScreenSaverRes(splash);
         loadData(splash);
     }
 
     @Override
     public void loadSplashFailed(Throwable throwable) {
         if (throwable instanceof NoNetworkException) {
-            String splash = ArtResourceUtils.getSplashRes();
+            String splash = ArtResourceUtils.getScreenSaverRes();
             if (splash != null)
                 loadData(splash);
         }
@@ -168,7 +173,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .override(1920, 1080)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.2f)
-                .error(R.drawable.bg_splash)
+                .error(R.drawable.bg_err)
                 .into(splash_iv);
 
 

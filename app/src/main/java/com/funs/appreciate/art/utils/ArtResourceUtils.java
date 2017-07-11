@@ -1,5 +1,15 @@
 package com.funs.appreciate.art.utils;
 
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import com.funs.appreciate.art.model.entitys.LayoutModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 /**
  * Created by yc on 2017/6/30.
  *  资源保存
@@ -8,8 +18,9 @@ package com.funs.appreciate.art.utils;
 public class ArtResourceUtils {
 //    private static String splashRes;
 //    private static String layoutRes;
-//    private static String screenRes;
 //    private static int screenSaverTime;
+//    private static String screenSaverRes;
+//     private static String layoutColumnIds; // layout column id
 
     public static String getSplashRes() {
         return SharedPreferencesUtils.getString("splashRes");
@@ -27,13 +38,6 @@ public class ArtResourceUtils {
         SharedPreferencesUtils.put("layoutRes_"+id,layoutRes);
     }
 
-    public static String getScreenRes() {
-        return SharedPreferencesUtils.getString("screenRes");
-    }
-
-    public static void setScreenRes(String screenRes) {
-        SharedPreferencesUtils.put("screenRes",screenRes);
-    }
 
     public static int getScreenSaverTime(int defaultTime) {
         return SharedPreferencesUtils.getInt("screenSaverTime",defaultTime);
@@ -42,4 +46,39 @@ public class ArtResourceUtils {
     public static void setScreenSaverTime(int screenSaverTime) {
         SharedPreferencesUtils.put("screenSaverTime",screenSaverTime);
     }
+
+    public static String getScreenSaverRes() {
+        return SharedPreferencesUtils.getString("screenSaverRes");
+    }
+
+    public static void setScreenSaverRes(String screenSaverRes) {
+        SharedPreferencesUtils.put("screenSaverRes",screenSaverRes);
+    }
+
+
+    public static String getLayoutColumnIds() {
+        return SharedPreferencesUtils.getString("layoutColumnIds");
+    }
+
+    public static void setLayoutColumnIds(String layoutColumnIds) {
+        SharedPreferencesUtils.put("layoutColumnIds",layoutColumnIds);
+    }
+
+    // 清除屏保
+    public static void removeScreenSaverRes() {
+        SharedPreferencesUtils.remove("screenSaverRes");
+    }
+
+    //清除layout
+    public static void removeLayouts() {
+        String lay = SharedPreferencesUtils.getString("layoutColumnIds");
+        if(!TextUtils.isEmpty(lay)){
+            Type type = new TypeToken<List<String>>(){}.getType();
+            List<String> list = new Gson().fromJson(lay ,type);
+            for(String id : list){
+                SharedPreferencesUtils.remove("layoutRes_"+id);
+            }
+        }
+    }
+
 }

@@ -105,7 +105,7 @@ public class PictureFocusRelative extends FocusRelative {
                         cb = lm.getContentBean().get(0);
                     }
                     if( cb != null) {
-                        Glide.with(mContext).load(cb.getSurfaceimage()).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(iv);
+                        Glide.with(mContext).load(cb.getSurfaceimage()).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(iv);
                     }
 
                 }

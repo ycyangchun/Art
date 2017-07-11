@@ -95,7 +95,7 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
             List<LayoutModel.LayoutBean.ContentBean> ls = lm.getData().getContent();
             String bgImg = lm.getData().getBgimage();
             if(bgImg != null){
-                Glide.with(this).load(bgImg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(iv_special);
+                Glide.with(this).load(bgImg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(iv_special);
             }
             if( ls != null) {
                for(int i = 0 ; i < ls.size() ; i++){

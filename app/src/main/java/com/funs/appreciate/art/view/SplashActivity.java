@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,11 +19,9 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
-import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.view.widget.DialogErr;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 import javax.inject.Inject;
 
@@ -52,6 +49,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                 .build().inject(this);
 
         presenter.loadSplash("0");
+        presenter.loadSplash("1");
         ////////////////
         Runtime rt=Runtime.getRuntime();
         long maxMemory=rt.maxMemory();
@@ -93,15 +91,15 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
-        String screenTime = cb.getScreenSaverTime();
-        if(!TextUtils.isEmpty(screenTime)){
-            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
-        }
+//        String screenTime = cb.getScreenSaverTime();
+//        if(!TextUtils.isEmpty(screenTime)){
+//            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
+//        }
 
         if(picUrl.contains(";")){
 
         } else {
-            Glide.with(this).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_splash).into(splash_iv);
+            Glide.with(this).load(picUrl).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.bg_err).into(splash_iv);
         }
 
         int duration = 5;//默认

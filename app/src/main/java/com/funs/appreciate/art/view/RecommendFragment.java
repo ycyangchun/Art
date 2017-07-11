@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,8 +62,11 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
                 .netComponent(ArtApp.get(mainActivity).getNetComponent())
                 .mainModule(new MainModule(this))
                 .build().inject(this);
-
-        mainPresenter.loadLayout("getLayoutAndContent",columnId);
+        String lay = ArtResourceUtils.getLayoutRes(columnId + "");
+        if (TextUtils.isEmpty(lay))
+            mainPresenter.loadLayout("getLayoutAndContent",columnId);
+        else
+            loadData(lay);
     }
 
     @Override
