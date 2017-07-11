@@ -67,7 +67,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         wakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
 
 
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_screen);
         splash_iv = (ImageView) findViewById(R.id.splash_iv);
         findViewById(R.id.count_down_tv).setVisibility(View.GONE);
         instance = this.getApplicationContext();
