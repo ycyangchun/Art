@@ -7,13 +7,10 @@ package com.funs.appreciate.art.model.entitys;
 
 public class CommonEntity<T> {
 
-    private String code;
+    private String status;
     private String msg;
     private T data;
 
-    public String getCode() {
-        return code;
-    }
 
     public T getData() {
         return data;
@@ -23,8 +20,12 @@ public class CommonEntity<T> {
         return msg;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setData(T data) {

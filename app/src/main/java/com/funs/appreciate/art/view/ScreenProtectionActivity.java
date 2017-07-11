@@ -24,7 +24,6 @@ import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
-import com.funs.appreciate.art.utils.SourcePictureDownload;
 import com.funs.appreciate.art.utils.UIHelper;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;

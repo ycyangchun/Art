@@ -11,7 +11,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->
-        <item name="android:windowBackground">@drawable/bg</item>
+        <item name="android:windowBackground">@drawable/bg_welcome</item>
     </style>
 
     <!-- 分享对话框样式 -->

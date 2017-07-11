@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,6 +52,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                 .build().inject(this);
 
         presenter.loadSplash("0");
+        ////////////////
+        Runtime rt=Runtime.getRuntime();
+        long maxMemory=rt.maxMemory();
+        Log.i("=====>maxMemory:",Long.toString(maxMemory/(1024*1024)));
     }
 
     ///////////////////////////////////////////////////////

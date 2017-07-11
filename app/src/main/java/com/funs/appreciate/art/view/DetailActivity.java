@@ -98,28 +98,32 @@ public class DetailActivity extends BaseActivity{
             if(special == -1) {
                 DetailEntity de = new Gson().fromJson(content, DetailEntity.class);
                 DetailEntity.DataBean cb = de.getData();
-                String picUrl = cb.getDatajson();
-                detail_title_tv.setText(cb.getName());
-                detail_content_tv.setText(cb.getRemark());
-                if ("0".equals(type)) {
-                    if (picUrl.contains(";")) {
-                        urls = picUrl.split(";");
-                        setViewVisibility();
-                        glideImg();
-                    } else {
-                        Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(browse_iv);
+                try {
+                    String picUrl = cb.getDatajson();
+                    detail_title_tv.setText(cb.getName());
+                    detail_content_tv.setText(cb.getRemark());
+                    if ("0".equals(type)) {
+                        if (picUrl.contains(";")) {
+                            urls = picUrl.split(";");
+                            setViewVisibility();
+                            glideImg();
+                        } else {
+                            Glide.with(this).load(picUrl).error(R.drawable.bg_splash).into(browse_iv);
+                        }
+                    } else if ("1".equals(type)) {
+                        closeScreenService();
+                        Intent intent = new Intent(this, VideoActivity.class);
+                        intent.putExtra("videoUrl", picUrl);
+                        startActivity(intent);
+                        finish();
+                    } else if ("3".equals(type)) {
+                        Intent intent = new Intent(this, WebActivity.class);
+                        intent.putExtra("art_url", picUrl);
+                        startActivity(intent);
+                        finish();
                     }
-                } else if ("1".equals(type)) {
-                    closeScreenService();
-                    Intent intent = new Intent(this, VideoActivity.class);
-                    intent.putExtra("videoUrl", picUrl);
-                    startActivity(intent);
-                    finish();
-                } else if ("3".equals(type)) {
-                    Intent intent = new Intent(this, WebActivity.class);
-                    intent.putExtra("art_url", picUrl);
-                    startActivity(intent);
-                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else { // 专题数据展示
                 Type type = new TypeToken<List<LayoutModel.LayoutBean.ContentBean>>(){}.getType();

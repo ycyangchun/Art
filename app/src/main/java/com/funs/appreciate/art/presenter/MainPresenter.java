@@ -1,6 +1,8 @@
 package com.funs.appreciate.art.presenter;
 
 import com.funs.appreciate.art.model.api.ApiService;
+import com.funs.appreciate.art.model.entitys.CommonEntity;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
@@ -34,7 +36,13 @@ public class MainPresenter implements MainContract.Presenter {
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {
-                            view.loadLayoutSuccess(s);
+                            CommonEntity commonEntity = new Gson().fromJson(s , CommonEntity.class);
+                            String status = commonEntity.getStatus();
+                            if("1".equals(status)) {
+                                view.loadLayoutSuccess(s);
+                            } else {
+                                view.loadLayoutFailed(new Throwable(commonEntity.getMsg()) , TYPELAYOUT);
+                            }
                         }
                     }, new Action1<Throwable>() {
                         @Override
@@ -56,7 +64,13 @@ public class MainPresenter implements MainContract.Presenter {
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {
-                            view.loadContentSuccess(s , type);
+                            CommonEntity commonEntity = new Gson().fromJson(s , CommonEntity.class);
+                            String status = commonEntity.getStatus();
+                            if("1".equals(status)) {
+                                view.loadContentSuccess(s , type);
+                            } else {
+                                view.loadLayoutFailed(new Throwable(commonEntity.getMsg()) , TYPECONTENT);
+                            }
                         }
                     }, new Action1<Throwable>() {
                         @Override

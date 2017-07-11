@@ -22,6 +22,7 @@ import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
+import com.funs.appreciate.art.view.widget.DialogErr;
 import com.funs.appreciate.art.view.widget.PictureFocusRelative;
 import com.google.gson.Gson;
 
@@ -30,6 +31,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.funs.appreciate.art.presenter.MainContract.TYPECONTENT;
 import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
 
 /**
@@ -94,10 +96,12 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
                 String lay = ArtResourceUtils.getLayoutRes(columnId + "");
                 if (lay != null)
                     loadData(lay);
-            }else if(type == TYPELAYOUT){
+            }else if(type == TYPECONTENT){
 
             }
 
+        } else {
+            new DialogErr(mainActivity,throwable.getMessage()).show();
         }
     }
 

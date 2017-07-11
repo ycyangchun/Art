@@ -59,9 +59,9 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
         if("top".equals(keyType)) {
 
         } else if("left".equals(keyType)) {
-
+            System.out.println("========left==========>");
         } else if("right".equals(keyType)) {
-
+            System.out.println("========right==========>");
         } else if("center".equals(keyType)) {
             List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
             if(contents != null) {
