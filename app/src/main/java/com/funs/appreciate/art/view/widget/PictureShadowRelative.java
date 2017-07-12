@@ -110,6 +110,7 @@ public class PictureShadowRelative extends RelativeLayout {
                     iv.setFocusable(false);
                     iv.setId(lm.getId() + 1000);
                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                    iv.setAlpha(0.3f);
                     rl.addView(iv,lpc);
                     LayoutModel.LayoutBean.ContentBean cb = null;
                     if("tag_content".equals(lm.getTypeRrc())){// 显示内容时，TypeRrc = “tag_content”

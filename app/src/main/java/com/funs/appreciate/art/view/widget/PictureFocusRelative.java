@@ -42,7 +42,6 @@ public class PictureFocusRelative extends FocusRelative {
 
     public PictureFocusRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
-        margin = -17;
     }
 
     public PictureFocusRelative(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -70,8 +69,8 @@ public class PictureFocusRelative extends FocusRelative {
                 margin = lm.getMargin();
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
-//                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
-                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
+                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
+//                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
 
                 lp.setMargins(marginW, marginH, marginW, marginH);
 
@@ -79,7 +78,7 @@ public class PictureFocusRelative extends FocusRelative {
                 final RelativeLayout rl = lm.getRootView();
                 rl.setId(lm.getId());
                 ///////////////
-                if(lm.getContentBean() != null) {
+                if(lm.getContentBean() == null) {
                     TextView tv = new TextView(mContext);
                     tv.setFocusable(false);
                     tv.setId(lm.getId() + 1200);
