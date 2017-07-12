@@ -173,7 +173,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .load(url)
                 .override(1920, 1080)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .thumbnail(0.2f)
                 .error(R.drawable.bg_err)
                 .into(splash_iv);
 
