@@ -118,9 +118,9 @@ public class PictureShadowRelative extends RelativeLayout {
                         cb = lm.getContentBean().get(0);
                     }
                     if( cb != null) {
-                         Glide.with(mContext).load(cb.getSurfaceimage())
+                         Glide.with(mContext)
+                                 .load(cb.getSurfaceimage())
                                  .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                 .thumbnail(0.2f)
                                  .transform(new RotateShadowTransformation(mContext))
                                  .into(iv);
 

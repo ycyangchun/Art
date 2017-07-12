@@ -19,6 +19,7 @@ import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.utils.AnimFocusContentManager;
 import com.funs.appreciate.art.utils.ImageHelper;
+import com.funs.appreciate.art.utils.RotateShadowTransformation;
 import com.funs.appreciate.art.utils.UIHelper;
 
 import java.util.List;

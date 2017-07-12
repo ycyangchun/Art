@@ -58,7 +58,7 @@ public class PictureModel {
     public PictureModel(LayoutModel.LayoutBean lb, Context mContext , int index) {
         this.id = (index + 1) * 300 ;
         this.width = Integer.parseInt(lb.getWidth());
-        this.height = 80;
+        this.height = 50;
         this.topid = 0 ;
         this.leftid = index * 300 ;
         this.contentBean = lb.getContent();

@@ -32,14 +32,14 @@ public class RotateShadowTransformation extends BitmapTransformation {
         // 实现图片翻转90度
         matrix.preScale(1, -1);
         // 创建倒影图片
-        Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0, height - 80 , width, 80, matrix, false);
+        Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0, height - 50 , width, 50, matrix, false);
         // 创建画布
         Canvas canvas = new Canvas(reflectionImage);
         //把倒影图片画到画布上
         canvas.drawBitmap(reflectionImage, 0, 0, null);
         Paint shaderPaint = new Paint();
         //创建线性渐变LinearGradient对象
-        LinearGradient shader = new LinearGradient(0, 0, 0, reflectionImage.getHeight() + 1, 0x70ffffff,
+        LinearGradient shader = new LinearGradient(0, 0, 0, reflectionImage.getHeight(), 0x19ffffff,
                 0x00ffffff, Shader.TileMode.MIRROR);
         shaderPaint.setShader(shader);
         shaderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
