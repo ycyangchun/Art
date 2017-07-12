@@ -64,11 +64,12 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
                 .netComponent(ArtApp.get(mainActivity).getNetComponent())
                 .mainModule(new MainModule(this))
                 .build().inject(this);
-        String lay = ArtResourceUtils.getLayoutRes(columnId + "");
-        if (TextUtils.isEmpty(lay))
-            mainPresenter.loadLayout("getLayoutAndContent",columnId);
-        else
-            loadData(lay);
+//        String lay = ArtResourceUtils.getLayoutRes(columnId + "");
+//        if (TextUtils.isEmpty(lay))
+//            mainPresenter.loadLayout("getLayoutAndContent",columnId);
+//        else
+//            loadData(lay);
+        mainPresenter.loadLayout("getLayoutAndContent",columnId);
     }
 
     @Override
