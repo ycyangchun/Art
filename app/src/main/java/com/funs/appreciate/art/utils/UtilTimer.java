@@ -25,8 +25,7 @@ public class UtilTimer {
     private UtilTimer(Context context, Handler handle) {
         this.mContext = context.getApplicationContext();//单例的生命周期和应用的一样长，这样就防止了内存泄漏。
         this.mHandler = handle;
-//        times = ArtResourceUtils.getScreenSaverTime(30) * 60 * 1000;
-        times = ArtResourceUtils.getScreenSaverTime(10)  * 1000;
+
 
     }
 
@@ -44,6 +43,7 @@ public class UtilTimer {
 
 
     public static void timerStart(){
+        times = ArtResourceUtils.getScreenSaverTime(60)  * 1000;
         if(mHandler != null) {
             mHandler.removeMessages(START_STATUS);
             if(startTimer) {

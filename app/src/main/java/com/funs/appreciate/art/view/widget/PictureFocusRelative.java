@@ -71,19 +71,18 @@ public class PictureFocusRelative extends FocusRelative {
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
 //                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
-//                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
+                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
 
                 lp.setMargins(marginW, marginH, marginW, marginH);
 
                 LayoutParams lpc = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
-//                lpc.setMargins(6, 6, 6, 6);
                 final RelativeLayout rl = lm.getRootView();
                 rl.setId(lm.getId());
                 ///////////////
-                if(lm.getContentBean() == null) {
+                if(lm.getContentBean() != null) {
                     TextView tv = new TextView(mContext);
                     tv.setFocusable(false);
-                    tv.setId(lm.getId() + 1000);
+                    tv.setId(lm.getId() + 1200);
                     tv.setText(lm.getId() + "");
                     tv.setTextSize(30f);
                     tv.setGravity(Gravity.CENTER);
@@ -107,7 +106,9 @@ public class PictureFocusRelative extends FocusRelative {
                         cb = lm.getContentBean().get(0);
                     }
                     if( cb != null) {
-                        Glide.with(mContext).load(cb.getSurfaceimage())
+                        Glide.with(mContext)
+                                .load(cb.getSurfaceimage())
+                                .override(size.width, size.height)
                                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                                 .thumbnail(0.2f)
                                 .error(R.drawable.bg_err).into(iv);

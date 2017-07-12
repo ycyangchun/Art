@@ -120,6 +120,7 @@ public class PictureShadowRelative extends RelativeLayout {
                     if( cb != null) {
                          Glide.with(mContext)
                                  .load(cb.getSurfaceimage())
+                                 .override(1920, 1080)
                                  .diskCacheStrategy(DiskCacheStrategy.RESULT)
                                  .transform(new RotateShadowTransformation(mContext))
                                  .into(iv);
