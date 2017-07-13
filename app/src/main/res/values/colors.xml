@@ -6,4 +6,6 @@
     <color name="pink">#bb79ff</color>
     <color name="blue">#00E6FD</color>
     <color name="dialog_text">#f1f1f1</color>
+    <color name="bg_color">#1a2340</color>
+
 </resources>
