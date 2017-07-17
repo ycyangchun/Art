@@ -59,7 +59,7 @@
             />
 
         <!-- umeng -->
-        <meta-data android:value="595f1f689f06fd62d9001063" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="596c5de3c895760ac400008b" android:name="UMENG_APPKEY"/>
         <meta-data android:value="funs_art" android:name="UMENG_CHANNEL"/>
 
         <!-- talkingData-->
@@ -69,7 +69,7 @@
                 <action android:name="com.talkingdata.sdk.TDAntiCheatingService" />
             </intent-filter>
         </service>
-        <meta-data android:name="TD_APP_ID" android:value="D2E556DCEAF34FBEA8DB243CB3FFC5F5" />
+        <meta-data android:name="TD_APP_ID" android:value="1EB36E2846A4445CB8DCF2DE1EF2162A" />
         <meta-data android:name="TD_CHANNEL_ID" android:value="funs_art" />
 
     </application>
