@@ -98,9 +98,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
         int duration = 5;//默认
         try {
-            duration = Integer.parseInt(cb.getDuration());
-        } catch (NumberFormatException e) {
+            duration = Integer.parseInt("");
+        } catch (Exception e) {
             e.printStackTrace();
+            duration = 0;
         } finally {
             countDownTimer = new CountDownTimer( duration * 1000 ,1000){
                 @Override
