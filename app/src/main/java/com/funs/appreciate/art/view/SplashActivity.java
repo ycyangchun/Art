@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -98,11 +99,14 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
         int duration = 5;//默认
         try {
-            duration = Integer.parseInt("");
+            duration = Integer.parseInt(cb.getDuration());
         } catch (Exception e) {
             e.printStackTrace();
             duration = 0;
         } finally {
+            if(duration > 0) {
+                count_down_tv.setVisibility(View.VISIBLE);
+            }
             countDownTimer = new CountDownTimer( duration * 1000 ,1000){
                 @Override
                 public void onTick(long millisUntilFinished) {
