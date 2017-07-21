@@ -32,6 +32,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -189,8 +191,10 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             ArtResourceUtils.setLayoutColumnIds(new Gson().toJson(listMainIds));
             int section = 96;
             for (int i = 0; i < listMainTab.size(); i++) {
-                int len = listMainTab.get(i).length();
-                PictureModel pm = new PictureModel(i + 1, len * section, 96, listMainTab.get(i), i, this);
+                String tab = listMainTab.get(i);
+//                int len = tab.length() ;
+                int len = getChineseCount(tab);
+                PictureModel pm = new PictureModel(i + 1, len * (section - 20), 96, listMainTab.get(i), i, this);
                 lpms.add(pm);
             }
 
@@ -235,26 +239,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
         @Override
         public Fragment getItem(int position) {//只会在新建 Fragment 时执行一次
-            Fragment f = null;
-//            String tab = listMainTab.get(position);
-//            switch(tab){
-//            case ArtConstants.recommends:
-//                f = new RecommendFragment();
-//                break;
-//            case ArtConstants.oil:
-//                f = new RecommendFragment();
-//                break;
-//            case ArtConstants.landscape:
-//                f = new RecommendFragment();
-//                break;
-//            case ArtConstants.migratory:
-//                f = new RecommendFragment();
-//                break;
-//            case ArtConstants.mall:
-//                f = new RecommendFragment();
-//                break;
-//        }
-            f = new RecommendFragment();
+            Fragment f = new RecommendFragment();
             Bundle bundle = new Bundle();
             bundle.putString("columnId",listMainIds.get(position));
             f.setArguments(bundle);
@@ -328,4 +313,17 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         }
     };
 
+    /// tab 长度
+    String regEx = "[\\u4e00-\\u9fa5]"; // unicode编码，判断是否为汉字
+    private int getChineseCount(String str) {
+        int count = 0;
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+         if(m.find()) {
+             count = str.length();
+        } else {
+             count = str.length()/2;
+         }
+        return count;
+    }
 }

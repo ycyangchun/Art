@@ -30,7 +30,7 @@ public class TabFocusRelative extends FocusRelative {
 
     private List<PictureModel> lms;
     public List<RelativeLayout> childViews;
-    private int itemFocusIndex;// 获取焦点 item
+    private int itemFocusIndex ,marginS;// 获取焦点 item
     public RelativeLayout focusView , selectView; // 记录焦点view ; 记录tab 选中view( 按下方向键焦点转移到fragment时  ；fragment 左右切换时 )
     private int colorDefault, colorSelect;
     TabSelect tabSelect;
@@ -40,7 +40,7 @@ public class TabFocusRelative extends FocusRelative {
 
     public TabFocusRelative(Context context, AttributeSet attrs) {
         super(context, attrs);
-        margin = 10;
+        margin = 2;
         childViews = new ArrayList<>();
         colorDefault = Color.parseColor("#ABAEB7");
         colorSelect = Color.parseColor("#FFFEFF");
@@ -67,14 +67,15 @@ public class TabFocusRelative extends FocusRelative {
                     lp.addRule(RelativeLayout.RIGHT_OF, lm.getLeftid());
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
-                lp.setMargins(marginW, marginH, marginW, marginH);
+                marginS = UIHelper.zoomW(10, UIHelper.ZoomMode.KeepHV);
+//                lp.setMargins(marginW, marginH, marginW, marginH);
 
                 ///////////////
                 TextView tv = new TextView(mContext);
                 tv.setFocusable(false);
                 tv.setId(lm.getId()+ 1000);
                 tv.setText(lm.getTypeRrc());
-                tv.setTextSize(marginW * 3f);
+                tv.setTextSize(marginS * 3f);
                 tv.setGravity(Gravity.CENTER);
                 tv.setTextColor(colorDefault);
                 LayoutParams lpc = new LayoutParams(size.width,size.height);
@@ -103,6 +104,10 @@ public class TabFocusRelative extends FocusRelative {
                             }
                             // 焦点右移最后一项
                             if( (finalI == lms.size()-1) && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+                                return true;
+                            }
+                            // 焦点最左边
+                            if( (finalI == 0) && keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
                                 return true;
                             }
                         }
@@ -181,14 +186,13 @@ public class TabFocusRelative extends FocusRelative {
     // 设置 relative child的文本颜色
     private void setChildTextColor(RelativeLayout rl , int textColor) {
         int count = rl.getChildCount();
-        int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
         if (count > 0) {
             TextView tv = (TextView) rl.getChildAt(0);
             tv.setTextColor(textColor);
             if(textColor == colorDefault){
-                tv.setTextSize(marginW * 3f );
+                tv.setTextSize(marginS * 3f );
             } else if(textColor == colorSelect){
-                tv.setTextSize(marginW * 3f * 1.3f);
+                tv.setTextSize(marginS * 3f * 1.3f);
             }
         }
     }
