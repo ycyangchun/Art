@@ -27,6 +27,7 @@ import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
+import com.funs.appreciate.art.view.widget.DialogErr;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
 
@@ -100,27 +101,22 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.KEYCODE_MENU:
                 case KeyEvent.KEYCODE_BACK:
-                    // 针对焦点在item上传递
-                    View focus = getCurrentFocus();
-                    if (focus != null ){
-                        if(!tabFocusRelative.isChileView(focus)) {// 导航失去焦点
+                    if (tabFocusRelative.getChildCount() > 0){
+                        // 针对焦点在item上传递
+                        View focus = getCurrentFocus();
+                        if(focus != null ) {
+                            if (!tabFocusRelative.isChileView(focus)) {// 导航失去焦点
 //                            System.out.println("======= 焦点在item =======>");
-                            bubbleFocusEvent(tabFocusRelative,false);
-                            if (keyCode == KeyEvent.KEYCODE_BACK ) {// item按 (返回键) 导航获取焦点
-                                return lastFocusStatus();
-//                                return true;
+                                bubbleFocusEvent(tabFocusRelative, false);
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {// item按 (返回键) 导航获取焦点
+                                    return lastFocusStatus();
+                                }
                             }
-                        } else {
-
                         }
                     }
-
                     // 退出应用
                     if(keyCode == KeyEvent.KEYCODE_BACK){
-                        ArtResourceUtils.removeScreenSaverRes();
-                        ArtResourceUtils.removeLayouts();
-                        sps_intent.putExtra("screen_status", "remove");
-                        startService(sps_intent);
+                        exitApp();
                     }
 
                     break;
@@ -128,6 +124,16 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         }
         return super.dispatchKeyEvent(event);
 
+
+    }
+
+    // 退出应用
+    private void exitApp() {
+        ArtResourceUtils.removeScreenSaverRes();
+        ArtResourceUtils.removeLayouts();
+        sps_intent.putExtra("screen_status", "remove");
+        startService(sps_intent);
+        this.finish();
 
     }
 
@@ -188,25 +194,37 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
             listMainTab = lm.getColumnNames();
             listMainIds = lm.getColumnIds();
-            ArtResourceUtils.setLayoutColumnIds(new Gson().toJson(listMainIds));
-            int section = 96;
-            for (int i = 0; i < listMainTab.size(); i++) {
-                String tab = listMainTab.get(i);
-//                int len = tab.length() ;
-                int len = getChineseCount(tab);
-                PictureModel pm = new PictureModel(i + 1, len * (section - 20), 96, listMainTab.get(i), i, this);
-                lpms.add(pm);
+            if(listMainIds != null && listMainIds.size() > 0) {
+                ArtResourceUtils.setLayoutColumnIds(new Gson().toJson(listMainIds));
+            } else {
+                DialogErr dialogErr = new DialogErr(this,"加载布局失败,请设置布局信息。", new DialogErr.DialogListener(){
+                    @Override
+                    public void clickDismiss() {
+                        exitApp();
+                    }
+                });
+                dialogErr.show();
             }
 
-            //tab
-            tabFocusRelative.addViews(lpms);
-            tabFocusRelative.setTabSelect(this);
-            tabFocusRelative.setIndexFocus(tabIndex);
+            if(listMainTab != null && listMainTab.size() > 0) {
+                int section = 96;
+                for (int i = 0; i < listMainTab.size(); i++) {
+                    String tab = listMainTab.get(i);
+                    int len = getChineseCount(tab);
+                    PictureModel pm = new PictureModel(i + 1, len * (section - 20), 96, listMainTab.get(i), i, this);
+                    lpms.add(pm);
+                }
 
-            //content
-            myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
-            contentVp.setAdapter(myPagerAdapter);
-//            contentVp.setOffscreenPageLimit(listMainTab.size());
+                //tab
+                tabFocusRelative.addViews(lpms);
+                tabFocusRelative.setTabSelect(this);
+                tabFocusRelative.setIndexFocus(tabIndex);
+                //content
+                myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
+                contentVp.setAdapter(myPagerAdapter);
+//              contentVp.setOffscreenPageLimit(listMainTab.size());
+            }
+
         }
     }
     //////////// MainContract.View ↑↑↑↑↑↑
@@ -316,7 +334,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     /// tab 长度
     String regEx = "[\\u4e00-\\u9fa5]"; // unicode编码，判断是否为汉字
     private int getChineseCount(String str) {
-        int count = 0;
+        int count ;
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
          if(m.find()) {

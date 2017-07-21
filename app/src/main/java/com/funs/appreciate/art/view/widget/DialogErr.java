@@ -16,12 +16,17 @@ public class DialogErr extends Dialog {
 
     RelativeLayout dialog_bnt_tv;
 
+    DialogListener  dialogListener;
     private String content;
     public DialogErr(Context context, String msg) {
         super(context, R.style.ShareDialog);
         this.content = msg;
     }
-
+    public DialogErr(Context context, String msg ,DialogListener listener ) {
+        super(context, R.style.ShareDialog);
+        this.content = msg;
+        this.dialogListener = listener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,15 @@ public class DialogErr extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
+                if(dialogListener != null){
+                    dialogListener.clickDismiss();
+                }
             }
         });
+
     }
 
+    public interface DialogListener {
+        void clickDismiss();
+    }
 }

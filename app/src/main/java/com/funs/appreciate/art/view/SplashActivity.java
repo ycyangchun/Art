@@ -58,7 +58,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         ////////////////
         Runtime rt=Runtime.getRuntime();
         long maxMemory=rt.maxMemory();
-        Log.i(" =====> maxMemory ",Long.toString(maxMemory/(1024*1024)));
+        Log.i(" === art ==> maxMemory ",Long.toString(maxMemory/(1024*1024)));
     }
 
     ///////////////////////////////////////////////////////
