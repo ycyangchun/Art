@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.funs.appreciate.art.R;
@@ -28,7 +27,7 @@ public class VideoActivity extends FragmentActivity {
         if(videoUrl != null) {
             Uri uri = Uri.parse(videoUrl);
             //设置视频控制器
-            videoView.setMediaController(new MediaController(this));
+//            videoView.setMediaController(new MediaController(this));
             //播放完成回调
             videoView.setOnCompletionListener(new MyPlayerOnCompletionListener());
             videoView.setVideoURI(uri);
