@@ -94,7 +94,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
-        if(se != null ){
+        if(se == null ){
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
             return;
