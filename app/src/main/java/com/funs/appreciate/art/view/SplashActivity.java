@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -94,18 +95,17 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
-        if(se == null ){
+        int duration = 5;//默认
+        SplashPictureEntity.ConfigBean  cb = se.getConfig();
+        String picUrl = cb.getDataJson();
+        String d  = cb.getDuration();
+        if(TextUtils.isEmpty(d) && TextUtils.isEmpty(picUrl)){
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
             return;
         }
-
-        int duration = 5;//默认
-        SplashPictureEntity.ConfigBean  cb = se.getConfig();
-        String picUrl = cb.getDataJson();
-
         try {
-            duration = Integer.parseInt(cb.getDuration());
+            duration = Integer.parseInt(d);
         } catch (Exception e) {
 //            e.printStackTrace();
             duration = 0;
