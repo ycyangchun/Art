@@ -20,6 +20,7 @@
         <com.funs.appreciate.art.view.widget.PictureShadowRelative
             android:id="@+id/shadow_relative"
             android:layout_width="match_parent"
+            android:minHeight="40dp"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />

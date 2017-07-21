@@ -19,7 +19,6 @@ import com.funs.appreciate.art.model.entitys.LayoutModel;
 import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.utils.AnimFocusContentManager;
 import com.funs.appreciate.art.utils.ImageHelper;
-import com.funs.appreciate.art.utils.RotateShadowTransformation;
 import com.funs.appreciate.art.utils.UIHelper;
 
 import java.util.List;
@@ -69,7 +68,7 @@ public class PictureFocusRelative extends FocusRelative {
                 margin = lm.getMargin();
                 int marginW = UIHelper.zoomW(margin, UIHelper.ZoomMode.KeepHV);
                 int marginH = UIHelper.zoomH(margin, UIHelper.ZoomMode.KeepHV);
-                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
+//                System.out.println("====== marginW ====== marginH ==========>"+marginW+ " "+marginH);
 //                System.out.println("================>"+lm.getId()+"  "+lm.getTopid()+ "  "+lm.getLeftid());
 
                 lp.setMargins(marginW, marginH, marginW, marginH);
@@ -99,19 +98,25 @@ public class PictureFocusRelative extends FocusRelative {
                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                     rl.addView(iv,lpc);
                     LayoutModel.LayoutBean.ContentBean cb = null;
-                    if("tag_content".equals(lm.getTypeRrc())){// 显示内容时，TypeRrc = “tag_content”
-                        cb = lm.getContentBean().get(i);
+                    List<LayoutModel.LayoutBean.ContentBean>  lcb = lm.getContentBean();
+                    if(lcb != null && lcb.size() > 0) {
+                        if ("tag_content".equals(lm.getTypeRrc())) {// 显示内容时，TypeRrc = “tag_content”
+                            cb = lm.getContentBean().get(i);
+                        } else {
+                            cb = lm.getContentBean().get(0);
+                        }
+                        if( cb != null) {
+                            Glide.with(mContext)
+                                    .load(cb.getSurfaceimage())
+                                    .override(size.width, size.height)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                    .thumbnail(0.2f)
+                                    .error(R.drawable.bg_err).into(iv);
+                        }
                     } else {
-                        cb = lm.getContentBean().get(0);
+                        iv.setBackground(mContext.getResources().getDrawable(R.drawable.not_foucs_shadow));
                     }
-                    if( cb != null) {
-                        Glide.with(mContext)
-                                .load(cb.getSurfaceimage())
-                                .override(size.width, size.height)
-                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                .thumbnail(0.2f)
-                                .error(R.drawable.bg_err).into(iv);
-                    }
+
 
                 }
                 ///////////////

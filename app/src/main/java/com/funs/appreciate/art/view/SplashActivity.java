@@ -107,7 +107,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
             if(duration > 0) {
                 count_down_tv.setVisibility(View.VISIBLE);
             }
-            countDownTimer = new CountDownTimer( duration * 1000 ,1000){
+            countDownTimer = new CountDownTimer( (duration + 1) * 1000 ,1000){
                 @Override
                 public void onTick(long millisUntilFinished) {
                     count_down_tv.setText( "时间剩余"+millisUntilFinished / 1000 +"\"");
@@ -115,7 +115,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
                 @Override
                 public void onFinish() {
-                    count_down_tv.setText( "时间剩余0\"");
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 }

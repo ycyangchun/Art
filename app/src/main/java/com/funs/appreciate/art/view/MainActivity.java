@@ -25,10 +25,8 @@ import com.funs.appreciate.art.model.entitys.PictureModel;
 import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.MainContract;
 import com.funs.appreciate.art.presenter.MainPresenter;
-import com.funs.appreciate.art.utils.AppUtil;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.funs.appreciate.art.utils.MsgHelper;
-import com.funs.appreciate.art.utils.SharedPreferencesUtils;
 import com.funs.appreciate.art.view.widget.TabFocusRelative;
 import com.google.gson.Gson;
 
@@ -238,24 +236,24 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
         @Override
         public Fragment getItem(int position) {//只会在新建 Fragment 时执行一次
             Fragment f = null;
-            String tab = listMainTab.get(position);
-            switch(tab){
-            case ArtConstants.recommends:
-                f = new RecommendFragment();
-                break;
-            case ArtConstants.oil:
-                f = new RecommendFragment();
-                break;
-            case ArtConstants.landscape:
-                f = new RecommendFragment();
-                break;
-            case ArtConstants.migratory:
-                f = new RecommendFragment();
-                break;
-            case ArtConstants.mall:
-                f = new RecommendFragment();
-                break;
-        }
+//            String tab = listMainTab.get(position);
+//            switch(tab){
+//            case ArtConstants.recommends:
+//                f = new RecommendFragment();
+//                break;
+//            case ArtConstants.oil:
+//                f = new RecommendFragment();
+//                break;
+//            case ArtConstants.landscape:
+//                f = new RecommendFragment();
+//                break;
+//            case ArtConstants.migratory:
+//                f = new RecommendFragment();
+//                break;
+//            case ArtConstants.mall:
+//                f = new RecommendFragment();
+//                break;
+//        }
             f = new RecommendFragment();
             Bundle bundle = new Bundle();
             bundle.putString("columnId",listMainIds.get(position));
