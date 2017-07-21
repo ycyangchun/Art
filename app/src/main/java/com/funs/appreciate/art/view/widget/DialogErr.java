@@ -3,6 +3,7 @@ package com.funs.appreciate.art.view.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,6 +37,16 @@ public class DialogErr extends Dialog {
         dialog_bnt_tv = (RelativeLayout) findViewById(R.id.dialog_bnt_tv);
         dialogContextTv.setText(content);
         dialog_bnt_tv.requestFocus();
+        dialog_bnt_tv.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         dialog_bnt_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
