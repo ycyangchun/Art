@@ -94,14 +94,20 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash , SplashPictureEntity.class);
+        if(se != null ){
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
+        int duration = 5;//默认
         SplashPictureEntity.ConfigBean  cb = se.getConfig();
         String picUrl = cb.getDataJson();
 
-        int duration = 5;//默认
         try {
             duration = Integer.parseInt(cb.getDuration());
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             duration = 0;
         } finally {
             if(duration > 0) {

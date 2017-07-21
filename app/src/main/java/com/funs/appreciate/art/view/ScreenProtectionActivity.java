@@ -169,7 +169,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private void showPic() {
         final String url = getPicUrl();
-        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
+//        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
         Glide.with(instance)
                 .load(url)
                 .override(1920, 1080)
