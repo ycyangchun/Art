@@ -166,7 +166,7 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
             MsgHelper.sendMessage(null, ArtConstants.KEYRIGHT );
          } else if("center".equals(keyType)) {
             List<LayoutModel.LayoutBean.ContentBean> contents = lm.getContentBean();
-            if(contents != null) {
+            if(contents != null && contents.size() > 0) {
                 LayoutModel.LayoutBean.ContentBean contentBean = contents.get(0);
                 String type = contentBean.getType();
                 String contentId = contentBean.getContentid();
