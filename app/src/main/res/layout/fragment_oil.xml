@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:background="@drawable/bg">
+    android:background="@color/bg_color">
 
     <include layout="@layout/activity_focus_relative" />
 </RelativeLayout>

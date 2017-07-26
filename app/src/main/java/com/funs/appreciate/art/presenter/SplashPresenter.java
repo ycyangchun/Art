@@ -15,8 +15,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
-
 /**
  * Created by yc on 2017/6/14.
  * 开屏页  or 屏保 presenter
@@ -34,7 +32,7 @@ public class SplashPresenter implements  SplashContract.Presenter{
 
 
     @Override
-    public void loadSplash(final String type) {
+    public void loadSplash(final String type, final boolean tagScreen) {
         try {
             apiService.getAppConfig("getAppConfig",type, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
@@ -55,6 +53,8 @@ public class SplashPresenter implements  SplashContract.Presenter{
                                         if(!TextUtils.isEmpty(screenTime)){
                                             ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
                                         }
+                                        if(tagScreen)
+                                            view.loadSplashSuccess(s);
                                     }
                                 } else {
                                     if ("0".equals(type))//启动页

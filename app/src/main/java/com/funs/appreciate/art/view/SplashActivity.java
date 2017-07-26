@@ -25,8 +25,13 @@ import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
+import com.funs.appreciate.art.utils.PathUtils;
+import com.funs.appreciate.art.utils.ZipUtils;
 import com.funs.appreciate.art.view.widget.DialogErr;
 import com.google.gson.Gson;
+
+import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -54,12 +59,55 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                 .splashModule(new SplashModule(this))
                 .build().inject(this);
 
-        presenter.loadSplash("0");
-        presenter.loadSplash("1");
+        presenter.loadSplash("0",false);
+        presenter.loadSplash("1",false);
         ////////////////
         Runtime rt=Runtime.getRuntime();
         long maxMemory=rt.maxMemory();
         Log.i(" === art ==> maxMemory ",Long.toString(maxMemory/(1024*1024)));
+        // 屏保zip包
+        UnZip();
+    }
+
+    private void UnZip(){
+        String res = PathUtils.resourcePath;
+        final String scrPath = res + File.separator + "screen";
+        final File scrFile = new File(scrPath);
+        // 是否有屏保zip目录
+        if(!scrFile.exists()){
+            scrFile.mkdir();
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File [] files = scrFile.listFiles();
+                if(files != null){
+                    if(files .length ==  15){//是否已经解压过
+//                        System.out.println("============== zipAlready ============ ");
+                    }  else { //解压
+                        try {
+                            final long t = System.currentTimeMillis();
+                            ZipUtils.UnAssZipFolder(SplashActivity.this.getApplicationContext(), "screenRes.zip", scrPath, new ZipUtils.ZipListener() {
+                                @Override
+                                public void zipComplete(String name) {
+//                                    System.out.println("============== zipComplete =========="+ name);
+                                }
+
+                                @Override
+                                public void zipAllComplete() {
+                                    long t2= System.currentTimeMillis();
+//                                    System.out.println("============== zipComplete ==========" + ( t2 - t)/ 1000);
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }).start();
+
     }
 
     ///////////////////////////////////////////////////////
@@ -148,6 +196,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        countDownTimer.cancel();
     }
 }

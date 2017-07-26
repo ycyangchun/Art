@@ -3,11 +3,7 @@ package com.funs.appreciate.art.presenter;
 import com.funs.appreciate.art.base.BaseActivity;
 import com.funs.appreciate.art.model.api.ApiService;
 import com.funs.appreciate.art.model.entitys.CommonEntity;
-import com.funs.appreciate.art.utils.AppUtil;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 

@@ -2,7 +2,6 @@ package com.funs.appreciate.art.presenter;
 
 import com.funs.appreciate.art.base.BasePresenter;
 import com.funs.appreciate.art.base.BaseView;
-import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 
 /**
  * Created by yc on 2017/6/14.
@@ -11,7 +10,7 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 
 public interface SplashContract {
         interface Presenter extends BasePresenter {
-            void loadSplash(String type);
+            void loadSplash(String type ,boolean tagScreen);
         }
 
         interface View extends BaseView{

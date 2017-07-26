@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
     // 切换界面fragment
     private void switchPage(String tab , int type) {
         tabIndex = listMainTab.indexOf(tab);
-        System.out.println("======= tab ======> "+tab+"  =  "+ tabIndex +" = "+lastTab);
+        System.out.println("======= tab ======> "+tab+"  tabIndex=  "+ tabIndex +" lastTab= "+lastTab);
         if(tab.equals(lastTab)) return;
         lastTab = tab;
         contentVp.setCurrentItem(tabIndex);

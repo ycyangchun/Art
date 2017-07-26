@@ -2,6 +2,7 @@ package com.funs.appreciate.art.view;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.funs.appreciate.art.ArtApp;
 import com.funs.appreciate.art.R;
 import com.funs.appreciate.art.di.components.DaggerScreenProtectionComponent;
@@ -26,10 +30,14 @@ import com.funs.appreciate.art.model.util.NoNetworkException;
 import com.funs.appreciate.art.presenter.SplashContract;
 import com.funs.appreciate.art.presenter.SplashPresenter;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
+import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.UIHelper;
+import com.funs.appreciate.art.utils.ZipUtils;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,14 +58,12 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private final static int webPic = 0;
     @Inject
     SplashPresenter presenter;
-    List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen;
-    List<String> decodeFaileds;
+    List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen ,dataJsonBeenLocal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UIHelper.initialize(this, false);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         // 屏蔽系统的屏保
@@ -80,14 +86,12 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .splashModule(new SplashModule(this))
                 .build().inject(this);
 
-        String res = ArtResourceUtils.getScreenSaverRes();
-        if(TextUtils.isEmpty(res)) {
-            presenter.loadSplash("1");
-        } else {
-            loadData(res);
-        }
+    }
 
-        decodeFaileds = new ArrayList<>();
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handler.removeMessages(webPic);
     }
 
     @Override
@@ -97,6 +101,21 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             wakeLock.acquire();
         }
         MobclickAgent.onResume(this);
+        // 直接跳转到屏保
+        String from = this.getIntent().getStringExtra("from");
+        if(!TextUtils.isEmpty(from)){
+            System.out.println("=============from=================>"+from);
+        }
+        loadLocalData();
+        String res = ArtResourceUtils.getScreenSaverRes();
+        if(TextUtils.isEmpty(res)) {
+            if(presenter != null) {
+                presenter.loadSplash("1",true);
+            }
+        } else {
+            loadData(res);
+        }
+
     }
 
     @Override
@@ -115,6 +134,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             wakeLock.release();
             wakeLock = null;
         }
+        handler.removeMessages(webPic);
     }
 
     ///////////////////////////////////////////////////////
@@ -130,7 +150,6 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     @Override
     public void loadSplashSuccess(String splash) {
-        ArtResourceUtils.setScreenSaverRes(splash);
         loadData(splash);
     }
 
@@ -143,13 +162,53 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         }
     }
 
+    private void loadLocalData(){
+        dataJsonBeenLocal = new ArrayList<>();
+        // 本地图片
+        String res = PathUtils.resourcePath;
+        final String scrPath = res + File.separator + "screen";
+        File scrFile = new File(scrPath);
+        // 本地图片 添加到list
+        File [] files = scrFile.listFiles();
+        if(files != null) {
+            if (files.length == 15) {//已经解压过
+                for( int i = 0; i < files.length ;i++){
+                    SplashPictureEntity.ConfigBean.DataJsonBean djb = new SplashPictureEntity.ConfigBean.DataJsonBean();
+                    djb.setImgUrl(scrPath + File.separator + i+".jpg");
+                    dataJsonBeenLocal.add(djb);
+                }
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final long t = System.currentTimeMillis();
+                            ZipUtils.UnAssZipFolder(ScreenProtectionActivity.this, "screenRes.zip", scrPath, new ZipUtils.ZipListener() {
+                                @Override
+                                public void zipComplete(String name) {
+//                                    System.out.println("============== zipComplete =========="+ name);
+                                }
+
+                                @Override
+                                public void zipAllComplete() {
+                                    long t2= System.currentTimeMillis();
+                                    loadLocalData();
+                                    dataJsonBeen.addAll(dataJsonBeenLocal);
+//                                    System.out.println("============== zipComplete ==========" + ( t2 - t)/ 1000);
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                    }
+                    }
+                }).start();
+            }
+        }
+    }
+
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash, SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean cb = se.getConfig();
-        String screenTime = cb.getScreenSaverTime();
-        if (!TextUtils.isEmpty(screenTime)) {
-            ArtResourceUtils.setScreenSaverTime(Integer.parseInt(screenTime));
-        }
         dataJsonBeen = cb.getImageArray();
         duration = 5;//默认
         try {
@@ -157,6 +216,9 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } finally {
+            if(dataJsonBeenLocal != null && dataJsonBeenLocal.size() >0)
+                dataJsonBeen.addAll(dataJsonBeenLocal);
+
             if (dataJsonBeen != null) {
                 picIndex = 0;
                 showPic();
@@ -170,11 +232,23 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
     private void showPic() {
         final String url = getPicUrl();
 //        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
-        Glide.with(instance)
+        Glide.with(ScreenProtectionActivity.this)
                 .load(url)
-                .override(1920, 1080)
+                .thumbnail(0.5f)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.drawable.bg_err)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        System.out.println(model);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .error(R.drawable.bg_welcome)
                 .into(splash_iv);
 
         splash_iv.setOnTouchListener(new View.OnTouchListener() {
@@ -226,6 +300,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.KEYCODE_BACK:
                     finish();
+                    handler.removeMessages(webPic);
                     return true;
             }
         }

@@ -32,6 +32,8 @@
 
         <!-- 屏保 -->
         <activity android:name=".view.ScreenProtectionActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"
             />
