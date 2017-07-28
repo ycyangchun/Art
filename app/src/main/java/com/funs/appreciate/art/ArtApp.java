@@ -8,6 +8,7 @@ import com.funs.appreciate.art.di.components.NetComponent;
 import com.funs.appreciate.art.di.modules.NetModule;
 import com.funs.appreciate.art.utils.PathUtils;
 import com.funs.appreciate.art.utils.SharedPreferencesUtils;
+import com.squareup.leakcanary.LeakCanary;
 import com.tendcloud.tenddata.TCAgent;
 import com.umeng.analytics.MobclickAgent;
 
@@ -40,7 +41,13 @@ public class ArtApp  extends Application{
         //umeng
         MobclickAgent.setDebugMode(ArtConfig.IS_DEBUG);
 
-
+        //LeakCanary
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
 

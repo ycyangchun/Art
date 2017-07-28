@@ -8,7 +8,7 @@
         android:layout_width="96dp"
         android:layout_height="86dp"
         android:background="@drawable/bg_err"
-        android:visibility="gone"/>
+        />
 
     <ImageView
         android:id="@+id/splash_iv"

@@ -231,10 +231,10 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
     private void showPic() {
         final String url = getPicUrl();
-//        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
-        Glide.with(ScreenProtectionActivity.this)
+        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
+         Glide.with(ScreenProtectionActivity.this)
                 .load(url)
-                .thumbnail(0.5f)
+//                .thumbnail(0.5f)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
@@ -249,6 +249,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                     }
                 })
                 .error(R.drawable.bg_welcome)
+                .crossFade()
                 .into(splash_iv);
 
         splash_iv.setOnTouchListener(new View.OnTouchListener() {

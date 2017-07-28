@@ -43,4 +43,9 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     // talkingdata
     compile files('libs/SaaS_AppAnalytics_Android_SDK_V4.0.3.jar')
+
+    //leakcanary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 }

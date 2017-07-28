@@ -176,7 +176,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
             Glide.with(this).load(picUrl)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .thumbnail(0.2f)
-                    .error(R.drawable.bg_err)
+                    .error(R.drawable.bg_welcome)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
