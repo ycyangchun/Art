@@ -3,6 +3,8 @@ package com.funs.appreciate.art.view;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -343,6 +346,8 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                     .crossFade()
                     .into(imageView);
             container.addView(imageView);
+            //释放资源
+//            recycleView(position);
             return imageView;
         }
 
@@ -352,5 +357,30 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         }
     }
 
+    //
+    void recycleView(int position){
+        int tempIndex = position;
+        if(tempIndex == 0 ){
+            tempIndex = views.size() -1;
+        } else {
+            --tempIndex;
+        }
+        ImageView imageView = views.get(tempIndex);
+        Drawable drawable = imageView.getDrawable();
+        if(drawable != null ) {
+            if (drawable instanceof GlideDrawable) {
+                GlideBitmapDrawable bitmapDrawable = (GlideBitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    try {
+                        bitmap.recycle();
+                        System.out.println("===== recycle =====> tempIndex  " + tempIndex);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
 }
