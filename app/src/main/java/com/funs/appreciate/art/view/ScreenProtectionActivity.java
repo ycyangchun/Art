@@ -9,10 +9,12 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -48,14 +50,15 @@ import javax.inject.Inject;
  * 屏保
  */
 
-public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View{
+public class ScreenProtectionActivity extends FragmentActivity implements SplashContract.View {
 
     private PowerManager.WakeLock wakeLock;
-    private ImageView splash_iv;
+    private ViewPager viewPager;
     private Context instance;
     private static int picIndex;
     private int duration;
     private final static int webPic = 0;
+    private MyPagerAdapter myPagerAdapter;
     @Inject
     SplashPresenter presenter;
     List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen ,dataJsonBeenLocal;
@@ -76,7 +79,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
 
 
         setContentView(R.layout.activity_screen);
-        splash_iv = (ImageView) findViewById(R.id.splash_iv);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         findViewById(R.id.count_down_tv).setVisibility(View.GONE);
         instance = this.getApplicationContext();
         System.out.println("=============== 屏保 ===============>" +  ArtResourceUtils.getScreenSaverTime(10));
@@ -85,6 +88,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 .netComponent(ArtApp.get(this).getNetComponent())
                 .splashModule(new SplashModule(this))
                 .build().inject(this);
+
 
     }
 
@@ -194,6 +198,8 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                                     long t2= System.currentTimeMillis();
                                     loadLocalData();
                                     dataJsonBeen.addAll(dataJsonBeenLocal);
+                                    myPagerAdapter.updateView(dataJsonBeen);
+                                    myPagerAdapter.notifyDataSetChanged();
 //                                    System.out.println("============== zipComplete ==========" + ( t2 - t)/ 1000);
                                 }
                             });
@@ -210,60 +216,30 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         SplashPictureEntity se = new Gson().fromJson(splash, SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean cb = se.getConfig();
         dataJsonBeen = cb.getImageArray();
+        myPagerAdapter = new MyPagerAdapter();
+        myPagerAdapter.setView(dataJsonBeen);
+        viewPager.setAdapter(myPagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
         duration = 5;//默认
         try {
             duration = Integer.parseInt(cb.getDuration());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } finally {
-            if(dataJsonBeenLocal != null && dataJsonBeenLocal.size() >0)
+            if(dataJsonBeenLocal != null && dataJsonBeenLocal.size() >0) {
                 dataJsonBeen.addAll(dataJsonBeenLocal);
+                myPagerAdapter.updateView(dataJsonBeen);
+                myPagerAdapter.notifyDataSetChanged();
+            }
 
             if (dataJsonBeen != null) {
                 picIndex = 0;
-                showPic();
-                if (dataJsonBeen.size() > 1) {
-                    handler.sendEmptyMessageDelayed(webPic, duration * 1000);
+                if (dataJsonBeen.size() > 0) {
+                    handler.sendEmptyMessage(webPic);
                 }
             }
         }
     }
-
-    private void showPic() {
-        final String url = getPicUrl();
-        System.out.println("=====url =====>" + url + " picIndex  " + picIndex);
-         Glide.with(ScreenProtectionActivity.this)
-                .load(url)
-//                .thumbnail(0.5f)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        System.out.println(model);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .error(R.drawable.bg_welcome)
-                .crossFade()
-                .into(splash_iv);
-
-        splash_iv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-    }
-
-    private String getPicUrl() {
-        return dataJsonBeen.get(picIndex).getImgUrl();
-    }
-
 
     public Handler handler = new Handler() {
         @Override
@@ -272,9 +248,10 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             switch (msg.what) {
                 case webPic:
                     if (dataJsonBeen != null) {
-                        picIndex = getCurrentShow();
-                        showPic();
+//                        System.out.println("=====picIndex =====> picIndex  " + picIndex);
+                        viewPager.setCurrentItem(picIndex);
                         handler.sendEmptyMessageDelayed(webPic, duration * 1000);
+                        picIndex = getCurrentShow();
                     }
                     break;
             }
@@ -307,4 +284,73 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
         }
         return super.dispatchKeyEvent(event);
     }
+
+
+    private List<ImageView> views;
+    class MyPagerAdapter extends PagerAdapter {
+        public MyPagerAdapter() {
+            views = new ArrayList<>();
+        }
+
+        void setView(List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen){
+            if(dataJsonBeen != null && dataJsonBeen.size() > 0) {
+                for (int i = 0; i < dataJsonBeen.size(); i++) {
+                    views.add(new ImageView(instance));
+                }
+            }
+        }
+
+        void updateView(List<SplashPictureEntity.ConfigBean.DataJsonBean> dataJsonBeen){
+            views.clear();
+            if(dataJsonBeen != null && dataJsonBeen.size() > 0) {
+                for (int i = 0; i < dataJsonBeen.size(); i++) {
+                    views.add(new ImageView(instance));
+                }
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return views == null ? 0 : views.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = views.get(position);
+            String url = dataJsonBeen.get(position).getImgUrl();
+//            System.out.println("=====url =====>" + url + " position  " + position);
+            Glide.with(ScreenProtectionActivity.this)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            System.out.println(model);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .error(R.drawable.bg_welcome)
+                    .crossFade()
+                    .into(imageView);
+            container.addView(imageView);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(views.get(position));
+        }
+    }
+
+
 }
