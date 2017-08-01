@@ -346,26 +346,22 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                     .crossFade()
                     .into(imageView);
             container.addView(imageView);
-            //释放资源
-//            recycleView(position);
             return imageView;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(views.get(position));
+            //释放资源
+//            recycleView(position);
+            ImageView imageView = views.get(position);
+            Glide.clear(imageView);
+            container.removeView(imageView);
         }
     }
 
     //
     void recycleView(int position){
-        int tempIndex = position;
-        if(tempIndex == 0 ){
-            tempIndex = views.size() -1;
-        } else {
-            --tempIndex;
-        }
-        ImageView imageView = views.get(tempIndex);
+        ImageView imageView = views.get(position);
         Drawable drawable = imageView.getDrawable();
         if(drawable != null ) {
             if (drawable instanceof GlideDrawable) {
@@ -374,7 +370,9 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
                 if (bitmap != null && !bitmap.isRecycled()) {
                     try {
                         bitmap.recycle();
-                        System.out.println("===== recycle =====> tempIndex  " + tempIndex);
+                        bitmap = null;
+//                        System.gc();
+                        System.out.println("===== recycle =====> position  " + position);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
