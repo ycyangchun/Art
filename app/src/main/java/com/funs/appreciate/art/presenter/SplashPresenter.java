@@ -65,7 +65,7 @@ public class SplashPresenter implements  SplashContract.Presenter{
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {
-                            view.loadSplashFailed(throwable);
+                               view.loadSplashFailed(throwable);
                         }
                     });
         } catch (Exception e) {
