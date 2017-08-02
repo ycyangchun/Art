@@ -9,6 +9,9 @@ import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
 import com.funs.appreciate.art.utils.ArtResourceUtils;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,7 +37,13 @@ public class SplashPresenter implements  SplashContract.Presenter{
     @Override
     public void loadSplash(final String type, final boolean tagScreen) {
         try {
-            apiService.getAppConfig("getAppConfig",type, BaseActivity.map)
+            Map<String, String> map ;
+            if(BaseActivity.map != null){
+                map = BaseActivity.map;
+            } else {
+                map  = new HashMap<>();
+            }
+            apiService.getAppConfig("getAppConfig",type, map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {

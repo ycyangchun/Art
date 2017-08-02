@@ -36,7 +36,11 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"
-            />
+            >
+            <intent-filter >
+                <action android:name="funs.appreciate.art.screen_protect"/>
+            </intent-filter>
+            </activity>
         <!-- 专题 -->
         <activity android:name=".view.SpecialActivity"
             android:screenOrientation="landscape"

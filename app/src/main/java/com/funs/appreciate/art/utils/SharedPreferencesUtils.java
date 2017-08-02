@@ -67,7 +67,7 @@ public class SharedPreferencesUtils {
         if (TextUtils.isEmpty(name)) {
             sharedPreferences = getSharedPreferences();
         } else {
-            sharedPreferences = mContext.getSharedPreferences(name, Context.MODE_PRIVATE);
+            sharedPreferences = mContext.getSharedPreferences(name, Context.MODE_WORLD_WRITEABLE);
         }
         return sharedPreferences;
     }

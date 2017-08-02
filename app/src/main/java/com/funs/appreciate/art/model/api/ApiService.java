@@ -1,11 +1,8 @@
 package com.funs.appreciate.art.model.api;
 
 
-import com.funs.appreciate.art.model.entitys.SplashPictureEntity;
-
 import java.util.Map;
 
-import retrofit2.http.FieldMap;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
