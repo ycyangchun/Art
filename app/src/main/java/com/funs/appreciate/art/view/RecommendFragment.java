@@ -125,6 +125,11 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
         }
     }
 
+    @Override
+    public void viewDestroy() {
+        mainPresenter.unSubscribed();
+    }
+
     private void loadData(String lay) {
         if(lay != null) {
             LayoutModel lm = new Gson().fromJson(lay, LayoutModel.class);
@@ -180,4 +185,10 @@ public class RecommendFragment extends BaseFragment implements  PictureFocusRela
     }
 
     /////////// PictureFocusKeyEvent ↑↑↑↑↑↑
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewDestroy();
+    }
 }

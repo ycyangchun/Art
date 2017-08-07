@@ -14,9 +14,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by yc on 2017/6/14.
@@ -26,11 +28,12 @@ import rx.schedulers.Schedulers;
 public class SplashPresenter implements  SplashContract.Presenter{
     private SplashContract.View view;
     private ApiService apiService;
-
+    CompositeSubscription compositeSubscription;
     @Inject
     public SplashPresenter(SplashContract.View view, ApiService apiService) {
         this.view = view;
         this.apiService = apiService;
+        compositeSubscription = new CompositeSubscription();
     }
 
 
@@ -43,7 +46,7 @@ public class SplashPresenter implements  SplashContract.Presenter{
             } else {
                 map  = new HashMap<>();
             }
-            apiService.getAppConfig("getAppConfig",type, map)
+            Subscription subscription = apiService.getAppConfig("getAppConfig",type, map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
@@ -77,8 +80,14 @@ public class SplashPresenter implements  SplashContract.Presenter{
                                view.loadSplashFailed(throwable);
                         }
                     });
+            compositeSubscription.add(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void unSubscribed() {
+        compositeSubscription.clear();
     }
 }

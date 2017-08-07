@@ -146,4 +146,15 @@ public class SpecialActivity extends BaseActivity implements  PictureFocusRelati
     public void loadLayoutFailed(Throwable throwable , int type) {
 
     }
+
+
+    @Override
+    public void viewDestroy() {
+        mainPresenter.unSubscribed();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewDestroy();
+    }
 }

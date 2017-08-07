@@ -6,5 +6,5 @@ package com.funs.appreciate.art.base;
  */
 
 public interface BasePresenter {
-
+    void unSubscribed();
 }

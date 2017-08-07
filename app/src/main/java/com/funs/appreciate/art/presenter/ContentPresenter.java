@@ -7,9 +7,11 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by yc on 2017/6/30.
@@ -19,17 +21,18 @@ import rx.schedulers.Schedulers;
 public class ContentPresenter implements ContentContract.Presenter {
     private ContentContract.View view;
     private ApiService apiService;
-
+    CompositeSubscription compositeSubscription;
     @Inject
     public ContentPresenter(ContentContract.View view, ApiService apiService) {
         this.view = view;
         this.apiService = apiService;
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
     public void loadLayout(String m, String id) {
         try {
-            apiService.getContentDetail(m ,id , BaseActivity.map)
+            Subscription subscription = apiService.getContentDetail(m ,id , BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
@@ -49,8 +52,14 @@ public class ContentPresenter implements ContentContract.Presenter {
                             view.loadLayoutFailed(throwable);
                         }
                     });
+            compositeSubscription.add(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void unSubscribed() {
+        compositeSubscription.clear();
     }
 }

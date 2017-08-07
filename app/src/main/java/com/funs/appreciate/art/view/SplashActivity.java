@@ -194,8 +194,13 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
     @Override
+    public void viewDestroy() {
+        presenter.unSubscribed();
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         countDownTimer.cancel();
+        viewDestroy();
     }
 }

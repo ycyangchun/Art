@@ -142,6 +142,7 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             wakeLock = null;
         }
         handler.removeMessages(webPic);
+        viewDestroy();
     }
 
     ///////////////////////////////////////////////////////
@@ -214,7 +215,10 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             }
         }
     }
-
+    @Override
+    public void viewDestroy() {
+        presenter.unSubscribed();
+    }
     private void loadData(String splash) {
         SplashPictureEntity se = new Gson().fromJson(splash, SplashPictureEntity.class);
         SplashPictureEntity.ConfigBean cb = se.getConfig();
@@ -380,5 +384,4 @@ public class ScreenProtectionActivity extends FragmentActivity implements Splash
             }
         }
     }
-
 }

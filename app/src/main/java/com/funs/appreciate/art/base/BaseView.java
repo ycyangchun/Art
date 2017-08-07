@@ -8,4 +8,5 @@ package com.funs.appreciate.art.base;
 public interface BaseView {
     void showProgress();
     void hideProgress();
+    void viewDestroy();
 }

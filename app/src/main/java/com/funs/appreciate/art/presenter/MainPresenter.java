@@ -7,9 +7,11 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.funs.appreciate.art.presenter.MainContract.TYPECONTENT;
 import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
@@ -21,17 +23,18 @@ import static com.funs.appreciate.art.presenter.MainContract.TYPELAYOUT;
 public class MainPresenter implements MainContract.Presenter {
     private MainContract.View view;
     private ApiService apiService;
-
+    CompositeSubscription compositeSubscription;
     @Inject
     public MainPresenter(MainContract.View view, ApiService apiService) {
         this.view = view;
         this.apiService = apiService;
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
     public void loadLayout(String m , String columnId) {
         try {
-            apiService.getColumnList(m,columnId, BaseActivity.map)
+            Subscription subscription = apiService.getColumnList(m,columnId, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
@@ -51,6 +54,7 @@ public class MainPresenter implements MainContract.Presenter {
                             view.loadLayoutFailed(throwable , TYPELAYOUT);
                         }
                     });
+            compositeSubscription.add(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +63,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void loadContent(String m, String id , final String type) {
         try {
-            apiService.getContentDetail(m ,id, BaseActivity.map)
+            Subscription subscription = apiService.getContentDetail(m ,id, BaseActivity.map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
@@ -79,8 +83,14 @@ public class MainPresenter implements MainContract.Presenter {
                             view.loadLayoutFailed(throwable , TYPECONTENT);
                         }
                     });
+            compositeSubscription.add(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void unSubscribed() {
+        compositeSubscription.clear();
     }
 }

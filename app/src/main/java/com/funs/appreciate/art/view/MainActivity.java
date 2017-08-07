@@ -227,7 +227,12 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
 
         }
     }
+    @Override
+    public void viewDestroy() {
+        mainPresenter.unSubscribed();
+    }
     //////////// MainContract.View ↑↑↑↑↑↑
+
     //////////// TabFocusRelative.TabSelect ↓↓↓↓↓↓↓
     //tab 切换
     @Override
@@ -343,5 +348,11 @@ public class MainActivity extends BaseActivity  implements MainContract.View ,Ta
              count = str.length()/2;
          }
         return count;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewDestroy();
     }
 }
